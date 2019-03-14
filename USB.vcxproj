@@ -89,7 +89,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OutputFile>.\Debug\USB.exe</OutputFile>
-      <AdditionalDependencies>xlibCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <StackReserveSize>268435456</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
@@ -132,7 +132,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CEnrollDlg.cpp" />
     <ClCompile Include="protocol.cpp" />
     <ClCompile Include="Serial.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -148,14 +147,12 @@
     <ResourceCompile Include="USB.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CEnrollDlg.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serial.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="USB.h" />
     <ClInclude Include="USBDlg.h" />
-    <ClInclude Include="xlibCore.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="res\bitmap1.bmp" />

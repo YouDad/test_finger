@@ -4,12 +4,11 @@
 #include "string.h"
 
 //#include "crc16.h"
+#include "common.h"
 #include "Command.h"
 #include "protocol.h"
 #include <winuser.h>
 #include "Serial.h"
-
-#include "xlibCore.h"
 
 //extern "C"
 //{

@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include "common.h"
 #include "command.h"
-#include "CEnrollDlg.h"
 #pragma comment(lib, "shlwapi.lib")
 
 
@@ -22,9 +21,6 @@
 #define DataBits BIT_8 //数据位
 #define Parity P_NONE //效验位
 #define StopBits STOP_1 //停止位
-
-#define   WM_PCOMM    WM_USER + 550 //自定义消息
-#define   WM_COMM_MSG WM_USER + 105 //自动接收串口数据用的消息
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -45,57 +41,6 @@ VOID CALLBACK CntIrq(int port){
         }
     }
 }
-
-
-/////////////////////////////////////////////////////////////////////////////
-// CAboutDlg dialog used for App About
-
-class CAboutDlg: public CDialog{
-public:
-
-    //	int			m_nComPortIndex;
-    // 	int			m_nBaudRateIndex;
-
-
-    CAboutDlg();
-    CHAR SS;
-    // Dialog Data
-        //{{AFX_DATA(CAboutDlg)
-    enum{
-        IDD=IDD_ABOUTBOX
-    };
-    //}}AFX_DATA
-
-    // ClassWizard generated virtual function overrides
-    //{{AFX_VIRTUAL(CAboutDlg)
-protected:
-    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-    //}}AFX_VIRTUAL
-
-// Implementation
-protected:
-    //{{AFX_MSG(CAboutDlg)
-    virtual void OnOK();
-    //}}AFX_MSG
-    DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg(): CDialog(CAboutDlg::IDD){
-    //{{AFX_DATA_INIT(CAboutDlg)
-    //}}AFX_DATA_INIT
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX){
-    CDialog::DoDataExchange(pDX);
-    //{{AFX_DATA_MAP(CAboutDlg)
-    //}}AFX_DATA_MAP
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg,CDialog)
-    //{{AFX_MSG_MAP(CAboutDlg)
-    //}}AFX_MSG_MAP
-    //SetDlgItemText(IDC_COMBO7,"ss");
-END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CUSBDlg dialog
@@ -146,20 +91,46 @@ BEGIN_MESSAGE_MAP(CUSBDlg,CDialog)
     ON_BN_CLICKED(IDC_AdjustImage,OnAdjustImage)
     ON_BN_CLICKED(IDC_BtnContinuousGetImage,OnBtnContinuousGetImage)
     ON_BN_CLICKED(IDC_BUTTON2,OnBlackWhite)
-    ON_BN_CLICKED(IDC_BtnEnroll,OnBtnEnroll)
-    ON_BN_CLICKED(IDC_BtnIdentify,OnBtnIdentify)
     ON_BN_CLICKED(IDC_BtnRecodeDel,OnBtnRecodeDel)
     ON_NOTIFY(NM_RCLICK,IDC_ListRecord,OnClickListRecord)
-	ON_MESSAGE(WM_COMM_MSG, OnCommMsg)  //消息和消息响应函数的映射
     //}}AFX_MSG_MAP
 //	ON_MESSAGE(WM_PCOMM,OnPcomm) //这里是消息影射
-ON_WM_DEVICECHANGE()
-ON_MESSAGE(WM_UPDATEDATA,OnUpdateData)
+	ON_WM_DEVICECHANGE()
+	ON_MESSAGE(WM_UPDATEDATA,OnUpdateData)
 END_MESSAGE_MAP()
 ////////////////////////////////////////////
 
 
 
+///*communication message listen
+//	true代表串口监听函数来处理
+//	false代表串口监听函数不处理
+//	只要在SendCommand之前设置
+//	此标志位即可达到选择是否让监听函数处理的目的
+//	监听函数为:
+//	UINT AFX_CDECL OnCommDataRecv(LPVOID hwnd);
+//*/
+bool commMsgListen=true;
+//UINT AFX_CDECL OnCommDataRecv(LPVOID hwnd){
+//	while(true){
+//		if(g_Serial.IsOpen()&&g_Serial.WaitEvent()){
+//			static char data[65536]={},edit[65536]={};
+//			DWORD readCnt;
+//			if(commMsgListen){
+//				LONG res=g_Serial.Read(data,6000,&readCnt,NULL,5*1000);
+//				if(ERROR_SUCCESS==res){
+//					GetWindowText((HWND)hwnd,edit,65536);
+//					int slen=strlen(edit);
+//					edit[slen]='\r';
+//					data[readCnt]=0;
+//					strcpy(edit+slen+1,data);
+//					SetWindowText((HWND)hwnd,edit);
+//				}
+//			}
+//		}
+//	}
+//	return 0;
+//}
 
 
 ///////////////////////////////////////////////////
@@ -170,19 +141,7 @@ END_MESSAGE_MAP()
 BOOL CUSBDlg::OnInitDialog(){
     CDialog::OnInitDialog();
 
-    // IDM_ABOUTBOX must be in the system command range.
-    ASSERT((IDM_ABOUTBOX&0xFFF0)==IDM_ABOUTBOX);
-    ASSERT(IDM_ABOUTBOX<0xF000);
-
     CMenu* pSysMenu=GetSystemMenu(FALSE);
-    if(pSysMenu!=NULL){
-        CString strAboutMenu;
-        strAboutMenu.LoadString(IDS_ABOUTBOX);
-        if(!strAboutMenu.IsEmpty()){
-            pSysMenu->AppendMenu(MF_SEPARATOR);
-            pSysMenu->AppendMenu(MF_STRING,IDM_ABOUTBOX,strAboutMenu);
-        }
-    }
 
     // Set the icon for this dialog.  The framework does this automatically
     //  when the application's main window is not a dialog
@@ -211,6 +170,8 @@ BOOL CUSBDlg::OnInitDialog(){
     SetDlgItemText(IDC_EdWrValue,"0");
     IdListInit();
 
+	//AfxBeginThread(OnCommDataRecv,(LPVOID)GetDlgItem(IDC_EditCommLog));
+
     return TRUE;  // return TRUE  unless you set the focus to a control
 }
 void CUSBDlg::IdListInit(){
@@ -219,12 +180,7 @@ void CUSBDlg::IdListInit(){
     m_ctrlListRecord.InsertColumn(2,_T("Quality"),LVCFMT_CENTER,100);
 }
 void CUSBDlg::OnSysCommand(UINT nID,LPARAM lParam){
-    if((nID&0xFFF0)==IDM_ABOUTBOX){
-        CAboutDlg dlgAbout;
-        dlgAbout.DoModal();
-    } else{
-        CDialog::OnSysCommand(nID,lParam);
-    }
+    CDialog::OnSysCommand(nID,lParam);
 }
 
 // If you add a minimize button to your dialog, you will need the code below
@@ -458,22 +414,26 @@ void CUSBDlg::CmdDrawRawImage(U8 *revbuf,UINT length){
 #define imageheight 160
     static uint16_t revall;
     static uint16_t imagept=0;
-    uint16_t i,j,buflength=0;
+    uint16_t buflength=0;
     int end=512;//sio_read(Port,buf,600);
     int cx=160;
     int cy=160;
-    uint8_t imageBuf[imagewidth*imageheight];
+    static uint8_t imageBuf[imagewidth*imageheight];
     CString a="";
 
-	//Karl added,for big pack
-	if(length==25621){
-		for(int i=0;i<25600;i++)
-			imageBuf[i]=revbuf[i+19];
-		saveimage(imagewidth,imageheight,imageBuf);
-        end=0;
-	}else if(length>=26626){
-        revall=0;
-        for(i=0;i<49;i++){
+	//正常图片的包是26627字节的
+	//由很多小包组成,其中包头占19字节,CRC校验占2字节处于包尾
+	//if(length>=26626){
+		int i,j;
+		for(i=0,j=0;i<length;){
+			int k=revbuf[i+15]+revbuf[i+16]*256;//包数据部分长度
+			i+=19;//跳过包头
+			while(k--){
+				imageBuf[j++]=revbuf[i++];
+			}
+			i+=2;//跳过CRC
+		}
+        /*for(i=0;i<49;i++){
             if(i==48){
                 buflength=256;
             }else{
@@ -483,21 +443,18 @@ void CUSBDlg::CmdDrawRawImage(U8 *revbuf,UINT length){
                 imageBuf[imagept++]=*(revbuf+j);
             }
         }
-        imagept=0;
+        imagept=0;*/
         for(i=0;i<160;i++){
             j=i*160;
             imageBuf[j+47]=(imageBuf[j+46]+imageBuf[j+48])>>1;
             imageBuf[j+99]=(imageBuf[j+98]+imageBuf[j+100])>>1;
             imageBuf[j+151]=(imageBuf[j+150]+imageBuf[j+152])>>1;
         }
-        a.Format("%X",imagept);
-        SetDlgItemText(IDC_EDIT_RECMSG,a);
-        buflength=0;
-        uint8_t *xx=NULL;
-        xx=imageBuf;
+        //a.Format("%X",imagept);
+        //SetDlgItemText(IDC_EDIT_RECMSG,a);
         saveimage(imagewidth,imageheight,imageBuf);
         end=0;
-    }
+    //}
 }
 
 UINT  RevRawImage(LPVOID  lParam){
@@ -565,36 +522,31 @@ LRESULT CUSBDlg::RevModelParamThread(void){
     m_pThread=TRUE;
     g_Serial.Purge();
 
-    SendCommand(CMD_GET_RAW_IMAGE,SendPt,0);
+	SendCommand(CMD_GET_RAW_IMAGE,SendPt,0);
 
     w_nResult=g_Serial.Read(g_rPacket,MAX_DATA_LEN,&w_nAckCnt,NULL,w_dwTimeOut);
-
+	commMsgListen=true;
     // int k;
     if(m_pThread==TRUE){
         if(ERROR_SUCCESS!=w_nResult){
-            //((CEdit *)GetDlgItem(IDC_INFO))->SetDlgItemText("接收数据超时");//	
-            //	m_strResultMsg=_T("接收数据超时");
-            IDCINFORefresh("接收数据超时");
+            //IDCINFORefresh("接收数据超时");
         } else{
-            //	m_strResultMsg=_T("数据接收成功");
-            IDCINFORefresh("数据接收成功");
+            //IDCINFORefresh("数据接收成功");
             CmdDrawRawImage(g_rPacket,w_nAckCnt);
         }
-        //更新编辑框内容
-        //	m_ctrlBtnGetRawImage.EnableWindow(TRUE);
+        /*更新编辑框内容*/
         OpEnable(BtnRawImageEnd);
     }
     //UpdateData(FALSE); 
     SendMessage(WM_UPDATEDATA,FALSE);
     return 0;
 }
-#include<assert.h>
-UINT RevRawImageFirst(LPVOID lParam){
-	assert(0);
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
+
+UINT AFX_CDECL RevRawImageFirst(LPVOID lParam){
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
     //int StartTime=GetTickCount();
     pWnd->RevModelParamThread();
-    pWnd->RevRawImageThread();
+    //pWnd->RevRawImageThread();
 
     return 1;
 }
@@ -610,13 +562,17 @@ void CUSBDlg::OnBtnGetRawImage(){
     IDCINFORefresh("正在读取原始图像......");
     g_Serial.Purge();
     OpEnable(BtnRawImageStart);//更新编辑框内容
-    //m_hSleepThread=AfxBeginThread(RevRawImageFirst,(LPVOID)this);//启动新的线程
-	
-    RevModelParamThread();
-    //RevRawImageThread();
+	m_hSleepThread=AfxBeginThread(RevRawImageFirst,(LPVOID)this);//启动新的线程
+	if(m_hSleepThread==0){
+		RevModelParamThread();
+	}
 }
 
 void CUSBDlg::OnDraw(){
+
+}
+
+void CUSBDlg::OnOK(){
 
 }
 
@@ -760,9 +716,9 @@ UINT  RevSleepImageThread(LPVOID  lParam){
 
 void CUSBDlg::OnBtnGoSleep(){
     IDCINFORefresh("手指探测模式，请将手指放在传感器上");
-    //OpEnable(BtnFingerDetStart);
+    OpEnable(BtnFingerDetStart);
 	SendCommand(CMD_DETECT_FINGER,0,0);
-    //m_hSleepThread=AfxBeginThread(RevSleepImageThread,(LPVOID)this);
+    m_hSleepThread=AfxBeginThread(RevSleepImageThread,(LPVOID)this);
 }
 
 
@@ -1233,26 +1189,22 @@ LRESULT CUSBDlg::ContinuousRevSleepImageThread(void){
 }
 
 UINT  ContinuousRevSleepImage(LPVOID  lParam){
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
-    //int StartTime=GetTickCount();
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
     while(pWnd->m_pThread){
-        pWnd->ContinuousRevSleepImageThread();
+        pWnd->RevModelParamThread();
     }
     return 1;
 }
 
 void CUSBDlg::OnBtnContinuousGetImage(){
-    //TODO: Add your control notification handler code here
     CString a;
     GetDlgItemText(IDC_BtnContinuousGetImage,a);
     if(!strcmp(a,"连续获取图像")){
         SetDlgItemText(IDC_BtnContinuousGetImage,"停止连续获取");
-        //m_strResultMsg = _T("正在连续读取图像......");
-        //SetDlgItemText(IDC_INFO,"正在连续读取图像......");
         IDCINFORefresh("正在连续读取图像......");
         OpEnable(BtnContinuousGetImageStart);
         m_pThread=TRUE;
-        m_hSleepThread=AfxBeginThread(ContinuousRevSleepImage,(LPVOID)this);//启动新的线程
+        m_hSleepThread=AfxBeginThread(ContinuousRevSleepImage,(LPVOID)this);
     } else{
         m_pThread=FALSE;
         if(m_hSleepThread!=NULL){
@@ -1261,7 +1213,6 @@ void CUSBDlg::OnBtnContinuousGetImage(){
             m_hSleepThread=NULL;
         }
         SetDlgItemText(IDC_BtnContinuousGetImage,"连续获取图像");
-        //SetDlgItemText(IDC_INFO,"停止连续读取图像......");
         IDCINFORefresh("停止连续读取图像......");
 
         OpEnable(BtnContinuousGetImageEnd);
@@ -1351,46 +1302,6 @@ void CUSBDlg::OnBlackWhite(){
     m_hSleepThread=AfxBeginThread(ReadMaxBlackWhiteImage,(LPVOID)this);//启动新的线程
 }
 
-void CUSBDlg::OnBtnEnroll(){
-    CEnrollDlg EnrollDlg;
-    //CMeDialog medialog;
-    EnrollDlg.m_ValueTemplateNO=10;
-
-    // 	EnrollDlg.m_ctrlCbOption.AddString(_T("None"));
-    // 	EnrollDlg.m_ctrlCbOption.AddString(_T("None1"));
-    // 	EnrollDlg.m_ctrlCbOption.AddString(_T("None2"));
-
-    // EnrollDlg.m_CbOption.Insert(0,"Check Finger");	
-    // EnrollDlg.m_CbOption.Insert(1,"Check ID");
-    // EnrollDlg.m_CbOption.Insert(2,"Add New");
-    // EnrollDlg.m_CbOption.Insert(3,"Auto ID");
-    // EnrollDlg.m_CbOption.Insert(4,"None");
-        //EnrollDlg.m_ctrlCbRole.SetCurSel(1);
-    // 	//	EnrollDlg.m_CbOption.Insert(0);
-    // 	EnrollDlg.m_CbRole.Insert(0,_T("Admin"));
-    // 	EnrollDlg.m_CbRole.Insert(1,_T("Normal"));
-    // 	EnrollDlg.m_CbRole.Insert(2,_T("Guest"));
-    // 	EnrollDlg.m_ctrlCbRole.SetCurSel(2);
-    // 	EnrollDlg.m_ctrlCbOption.SetCurSel(0);
-    //EnrollDlg.m_ctrlCbOption.AddString("nONE");
-
-    if(IDOK==EnrollDlg.DoModal()){
-		//EnrollDlg.m_ctrlCbRole.SelectString(1,_T("Add New"));
-		//EnrollDlg.UserEnrollInFO.NO=1;
-		//CEnrollDlg::xFA_Param.Arith_SaveNo=EnrollDlg.m_ValueTemplateNO;
-    }
-}
-
-void CAboutDlg::OnOK(){
-    // TODO: Add extra validation here
-    CDialog::OnOK();
-}
-_XFA_Param CEnrollDlg::xFA_Param;
-void CUSBDlg::OnBtnIdentify(){
-    UINT16 temp;
-    temp=CEnrollDlg::xFA_Param.Arith_SaveNo;
-}
-
 LRESULT CUSBDlg::RecodeDelThread(void){
     //	CUSBDlg *pWnd = (CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
     //int StartTime=GetTickCount();
@@ -1477,19 +1388,4 @@ void CUSBDlg::OnClickListRecord(NMHDR* pNMHDR,LRESULT* pResult){
         case 10001:
             break;
     }
-}
-
-LRESULT CUSBDlg::OnCommMsg(WPARAM wParam, LPARAM lParam){
-	static char data[65536],edit[65536];
-	DWORD readCnt;
-	LONG res=g_Serial.Read(data,65536,&readCnt,NULL,5*1000);
-
-    if(ERROR_SUCCESS==res){
-		GetDlgItemText(IDC_EditCommLog,edit,65536);
-		int slen=strlen(edit);
-		edit[slen]='\n';
-		data[readCnt]=0;
-		strcpy(edit+slen+1,data);
-    }
-	return 0;
 }

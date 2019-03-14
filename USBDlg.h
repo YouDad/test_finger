@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include "protocol.h"
 #include "winuser.h"
-#include "CEnrollDlg.h"
 #define   WM_UPDATEDATA   WM_USER + 5 
 //_XFA_Param xFA_Param;
 /////////////////////////////////////////////////////////////////////////////
@@ -70,6 +69,7 @@ protected:
     virtual void saveimage(int width,int height,unsigned char *image);
     virtual void EnumerateSerialPorts(CUIntArray& ports,CUIntArray& portse,CUIntArray& portsu);
     virtual void TraversalCom(void);
+	virtual void OnOK();
 
     // Implementation
 protected:
@@ -92,11 +92,8 @@ protected:
     afx_msg void OnBtnContinuousGetImage();
     afx_msg void OnBlackWhite();
     afx_msg void IdListInit();
-    afx_msg void OnBtnEnroll();
-    afx_msg void OnBtnIdentify();
     afx_msg void OnBtnRecodeDel();
     afx_msg void OnClickListRecord(NMHDR* pNMHDR,LRESULT* pResult);
-	afx_msg LRESULT OnCommMsg(WPARAM wParam, LPARAM lParam);
 
 
     DECLARE_MESSAGE_MAP()

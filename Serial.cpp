@@ -745,11 +745,11 @@ LONG CSerial::Read(void* pData,size_t iLen,DWORD* pdwRead,LPOVERLAPPED lpOverlap
     m_lLastError=ERROR_SUCCESS;
 
     // Use our own variable for read count
-    DWORD dwRead;
+    /*DWORD dwRead;
     if(pdwRead==0){
         pdwRead=&dwRead;
     }
-
+	*/
     // Reset the number of bytes read
     *pdwRead=0;
 

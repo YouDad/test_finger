@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 
-
+#define WM_PCOMM WM_USER + 550
 
 
 

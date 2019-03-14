@@ -72,18 +72,6 @@ IDI_ICON1               ICON                    "res\\icon1.ico"
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG 0, 0, 224, 115
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "关于 USB"
-FONT 9, "宋体"
-BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "USB 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
-    LTEXT           "版权所有 (C) 2018",IDC_STATIC,40,25,119,8
-    DEFPUSHBUTTON   "确 定",IDOK,139,92,50,14,WS_GROUP
-    DEFPUSHBUTTON   "取 消",IDC_BtnCancel,55,91,50,14
-END
-
 IDD_USB_DIALOG DIALOGEX 0, 0, 591, 450
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
@@ -148,21 +136,6 @@ BEGIN
     EDITTEXT        IDC_EditCommLog,402,6,181,436,ES_AUTOHSCROLL
 END
 
-IDD_Enroll_DIALOG DIALOG 0, 0, 140, 101
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
-CAPTION "Enroll"
-FONT 10, "System"
-BEGIN
-    DEFPUSHBUTTON   "确 认",IDOK,79,79,50,14
-    PUSHBUTTON      "取 消",IDCANCEL,8,79,50,14
-    COMBOBOX        IDC_ComboxRole,69,51,53,68,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "用户权限",IDC_UserRole,21,53,32,9
-    COMBOBOX        IDC_ComboxOption,69,34,53,45,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "用户 ID",IDC_UserID,21,17,26,9
-    LTEXT           "操作方式",IDC_Option,21,35,34,9
-    EDITTEXT        IDC_EdTemplateNo,69,16,38,12,ES_AUTOHSCROLL | ES_NUMBER
-END
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -204,33 +177,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Dialog Info
-//
-
-IDD_Enroll_DIALOG DLGINIT
-BEGIN
-    IDC_ComboxRole, 0x403, 6, 0
-0x7547, 0x7365, 0x0074, 
-    IDC_ComboxRole, 0x403, 7, 0
-0x6f4e, 0x6d72, 0x6c61, "\000" 
-    IDC_ComboxRole, 0x403, 6, 0
-0x6441, 0x696d, 0x006e, 
-    IDC_ComboxOption, 0x403, 5, 0
-0x6f4e, 0x656e, "\000" 
-    IDC_ComboxOption, 0x403, 8, 0
-0x7541, 0x6f74, 0x4920, 0x0044, 
-    IDC_ComboxOption, 0x403, 8, 0
-0x6441, 0x2064, 0x654e, 0x0077, 
-    IDC_ComboxOption, 0x403, 9, 0
-0x6843, 0x6365, 0x206b, 0x4449, "\000" 
-    IDC_ComboxOption, 0x403, 13, 0
-0x6843, 0x6365, 0x206b, 0x6946, 0x676e, 0x7265, "\000" 
-    0
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // DESIGNINFO
 //
 
@@ -244,17 +190,6 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-STRINGTABLE
-BEGIN
-    IDS_ABOUTBOX            "关于 USB(&A)..."
-END
 
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////

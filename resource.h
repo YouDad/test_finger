@@ -3,8 +3,6 @@
 // Used by USB.rc
 //
 #define IDM_ABOUTBOX                    0x0010
-#define IDD_ABOUTBOX                    100
-#define IDS_ABOUTBOX                    101
 #define IDD_USB_DIALOG                  102
 #define IDR_MAINFRAME                   128
 #define IDB_BITMAP1                     131
@@ -12,7 +10,6 @@
 #define IDB_BITMAP3                     133
 #define IDB_BITMAP4                     134
 #define IDD_DIALOG1                     135
-#define IDD_Enroll_DIALOG               135
 #define IDI_ICON1                       138
 #define IDC_CHECK1                      1009
 #define IDC_AdjustImage                 1010
@@ -85,16 +82,9 @@
 #define IDC_EDIT1                       1083
 #define IDC_INFO                        1083
 #define IDC_TemplateNo                  1084
-#define IDC_EdTemplateNo                1084
 #define IDC_BtnEnroll                   1085
-#define IDC_BtnCancel                   1086
 #define IDC_ListRecord                  1091
 #define IDC_ListID                      1092
-#define IDC_ComboxRole                  1093
-#define IDC_ComboxOption                1094
-#define IDC_UserID                      1095
-#define IDC_Option                      1096
-#define IDC_UserRole                    1097
 #define IDC_c                           1101
 #define IDC_BtnReadRecordList           1102
 #define IDC_EditCommLog                 1104
