@@ -30,7 +30,10 @@ static char THIS_FILE[]=__FILE__;
 
 int currentPort=0;
 CUIntArray ports,portse,portsu;
-
+CString InfoStr[4];
+HANDLE mutex=0;
+#define lock WaitForSingleObject(mutex,INFINITE)
+#define unlock ReleaseMutex(mutex)
 
 
 ///////////////////////////串口中断回调函数//////////////////////////////////
@@ -452,13 +455,14 @@ void CUSBDlg::CmdDrawRawImage(U8 *revbuf,UINT length){
         }
         //a.Format("%X",imagept);
         //SetDlgItemText(IDC_EDIT_RECMSG,a);
-        saveimage(imagewidth,imageheight,imageBuf);
+		if(IsWindow(*this))
+			saveimage(imagewidth,imageheight,imageBuf);
         end=0;
     //}
 }
 
 UINT  RevRawImage(LPVOID  lParam){
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
     //int StartTime=GetTickCount();
 
     pWnd->RevRawImageThread();
@@ -529,9 +533,9 @@ LRESULT CUSBDlg::RevModelParamThread(void){
     // int k;
     if(m_pThread==TRUE){
         if(ERROR_SUCCESS!=w_nResult){
-            //IDCINFORefresh("接收数据超时");
+            IDCINFORefresh("接收数据超时");
         } else{
-            //IDCINFORefresh("数据接收成功");
+            IDCINFORefresh("数据接收成功");
             CmdDrawRawImage(g_rPacket,w_nAckCnt);
         }
         /*更新编辑框内容*/
@@ -573,7 +577,7 @@ void CUSBDlg::OnDraw(){
 }
 
 void CUSBDlg::OnOK(){
-
+	RevModelParamThread();
 }
 
 void CUSBDlg::OnBtnRdReg(){
@@ -661,7 +665,7 @@ void CUSBDlg::OnBtnBoardReset(){
 }
 
 UINT  RevSleepImageThread(LPVOID  lParam){
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
     //int StartTime=GetTickCount();
     DWORD	w_nAckCnt=0;
     LONG	w_nResult=0;
@@ -787,7 +791,7 @@ void CUSBDlg::EnumerateSerialPorts(CUIntArray& ports,CUIntArray& portse,CUIntArr
 }
 
 UINT  myproc(LPVOID  lParam){
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
     pWnd->ReDetectCom();                         //要执行的函数
     return 1;
 }
@@ -853,6 +857,7 @@ void CUSBDlg::OnPortopen(){
 }
 
 void CUSBDlg::OpEnable(BtnOpEnable NO){
+	if(!IsWindow(*this))return;
     switch(NO){
         case BtnRawImageEnd:
             m_ctrlBtnGetRawImage.EnableWindow(TRUE);
@@ -1106,7 +1111,7 @@ LRESULT CUSBDlg::RevAdjuestRawImageThread(void){
 }
 
 UINT  RevAdjuestRawImage(LPVOID  lParam){
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
     //int StartTime=GetTickCount();
     pWnd->RevAdjuestRawImageThread();
     return 1;
@@ -1205,6 +1210,9 @@ void CUSBDlg::OnBtnContinuousGetImage(){
         OpEnable(BtnContinuousGetImageStart);
         m_pThread=TRUE;
         m_hSleepThread=AfxBeginThread(ContinuousRevSleepImage,(LPVOID)this);
+		if(m_hSleepThread==0){
+			IDCINFORefresh("启动线程失败!");
+		}
     } else{
         m_pThread=FALSE;
         if(m_hSleepThread!=NULL){
@@ -1220,12 +1228,18 @@ void CUSBDlg::OnBtnContinuousGetImage(){
 }
 
 void CUSBDlg::IDCINFORefresh(CString str){
+	if(!mutex)mutex=CreateMutex(NULL,FALSE,NULL);
+	if(mutex==(HANDLE)0xdcdcdcdc)
+		return;
+	lock;
     InfoStr[3]=InfoStr[2];
     InfoStr[2]=InfoStr[1];
     InfoStr[1]=InfoStr[0];
-    InfoStr[0]=str+"\r\n";
+	InfoStr[0]=str+"\r\n";
+	if(!IsWindow(*this))return;
     SetDlgItemText(IDC_INFO,InfoStr[0]+InfoStr[1]+InfoStr[2]+InfoStr[3]);
     UpdateData(TRUE);
+	unlock;
 }
 
 LRESULT CUSBDlg::ReadMaxBlackWhiteImageThread(void){
@@ -1285,7 +1299,7 @@ LRESULT CUSBDlg::ReadMaxBlackWhiteImageThread(void){
     return 1;
 }
 UINT  ReadMaxBlackWhiteImage(LPVOID  lParam){
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
 
     pWnd->ReadMaxBlackWhiteImageThread();
 
@@ -1356,7 +1370,7 @@ LRESULT CUSBDlg::RecodeDelThread(void){
 }
 
 UINT  RecodeDel(LPVOID  lParam){
-    CUSBDlg *pWnd=(CUSBDlg *)lParam;         //将窗口指针赋给无类型指针
+    CUSBDlg *pWnd=(CUSBDlg *)CWnd::FromHandle((HWND)lParam);
     pWnd->ReadMaxBlackWhiteImageThread();
     return 1;
 }

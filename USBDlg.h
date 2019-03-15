@@ -103,7 +103,6 @@ public:
     CBitmap m_bmp;
     BOOL	m_pThread;
     struct _soft_param SoftParam;
-    CString InfoStr[4];
     HANDLE		m_hSleepThread;
     BOOL OpenSerialPort(U8 Comport,int ComBaudRate);
     bool	ReadDataN(BYTE* p_pData,int p_nLen,DWORD p_dwTimeOut);
