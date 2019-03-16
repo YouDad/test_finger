@@ -68,6 +68,7 @@ extern CComboBox* cmbWay;
 extern CComboBox* cmbBaud;
 extern CComboBox* cmbBaudSet;
 extern CComboBox* cmbSecurity;
+extern CComboBox* cmbLogLevel;
 extern CButton* btnConnect;
 extern CButton* btnReset;
 extern CButton* btnRawImage;
@@ -84,6 +85,13 @@ extern CStatic* image;
 #include"Serial.h"
 extern CSerial serial;
 
+#define WM_GET_RAW_IMAGE WM_USER+5
+#define WM_GET_CON_IMAGE WM_USER+6
+#define WM_STP_GET_IMAGE WM_USER+7
+
 #include"test_finger.h"
 #include"test_fingerDlg.h"
 #include"algo.h"	//这个项目用的算法头文件
+extern BYTE packet[65536];
+extern DWORD packetCnt;
+#include"protocol.h"

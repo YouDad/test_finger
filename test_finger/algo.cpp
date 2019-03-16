@@ -54,9 +54,9 @@ void updateCommunityWay(){
 			cmbWay->InsertString(i,name);
 		}
 		cmbWay->SetCurSel(0);
-		log("发现%d个串口",exist.GetSize());
+		log(LOGU,"发现%d个串口",exist.GetSize());
 	}else{
-		log("未发现存在的串口");
+		log(LOGU,"未发现存在的串口");
 	}
 }
 
@@ -74,13 +74,15 @@ char* timeStr(){
 	return tstr;
 }
 
-void log(CString info){
+void log(int level,CString info){
+	if(level>cmbLogLevel->GetCurSel())return;
 	CString time(timeStr()),old;
 	editLog->GetWindowText(old);
 	editLog->SetWindowText(old+time+info+"\r\n");
+	editLog->SendMessage(WM_VSCROLL,SB_BOTTOM,0);//滚动条始终在底部
 }
 
-void log(const char* format,...){
+void log(int level,const char* format,...){
 	static char tmp[512];
 	va_list ap;
 	va_start(ap,format);
@@ -88,7 +90,7 @@ void log(const char* format,...){
 	va_end(ap);
 	
 	CString info(tmp);
-	log(info);
+	log(level,info);
 }
 
 //本地函数,禁用控件
@@ -103,7 +105,10 @@ void enable(CWnd* pWnd){
 void updateControlDisable(action a){
 	switch(a){
 	case actInit:
-		actInit://一个标签
+actInit://一个标签
+		enable(cmbBaud);
+		enable(cmbWay);
+
 		disable(editAddress);
 		disable(editPassword);
 		disable(editAddressSet);
@@ -123,6 +128,8 @@ void updateControlDisable(action a){
 		break;
 	case actOpeningPort:
 	case actClosingPort:
+		disable(cmbBaud);
+		disable(cmbWay);
 		disable(btnConnect);
 		break;
 	case actOpenedPort:
@@ -143,10 +150,52 @@ void updateControlDisable(action a){
 		enable(btnSetBaud);
 		enable(btnSetPassword);
 		enable(btnSetAddress);
+
+		disable(cmbBaud);
+		disable(cmbWay);
 		break;
 	case actClosedPort:
 		enable(btnConnect);
 		goto actInit;
+		break;
+	case actGetConImage:
+		enable(btnContinueImage);
+		
+		disable(btnConnect);
+		disable(editAddress);
+		disable(editPassword);
+		disable(editAddressSet);
+		disable(editPasswordSet);
+		disable(editLightTime);
+		disable(editSensitivity);
+		disable(cmbBaudSet);
+		disable(cmbSecurity);
+		disable(btnReset);
+		disable(btnRawImage);
+		disable(btnSetSecurity);
+		disable(btnSetCmos);
+		disable(btnSetBaud);
+		disable(btnSetPassword);
+		disable(btnSetAddress);
+		break;
+	case actStpGetImage:
+		enable(btnConnect);
+		enable(editAddress);
+		enable(editPassword);
+		enable(editAddressSet);
+		enable(editPasswordSet);
+		enable(editLightTime);
+		enable(editSensitivity);
+		enable(cmbBaudSet);
+		enable(cmbSecurity);
+		enable(btnReset);
+		enable(btnRawImage);
+		enable(btnContinueImage);
+		enable(btnSetSecurity);
+		enable(btnSetCmos);
+		enable(btnSetBaud);
+		enable(btnSetPassword);
+		enable(btnSetAddress);
 		break;
 	}
 }
@@ -155,4 +204,47 @@ void loadImage(WCHAR* filePath){
     HBITMAP hBmp=(HBITMAP)LoadImage(0,filePath,0,0,0,LR_LOADFROMFILE);
 	image->ModifyStyle(0xf,SS_BITMAP|SS_CENTERIMAGE);
     image->SetBitmap(hBmp);
+}
+
+void saveBmp(int h,int w,BYTE*pData,CString path){
+    HANDLE hFile;
+
+    BITMAPINFOHEADER bmpInfo;
+    bmpInfo.biSize=sizeof bmpInfo;
+    bmpInfo.biWidth=w;
+    bmpInfo.biHeight=h;
+    bmpInfo.biPlanes=1;
+    bmpInfo.biBitCount=8;
+    bmpInfo.biCompression=BI_RGB;
+    bmpInfo.biSizeImage=0;
+    bmpInfo.biXPelsPerMeter=0;
+    bmpInfo.biYPelsPerMeter=0;
+    bmpInfo.biClrUsed=256;
+    bmpInfo.biClrImportant=256;
+    RGBQUAD bmfColorQuad[256];
+    for(int i=0;i<256;i++){
+        bmfColorQuad[i].rgbBlue=i;
+        bmfColorQuad[i].rgbGreen=i;
+        bmfColorQuad[i].rgbRed=i;
+        bmfColorQuad[i].rgbReserved=0;
+    }
+    BITMAPFILEHEADER bmpFileInfo;
+    bmpFileInfo.bfType=0x4d42;//"BM"
+    bmpFileInfo.bfSize=0x400+w*h+(sizeof bmpInfo)+sizeof(bmpFileInfo);
+    bmpFileInfo.bfReserved1=0;
+    bmpFileInfo.bfReserved2=0;
+    bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+
+		sizeof(BITMAPINFOHEADER);
+
+	CreateDirectory(_T("collectedImage"),0);
+    hFile=CreateFile(path,GENERIC_READ|GENERIC_WRITE,0,
+		NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+    if(hFile==INVALID_HANDLE_VALUE){
+        return;
+    }
+    WriteFile(hFile,&bmpFileInfo,sizeof bmpFileInfo,0,0);
+    WriteFile(hFile,&bmpInfo,sizeof bmpInfo,0,0);
+    WriteFile(hFile,&bmfColorQuad,sizeof bmfColorQuad,0,0);
+	WriteFile(hFile,pData,w*h,0,0);
+    CloseHandle(hFile);
 }
