@@ -33,4 +33,6 @@ public:
 	afx_msg void OnBnClickedBtnrawimage();
 	afx_msg void OnBnClickedBtncontinueimage();
 	afx_msg void OnBnClickedBtndevlog();
+	afx_msg void OnBnClickedBtnreadreg();
+	afx_msg void OnBnClickedBtnwritereg();
 };

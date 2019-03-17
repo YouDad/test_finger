@@ -1,46 +1,53 @@
 #pragma once
 #include"stdafx.h"
-#include"algo.h"
 CSerial serial;//串口对象
 
-void enumerateSerialPorts(CUIntArray& exist,CUIntArray& useful,CUIntArray& used){
-    //清除串口数组内容
-    exist.RemoveAll();
-    useful.RemoveAll();
-    used.RemoveAll();
-    int portState=0;
-    //因为至多有255个串口，所以依次检查各串口是否存在
-    //如果能打开某一串口，或打开串口不成功，但返回的是 ERROR_ACCESS_DENIED错误信息，
-    //都认为串口存在，只不过后者表明串口已经被占用,否则串口不存在
-	//检查255个太费时间,且用前30个的几率较大
-    for(int i=1; i<30; i++){
-        //生成原始设备名
-        CString sPort;
-        sPort.Format(_T("\\\\.\\COM%d"),i);
+char* CString2char(CString&c){
+	static char text[65536+10];
+	int len=WideCharToMultiByte(0,0,c,c.GetLength(),0,0,0,0);
+	WideCharToMultiByte(0,0,c,c.GetLength(),text,len,0,0);
+	text[len]=0;
+	return text;
+}
 
-        //试图打开此串口
-        BOOL bSuccess;
-        HANDLE hPort=::CreateFile(sPort,GENERIC_READ|GENERIC_WRITE,0,0,OPEN_EXISTING,0,0);
-        if(hPort==INVALID_HANDLE_VALUE){
+void enumerateSerialPorts(CUIntArray& exist,CUIntArray& useful,CUIntArray& used){
+	//清除串口数组内容
+	exist.RemoveAll();
+	useful.RemoveAll();
+	used.RemoveAll();
+	int portState=0;
+	//因为至多有255个串口，所以依次检查各串口是否存在
+	//如果能打开某一串口，或打开串口不成功，但返回的是 ERROR_ACCESS_DENIED错误信息，
+	//都认为串口存在，只不过后者表明串口已经被占用,否则串口不存在
+	//检查255个太费时间,且用前30个的几率较大
+	for(int i=1; i<30; i++){
+		//生成原始设备名
+		CString sPort;
+		sPort.Format(_T("\\\\.\\COM%d"),i);
+
+		//试图打开此串口
+		BOOL bSuccess;
+		HANDLE hPort=::CreateFile(sPort,GENERIC_READ|GENERIC_WRITE,0,0,OPEN_EXISTING,0,0);
+		if(hPort==INVALID_HANDLE_VALUE){
 			//打开串口失败
 			bSuccess=FALSE;
-            DWORD dwError=GetLastError();
-            if(dwError==ERROR_ACCESS_DENIED){
-                bSuccess=TRUE;
-                used.Add(i);//已占用的串口
-            }
-        } else{
-            //打开串口成功
-            bSuccess=TRUE;
-            useful.Add(i);//可用的串口
-            if(!CloseHandle(hPort)){
-                DWORD dwError=GetLastError();//关闭不成功的原因
-            }
-        }
-        if(bSuccess){
-            exist.Add(i);//所有存在的串口
-        }
-    }
+			DWORD dwError=GetLastError();
+			if(dwError==ERROR_ACCESS_DENIED){
+				bSuccess=TRUE;
+				used.Add(i);//已占用的串口
+			}
+		} else{
+			//打开串口成功
+			bSuccess=TRUE;
+			useful.Add(i);//可用的串口
+			if(!CloseHandle(hPort)){
+				DWORD dwError=GetLastError();//关闭不成功的原因
+			}
+		}
+		if(bSuccess){
+			exist.Add(i);//所有存在的串口
+		}
+	}
 }
 
 void updateCommunityWay(){
@@ -62,24 +69,27 @@ void updateCommunityWay(){
 
 char* timeStr(){
 	static char tstr[64];
-	time_t tt=time(NULL);//返回一个时间戳
-	tm* t=localtime(&tt);
-	sprintf(tstr,"%d-%02d-%02d %02d:%02d:%02d ",
-		t->tm_year+1900,
-		t->tm_mon+1,
-		t->tm_mday,
-		t->tm_hour,
-		t->tm_min,
-		t->tm_sec);
+	sprintf(tstr,"%s %s ",__DATE__,__TIME__);
 	return tstr;
 }
 
 void log(int level,CString info){
+	if(level>LOGT){
+		ASF_WARNING(01);
+	}
 	if(level>cmbLogLevel->GetCurSel())return;
 	CString time(timeStr()),old;
 	editLog->GetWindowText(old);
 	editLog->SetWindowText(old+time+info+"\r\n");
 	editLog->SendMessage(WM_VSCROLL,SB_BOTTOM,0);//滚动条始终在底部
+
+	//自动备份
+	editLog->GetWindowText(old);
+	char* text=CString2char(old);
+	//write into file
+	FILE* fp=fopen("backup.txt","w");
+	fprintf(fp,"%s",text);
+	fclose(fp);
 }
 
 void log(int level,const char* format,...){
@@ -125,6 +135,12 @@ actInit://一个标签
 		disable(btnSetBaud);
 		disable(btnSetPassword);
 		disable(btnSetAddress);
+		disable(btnReadReg);
+		disable(btnWriteReg);
+		disable(radImgSize1);
+		disable(radImgSize2);
+		disable(radImgSize3);
+		disable(radImgSize4);
 		break;
 	case actOpeningPort:
 	case actClosingPort:
@@ -150,6 +166,12 @@ actInit://一个标签
 		enable(btnSetBaud);
 		enable(btnSetPassword);
 		enable(btnSetAddress);
+		enable(btnReadReg);
+		enable(btnWriteReg);
+		enable(radImgSize1);
+		enable(radImgSize2);
+		enable(radImgSize3);
+		enable(radImgSize4);
 
 		disable(cmbBaud);
 		disable(cmbWay);
@@ -157,6 +179,60 @@ actInit://一个标签
 	case actClosedPort:
 		enable(btnConnect);
 		goto actInit;
+		break;
+	case actReadingReg:
+	case actWritingReg:
+	case actGetingImage:
+		disable(btnConnect);
+		disable(editAddress);
+		disable(editPassword);
+		disable(editAddressSet);
+		disable(editPasswordSet);
+		disable(editLightTime);
+		disable(editSensitivity);
+		disable(cmbBaudSet);
+		disable(cmbSecurity);
+		disable(btnReset);
+		disable(btnRawImage);
+		disable(btnSetSecurity);
+		disable(btnSetCmos);
+		disable(btnSetBaud);
+		disable(btnSetPassword);
+		disable(btnSetAddress);
+		disable(btnContinueImage);
+		disable(btnReadReg);
+		disable(btnWriteReg);
+		disable(radImgSize1);
+		disable(radImgSize2);
+		disable(radImgSize3);
+		disable(radImgSize4);
+		break;
+	case actReadedReg:
+	case actWritedReg:
+	case actGotImage:
+		enable(btnConnect);
+		enable(editAddress);
+		enable(editPassword);
+		enable(editAddressSet);
+		enable(editPasswordSet);
+		enable(editLightTime);
+		enable(editSensitivity);
+		enable(cmbBaudSet);
+		enable(cmbSecurity);
+		enable(btnReset);
+		enable(btnRawImage);
+		enable(btnContinueImage);
+		enable(btnSetSecurity);
+		enable(btnSetCmos);
+		enable(btnSetBaud);
+		enable(btnSetPassword);
+		enable(btnSetAddress);
+		enable(btnReadReg);
+		enable(btnWriteReg);
+		enable(radImgSize1);
+		enable(radImgSize2);
+		enable(radImgSize3);
+		enable(radImgSize4);
 		break;
 	case actGetConImage:
 		enable(btnContinueImage);
@@ -177,6 +253,12 @@ actInit://一个标签
 		disable(btnSetBaud);
 		disable(btnSetPassword);
 		disable(btnSetAddress);
+		disable(btnReadReg);
+		disable(btnWriteReg);
+		disable(radImgSize1);
+		disable(radImgSize2);
+		disable(radImgSize3);
+		disable(radImgSize4);
 		break;
 	case actStpGetImage:
 		enable(btnConnect);
@@ -196,55 +278,88 @@ actInit://一个标签
 		enable(btnSetBaud);
 		enable(btnSetPassword);
 		enable(btnSetAddress);
+		enable(btnReadReg);
+		enable(btnWriteReg);
+		enable(radImgSize1);
+		enable(radImgSize2);
+		enable(radImgSize3);
+		enable(radImgSize4);
 		break;
 	}
 }
 
 void loadImage(WCHAR* filePath){
-    HBITMAP hBmp=(HBITMAP)LoadImage(0,filePath,0,0,0,LR_LOADFROMFILE);
-	image->ModifyStyle(0xf,SS_BITMAP|SS_CENTERIMAGE);
-    image->SetBitmap(hBmp);
+	HBITMAP hBmp=(HBITMAP)LoadImage(0,filePath,0,0,0,LR_LOADFROMFILE);
+	if(hBmp){
+		image->ModifyStyle(0xf,SS_BITMAP|SS_CENTERIMAGE);
+		image->SetBitmap(hBmp);
+	}else{
+		ASF_WARNING(04);
+	}
 }
 
-void saveBmp(int h,int w,BYTE*pData,CString path){
-    HANDLE hFile;
-
-    BITMAPINFOHEADER bmpInfo;
-    bmpInfo.biSize=sizeof bmpInfo;
-    bmpInfo.biWidth=w;
-    bmpInfo.biHeight=h;
-    bmpInfo.biPlanes=1;
-    bmpInfo.biBitCount=8;
-    bmpInfo.biCompression=BI_RGB;
-    bmpInfo.biSizeImage=0;
-    bmpInfo.biXPelsPerMeter=0;
-    bmpInfo.biYPelsPerMeter=0;
-    bmpInfo.biClrUsed=256;
-    bmpInfo.biClrImportant=256;
-    RGBQUAD bmfColorQuad[256];
-    for(int i=0;i<256;i++){
-        bmfColorQuad[i].rgbBlue=i;
-        bmfColorQuad[i].rgbGreen=i;
-        bmfColorQuad[i].rgbRed=i;
-        bmfColorQuad[i].rgbReserved=0;
-    }
-    BITMAPFILEHEADER bmpFileInfo;
-    bmpFileInfo.bfType=0x4d42;//"BM"
-    bmpFileInfo.bfSize=0x400+w*h+(sizeof bmpInfo)+sizeof(bmpFileInfo);
-    bmpFileInfo.bfReserved1=0;
-    bmpFileInfo.bfReserved2=0;
-    bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+
+bool saveBmp(int h,int w,BYTE*pData,CString path){
+	BITMAPINFOHEADER bmpInfo;
+	bmpInfo.biSize=sizeof bmpInfo;
+	bmpInfo.biWidth=w;
+	bmpInfo.biHeight=h;
+	bmpInfo.biPlanes=1;
+	bmpInfo.biBitCount=8;
+	bmpInfo.biCompression=BI_RGB;
+	bmpInfo.biSizeImage=0;
+	bmpInfo.biXPelsPerMeter=0;
+	bmpInfo.biYPelsPerMeter=0;
+	bmpInfo.biClrUsed=256;
+	bmpInfo.biClrImportant=256;
+	RGBQUAD bmfColorQuad[256];
+	for(int i=0;i<256;i++){
+		bmfColorQuad[i].rgbBlue=i;
+		bmfColorQuad[i].rgbGreen=i;
+		bmfColorQuad[i].rgbRed=i;
+		bmfColorQuad[i].rgbReserved=0;
+	}
+	BITMAPFILEHEADER bmpFileInfo;
+	bmpFileInfo.bfType=0x4d42;//"BM"
+	bmpFileInfo.bfSize=0x400+w*h+(sizeof bmpInfo)+sizeof(bmpFileInfo);
+	bmpFileInfo.bfReserved1=0;
+	bmpFileInfo.bfReserved2=0;
+	bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+
 		sizeof(BITMAPINFOHEADER);
-
+	
 	CreateDirectory(_T("collectedImage"),0);
-    hFile=CreateFile(path,GENERIC_READ|GENERIC_WRITE,0,
-		NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
-    if(hFile==INVALID_HANDLE_VALUE){
-        return;
-    }
-    WriteFile(hFile,&bmpFileInfo,sizeof bmpFileInfo,0,0);
-    WriteFile(hFile,&bmpInfo,sizeof bmpInfo,0,0);
-    WriteFile(hFile,&bmfColorQuad,sizeof bmfColorQuad,0,0);
-	WriteFile(hFile,pData,w*h,0,0);
-    CloseHandle(hFile);
+
+	char* filePath=CString2char(path);
+	FILE* fp=fopen(filePath,"wb");
+	if(fp==NULL){
+		ASF_ERROR(01);
+		return false;
+	}
+	fwrite(&bmpFileInfo,sizeof bmpFileInfo,1,fp);
+	fwrite(&bmpInfo,sizeof bmpInfo,1,fp);
+	fwrite(&bmfColorQuad,sizeof bmfColorQuad,1,fp);
+	fwrite(pData,w*h,1,fp);
+	fclose(fp);
+	return true;
+}
+
+void getDataFromPacket(){
+	packetDataLen=0;
+	for(int i=0,j=0;i<packetCnt;){
+		//包数据部分长度
+		int k=packet[i+15]+packet[i+16]*256;
+		//兼容以前的bug
+		if(k==530)k=528;
+		//跳过包头
+		i+=19;
+		//累计数据长度
+		packetDataLen+=k;
+		while(k--){
+			packetData[j++]=packet[i++];
+		}
+		//TODO: CRC校验
+		//跳过CRC
+		i+=2;
+		if(i>packetCnt)
+			ASF_WARNING(02);
+	}
 }

@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include "test_finger.h"
-#include "test_fingerDlg.h"
 #include "afxdialogex.h"
 
 #ifdef _DEBUG
@@ -17,6 +15,10 @@ CEdit* editAddressSet;
 CEdit* editPasswordSet;
 CEdit* editLightTime;
 CEdit* editSensitivity;
+CEdit* editReadRegAddr;
+CEdit* editReadRegVal;
+CEdit* editWriteRegAddr;
+CEdit* editWriteRegVal;
 CComboBox* cmbWay;
 CComboBox* cmbBaud;
 CComboBox* cmbBaudSet;
@@ -32,10 +34,19 @@ CButton* btnSetBaud;
 CButton* btnSetPassword;
 CButton* btnSetAddress;
 CButton* btnSaveLog;
+CButton* btnReadReg;
+CButton* btnWriteReg;
+CButton* radImgSize1;
+CButton* radImgSize2;
+CButton* radImgSize3;
+CButton* radImgSize4;
 CStatic* textDevice;
 CStatic* image;
+CProgressCtrl* progress;
 BYTE packet[65536];
 DWORD packetCnt;
+BYTE packetData[65536];
+DWORD packetDataLen;
 
 
 // Ctest_fingerDlg 对话框
@@ -56,6 +67,8 @@ BEGIN_MESSAGE_MAP(Ctest_fingerDlg, CDialogEx)
 	ON_MESSAGE(WM_GET_RAW_IMAGE,serialResponse)
 	ON_MESSAGE(WM_GET_CON_IMAGE,serialResponse)
 	ON_MESSAGE(WM_STP_GET_IMAGE,serialResponse)
+	ON_MESSAGE(WM_READ_REGISTER,serialResponse)
+	ON_MESSAGE(WM_WRITE_REGISTER,serialResponse)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DEVICECHANGE()
 	ON_BN_CLICKED(IDC_BTNConnect, &Ctest_fingerDlg::OnBnClickedBtnconnect)
@@ -63,6 +76,8 @@ BEGIN_MESSAGE_MAP(Ctest_fingerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTNRawImage, &Ctest_fingerDlg::OnBnClickedBtnrawimage)
 	ON_BN_CLICKED(IDC_BTNContinueImage, &Ctest_fingerDlg::OnBnClickedBtncontinueimage)
 	ON_BN_CLICKED(IDC_BTNdevLog, &Ctest_fingerDlg::OnBnClickedBtndevlog)
+	ON_BN_CLICKED(IDC_BTNreadReg, &Ctest_fingerDlg::OnBnClickedBtnreadreg)
+	ON_BN_CLICKED(IDC_BTNwriteReg, &Ctest_fingerDlg::OnBnClickedBtnwritereg)
 END_MESSAGE_MAP()
 
 
@@ -87,6 +102,10 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	editPasswordSet	= (CEdit*) GetDlgItem(IDC_EDITPasswordSet);
 	editLightTime	= (CEdit*) GetDlgItem(IDC_EDITLightTime);
 	editSensitivity	= (CEdit*) GetDlgItem(IDC_EDITSensitivity);
+	editReadRegAddr	= (CEdit*) GetDlgItem(IDC_EDITreadRegAddr);
+	editReadRegVal	= (CEdit*) GetDlgItem(IDC_EDITreadRegVal);
+	editWriteRegAddr= (CEdit*) GetDlgItem(IDC_EDITwriteRegAddr);
+	editWriteRegVal	= (CEdit*) GetDlgItem(IDC_EDITwriteRegVal);
 	cmbWay			= (CComboBox*) GetDlgItem(IDC_CMBWay);
 	cmbBaud			= (CComboBox*) GetDlgItem(IDC_CMBBaud);
 	cmbBaudSet		= (CComboBox*) GetDlgItem(IDC_CMBBaudSet);
@@ -102,13 +121,20 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	btnSetPassword	= (CButton*) GetDlgItem(IDC_BTNSetPassword);
 	btnSetAddress	= (CButton*) GetDlgItem(IDC_BTNSetAddress);
 	btnSaveLog		= (CButton*) GetDlgItem(IDC_BTNSaveLog);
+	btnReadReg		= (CButton*) GetDlgItem(IDC_BTNreadReg);
+	btnWriteReg		= (CButton*) GetDlgItem(IDC_BTNwriteReg);
+	radImgSize1		= (CButton*) GetDlgItem(IDC_RADimgSize1);
+	radImgSize2		= (CButton*) GetDlgItem(IDC_RADimgSize2);
+	radImgSize3		= (CButton*) GetDlgItem(IDC_RADimgSize3);
+	radImgSize4		= (CButton*) GetDlgItem(IDC_RADimgSize4);
 	textDevice		= (CStatic*) GetDlgItem(IDC_TEXTDevice);
 	image			= (CStatic*) GetDlgItem(IDC_IMAGE);
+	progress		= (CProgressCtrl*) GetDlgItem(IDC_PROGRESS);
 
 	///2.对组合框的初始化
 	updateCommunityWay();
 	//常用波特率
-	const WCHAR* baud[]={_T("9600"),_T("115200"),0};
+	const WCHAR* baud[]={_T("9600"),_T("115200"),_T("256000"),0};
 	for(int i=0;baud[i];i++){
 		cmbBaud->InsertString(i,baud[i]);
 		cmbBaudSet->InsertString(i,baud[i]);
@@ -121,7 +147,7 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	}
 	cmbSecurity->SetCurSel(2);
 	//日志信息等级
-	const WCHAR* logLevel[]={_T("用户"),_T("错误"),_T("警告"),_T("调试"),0};
+	const WCHAR* logLevel[]={_T("用户"),_T("错误"),_T("警告"),_T("调试"),_T("临时"),0};
 	for(int i=0;logLevel[i];i++){
 		cmbLogLevel->InsertString(i,logLevel[i]);
 	}
@@ -132,6 +158,13 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 
 	///4.线程句柄清零
 	serialThread=0;
+
+	///5.进度条设置
+	progress->SetRange(0,100);
+	progress->SetPos(0);
+
+	///6.默认选中160x160
+	((CButton*)GetDlgItem(IDC_RADimgSize1))->SetCheck(TRUE);
 
 	///0.测试
 	
@@ -176,6 +209,7 @@ HCURSOR Ctest_fingerDlg::OnQueryDragIcon()
 
 //支持串口热拔插的设备更改监听函数
 #include<Dbt.h>
+#include "test_fingerDlg.h"
 afx_msg BOOL Ctest_fingerDlg::OnDeviceChange(UINT nEventType, DWORD dwData){
 	switch(nEventType){
 		case DBT_DEVICEREMOVECOMPLETE://移除设备
@@ -243,13 +277,9 @@ void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
 			path=path+_T(".txt");
 		}
 		//CString->char*
-		char filePath[256]={},* text;
+		char filePath[256]={},* text=CString2char(logText);
 		int len=WideCharToMultiByte(0,0,path,path.GetLength(),0,0,0,0);
 		WideCharToMultiByte(0,0,path,path.GetLength(),filePath,len,0,0);
-		len=WideCharToMultiByte(0,0,logText,logText.GetLength(),0,0,0,0);
-		text=new char[len+1];
-		WideCharToMultiByte(0,0,logText,logText.GetLength(),text,len,0,0);
-		text[len+1]=0;
 		//write into file
 		FILE* fp=fopen(filePath,"w");
 		fprintf(fp,"%s",text);
@@ -261,9 +291,11 @@ void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
 DWORD WINAPI threadGetRawImage(LPVOID params){
 	serial.Purge();
 	SendCommand(CMD_GET_RAW_IMAGE,0,0);
+	progress->SetPos(30);
 	log(LOGD,"Serial Thread:3向下位机发送命令:CMD_GET_RAW_IMAGE");
 	log(LOGU,"请放手指");
 	serial.Read(packet,sizeof packet,&packetCnt,0,10*1000);
+	progress->SetPos(50);
 	log(LOGD,"Serial Thread:4接收到数据包,大小为%d",packetCnt);
 	log(LOGD,"Serial Thread:5线程向主线程发送消息WM_GET_RAW_IMAGE");
 	SendMessage((HWND)params,WM_GET_RAW_IMAGE,WM_GET_RAW_IMAGE,0);
@@ -272,8 +304,11 @@ DWORD WINAPI threadGetRawImage(LPVOID params){
 
 //原始图像的点击事件
 void Ctest_fingerDlg::OnBnClickedBtnrawimage(){
+	updateControlDisable(actGetingImage);
+	progress->SetPos(10);
 	log(LOGD,"Main Thread:1开始采集原始图像");
 	serialThread=CreateThread(0,0,threadGetRawImage,this->m_hWnd,0,0);
+	progress->SetPos(20);
     log(LOGD,"Main Thread:2采集图像线程地址:%d",serialThread);
 }
 
@@ -282,37 +317,33 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 	static bool continueImage=false;
 	switch(w){
 		case WM_GET_RAW_IMAGE:{
+			progress->SetPos(75);
 			log(LOGD,"Main Thread:6消息处理函数收到消息WM_GET_RAW_IMAGE");
-			static uint8_t imageBuf[160*160];
-			//正常图片的包是26627字节的
-			//由很多小包组成,其中包头占19字节,CRC校验占2字节处于包尾
-			for(int i=0,j=0;i<packetCnt;){
-				int k=packet[i+15]+packet[i+16]*256;//包数据部分长度
-				i+=19;//跳过包头
-				while(k--){
-					imageBuf[j++]=packet[i++];
-				}
-				i+=2;//跳过CRC
-			}
+			getDataFromPacket();
 			
-			if(packetCnt==0){
+			if(packetDataLen==0){
 				log(LOGU,"接收数据超时");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}else{
 				CString path=CTime::GetCurrentTime().Format("%Y_%m_%d_%H_%M_%S");
 				path=_T("collectedImage/")+path+_T(".bmp");
-				saveBmp(160,160,imageBuf,path);
+				if(packetDataLen!=160*160)
+					ASF_WARNING(03);
+				saveBmp(160,160,packetData,path);
 				loadImage((LPTSTR)(LPCTSTR)path);
+				progress->SetPos(100);
 				log(LOGD,"Main Thread:7加载图片完成");
 				log(LOGU,"接收数据成功");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}
+			updateControlDisable(actGotImage);
 			if(!continueImage){
 				break;
 			}
 		}//if continueImage then can exec next
+		//so no break
 		case WM_GET_CON_IMAGE:{
 			continueImage=true;
 			assert(serialThread==0);
@@ -326,7 +357,30 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 				serialThread=0;
 			}
 		}break;
+		case WM_READ_REGISTER:{
+			getDataFromPacket();
+			if(packetDataLen==0){
+				log(LOGU,"接收数据超时");
+				CloseHandle(serialThread);
+				serialThread=0;
+			}else{
+				CString tmp;
+				tmp.Format(_T("%X"),packetData[0]);
+				editReadRegVal->SetWindowText(tmp);
+				log(LOGU,"接收数据成功");
+				CloseHandle(serialThread);
+				serialThread=0;
+			}
+			updateControlDisable(actReadedReg);
+		}break;
+		case WM_WRITE_REGISTER:{
+			log(LOGU,"修改寄存器命令发送成功");
+			CloseHandle(serialThread);
+			serialThread=0;
+			updateControlDisable(actWritedReg);
+		}break;
 	}
+	progress->SetPos(0);
 	return 1;
 }
 
@@ -353,4 +407,60 @@ void Ctest_fingerDlg::OnBnClickedBtndevlog(){
 	log(LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
 	log(LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
 	log(LOGU,"V1.1 <2019年3月16日15:54:23>:完成按钮互斥,防止线程冲突,添加开发日志");
+	log(LOGU,"V1.2 <2019年3月18日00:57:44>:添加读写寄存器,添加进度条,添加选图像大小");
+}
+
+//读寄存器的线程函数
+DWORD WINAPI threadReadReg(LPVOID params){
+	CString hex;
+	int integer;
+	editReadRegAddr->GetWindowText(hex);
+	sscanf(CString2char(hex),"%X",&integer);
+	U8 address=integer;
+
+    serial.Purge();
+    SendCommand(CMD_READ_NOTE_BOOK,&address,1);
+
+	serial.Read(packet,sizeof packet,&packetCnt,NULL,1000);
+
+	SendMessage((HWND)params,WM_READ_REGISTER,WM_READ_REGISTER,0);
+	return 0;
+}
+
+//写寄存器的线程函数
+DWORD WINAPI threadWriteReg(LPVOID params){
+	CString hex;
+	int integer;
+	U8 addrVal[2];
+	editWriteRegAddr->GetWindowText(hex);
+	sscanf(CString2char(hex),"%X",&integer);
+	addrVal[0]=integer;
+	editWriteRegVal->GetWindowText(hex);
+	sscanf(CString2char(hex),"%X",&integer);
+	addrVal[1]=integer;
+
+    serial.Purge();
+    SendCommand(CMD_WRITE_NOTE_BOOK,addrVal,2);
+
+	SendMessage((HWND)params,WM_WRITE_REGISTER,WM_WRITE_REGISTER,0);
+	return 0;
+}
+
+void Ctest_fingerDlg::OnBnClickedBtnreadreg(){
+	updateControlDisable(actReadingReg);
+	progress->SetPos(10);
+	log(LOGD,"Main Thread:1开始读寄存器");
+	serialThread=CreateThread(0,0,threadReadReg,this->m_hWnd,0,0);
+	progress->SetPos(20);
+    log(LOGD,"Main Thread:2读寄存器线程地址:%d",serialThread);
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnwritereg(){
+	updateControlDisable(actWritingReg);
+	progress->SetPos(10);
+	log(LOGD,"Main Thread:1开始写寄存器");
+	serialThread=CreateThread(0,0,threadWriteReg,this->m_hWnd,0,0);
+	progress->SetPos(20);
+    log(LOGD,"Main Thread:2写寄存器线程地址:%d",serialThread);
 }

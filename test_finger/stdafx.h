@@ -5,6 +5,8 @@
 
 #pragma once
 
+#define STRICT
+
 #ifndef _SECURE_ATL
 #define _SECURE_ATL 1
 #endif
@@ -64,6 +66,10 @@ extern CEdit* editAddressSet;
 extern CEdit* editPasswordSet;
 extern CEdit* editLightTime;
 extern CEdit* editSensitivity;
+extern CEdit* editReadRegAddr;
+extern CEdit* editReadRegVal;
+extern CEdit* editWriteRegAddr;
+extern CEdit* editWriteRegVal;
 extern CComboBox* cmbWay;
 extern CComboBox* cmbBaud;
 extern CComboBox* cmbBaudSet;
@@ -79,19 +85,31 @@ extern CButton* btnSetBaud;
 extern CButton* btnSetPassword;
 extern CButton* btnSetAddress;
 extern CButton* btnSaveLog;
+extern CButton* btnReadReg;
+extern CButton* btnWriteReg;
+extern CButton* radImgSize1;
+extern CButton* radImgSize2;
+extern CButton* radImgSize3;
+extern CButton* radImgSize4;
 extern CStatic* textDevice;
 extern CStatic* image;
+extern CProgressCtrl* progress;
 
 #include"Serial.h"
 extern CSerial serial;
 
-#define WM_GET_RAW_IMAGE WM_USER+5
-#define WM_GET_CON_IMAGE WM_USER+6
-#define WM_STP_GET_IMAGE WM_USER+7
+#define WM_GET_RAW_IMAGE	WM_USER+5
+#define WM_GET_CON_IMAGE	WM_USER+6
+#define WM_STP_GET_IMAGE	WM_USER+7
+#define WM_READ_REGISTER	WM_USER+8
+#define WM_WRITE_REGISTER	WM_USER+9
 
+#include"str4err_warn.h"
 #include"test_finger.h"
 #include"test_fingerDlg.h"
-#include"algo.h"	//这个项目用的算法头文件
+#include"algo.h"//这个项目用的算法头文件
 extern BYTE packet[65536];
 extern DWORD packetCnt;
+extern BYTE packetData[65536];
+extern DWORD packetDataLen;
 #include"protocol.h"

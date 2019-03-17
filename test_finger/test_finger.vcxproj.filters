@@ -51,6 +51,9 @@
     <ClInclude Include="protocol.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="str4err_warn.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_finger.cpp">
