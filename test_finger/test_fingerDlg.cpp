@@ -79,6 +79,7 @@ BEGIN_MESSAGE_MAP(Ctest_fingerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTNSetBaud, &Ctest_fingerDlg::OnBnClickedBtnsetbaud)
 	ON_BN_CLICKED(IDC_BTNSetPassword, &Ctest_fingerDlg::OnBnClickedBtnsetpassword)
 	ON_BN_CLICKED(IDC_BTNSetAddress, &Ctest_fingerDlg::OnBnClickedBtnsetaddress)
+	ON_BN_CLICKED(IDC_BTNOpenImage, &Ctest_fingerDlg::OnBnClickedBtnopenimage)
 END_MESSAGE_MAP()
 
 
@@ -382,6 +383,7 @@ void Ctest_fingerDlg::OnBnClickedBtndevlog(){
 	log(LOGU,"V1.1 <2019年3月16日15:54:23>:完成按钮互斥,防止线程冲突,添加开发日志");
 	log(LOGU,"V1.2 <2019年3月18日00:57:44>:添加读写寄存器,添加进度条,添加选图像大小");
 	log(LOGU,"V1.3 <2019年3月24日13:59:42>:完成了无用功能删减,放大了指纹图像,修复了按钮互斥bug");
+	log(LOGU,"V1.4 <2019年3月24日14:12:08>:添加了在release模式下取消warning的代码,添加了打开文件夹按钮");
 }
 
 //读寄存器的线程函数
@@ -475,4 +477,9 @@ void Ctest_fingerDlg::OnBnClickedBtnsetaddress(){
 	WCHAR str[100];
 	GetDlgItemText(IDC_EDITAddressSet,str,100);
 	log(LOGU,CString(_T("设置串口通信地址为"))+str);
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
+	system("explorer collectedImage");
 }

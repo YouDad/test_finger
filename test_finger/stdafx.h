@@ -57,8 +57,9 @@
 #endif
 #endif
 
-#include <afxpriv.h>
+#include<afxpriv.h>
 #include<Dbt.h>
+#include<assert.h>
 
 extern CEdit* editLog;
 extern CEdit* editAddress;

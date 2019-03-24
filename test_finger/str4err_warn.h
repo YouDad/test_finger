@@ -12,8 +12,12 @@
 #ifdef ASF_WARNING
 #error macro is repeated!
 #else
+#ifndef NDEBUG
 #define ASF_WARNING(ID) \
 	log(LOGW,"%s at %s(%d)FuncName:<%s>",ASF_WARNING##ID,__FILE__,__LINE__,__FUNCTION__)
+#else
+#define ASF_WARNING(ID)
+#endif
 #endif
 
 //WARNING STRING

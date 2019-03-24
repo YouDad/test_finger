@@ -40,4 +40,5 @@ public:
 	afx_msg void OnBnClickedBtnsetbaud();
 	afx_msg void OnBnClickedBtnsetpassword();
 	afx_msg void OnBnClickedBtnsetaddress();
+	afx_msg void OnBnClickedBtnopenimage();
 };

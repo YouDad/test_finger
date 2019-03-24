@@ -1,5 +1,7 @@
 /Debug/
+/Release/
 /test_finger/Debug/
+/test_finger/Release/
 *.aps
 *.bmp
 backup.txt
