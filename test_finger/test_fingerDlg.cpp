@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "afxdialogex.h"
+#include "test_fingerDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,7 +26,6 @@ CComboBox* cmbBaudSet;
 CComboBox* cmbSecurity;
 CComboBox* cmbLogLevel;
 CButton* btnConnect;
-CButton* btnReset;
 CButton* btnRawImage;
 CButton* btnContinueImage;
 CButton* btnSetSecurity;
@@ -36,10 +36,6 @@ CButton* btnSetAddress;
 CButton* btnSaveLog;
 CButton* btnReadReg;
 CButton* btnWriteReg;
-CButton* radImgSize1;
-CButton* radImgSize2;
-CButton* radImgSize3;
-CButton* radImgSize4;
 CStatic* textDevice;
 CStatic* image;
 CProgressCtrl* progress;
@@ -78,6 +74,11 @@ BEGIN_MESSAGE_MAP(Ctest_fingerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTNdevLog, &Ctest_fingerDlg::OnBnClickedBtndevlog)
 	ON_BN_CLICKED(IDC_BTNreadReg, &Ctest_fingerDlg::OnBnClickedBtnreadreg)
 	ON_BN_CLICKED(IDC_BTNwriteReg, &Ctest_fingerDlg::OnBnClickedBtnwritereg)
+	ON_BN_CLICKED(IDC_BTNSetSecurity, &Ctest_fingerDlg::OnBnClickedBtnsetsecurity)
+	ON_BN_CLICKED(IDC_BTNSetCmos, &Ctest_fingerDlg::OnBnClickedBtnsetcmos)
+	ON_BN_CLICKED(IDC_BTNSetBaud, &Ctest_fingerDlg::OnBnClickedBtnsetbaud)
+	ON_BN_CLICKED(IDC_BTNSetPassword, &Ctest_fingerDlg::OnBnClickedBtnsetpassword)
+	ON_BN_CLICKED(IDC_BTNSetAddress, &Ctest_fingerDlg::OnBnClickedBtnsetaddress)
 END_MESSAGE_MAP()
 
 
@@ -112,7 +113,6 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	cmbSecurity		= (CComboBox*) GetDlgItem(IDC_CMBSecurity);
 	cmbLogLevel		= (CComboBox*) GetDlgItem(IDC_CMBLogLevel);
 	btnConnect		= (CButton*) GetDlgItem(IDC_BTNConnect);
-	btnReset		= (CButton*) GetDlgItem(IDC_BTNReset);
 	btnRawImage		= (CButton*) GetDlgItem(IDC_BTNRawImage);
 	btnContinueImage= (CButton*) GetDlgItem(IDC_BTNContinueImage);
 	btnSetSecurity	= (CButton*) GetDlgItem(IDC_BTNSetSecurity);
@@ -123,10 +123,6 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	btnSaveLog		= (CButton*) GetDlgItem(IDC_BTNSaveLog);
 	btnReadReg		= (CButton*) GetDlgItem(IDC_BTNreadReg);
 	btnWriteReg		= (CButton*) GetDlgItem(IDC_BTNwriteReg);
-	radImgSize1		= (CButton*) GetDlgItem(IDC_RADimgSize1);
-	radImgSize2		= (CButton*) GetDlgItem(IDC_RADimgSize2);
-	radImgSize3		= (CButton*) GetDlgItem(IDC_RADimgSize3);
-	radImgSize4		= (CButton*) GetDlgItem(IDC_RADimgSize4);
 	textDevice		= (CStatic*) GetDlgItem(IDC_TEXTDevice);
 	image			= (CStatic*) GetDlgItem(IDC_IMAGE);
 	progress		= (CProgressCtrl*) GetDlgItem(IDC_PROGRESS);
@@ -163,54 +159,37 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	progress->SetRange(0,100);
 	progress->SetPos(0);
 
-	///6.默认选中160x160
-	((CButton*)GetDlgItem(IDC_RADimgSize1))->SetCheck(TRUE);
-
 	///0.测试
 	
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
-// 如果向对话框添加最小化按钮，则需要下面的代码
-//  来绘制该图标。对于使用文档/视图模型的 MFC 应用程序，
-//  这将由框架自动完成。
-
-void Ctest_fingerDlg::OnPaint()
-{
-	if (IsIconic())
-	{
-		CPaintDC dc(this); // 用于绘制的设备上下文
-
+//如果向对话框添加最小化按钮，则需要下面的代码
+//来绘制该图标。对于使用文档/视图模型的 MFC 应用程序，
+//这将由框架自动完成。
+void Ctest_fingerDlg::OnPaint(){
+	if(IsIconic()){
+		CPaintDC dc(this);
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
-
-		// 使图标在工作区矩形中居中
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
 		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// 绘制图标
+		int x=(rect.Width()-cxIcon+1)/2;
+		int y=(rect.Height()-cyIcon+1)/2;
 		dc.DrawIcon(x, y, m_hIcon);
-	}
-	else
-	{
+	}else{
 		CDialogEx::OnPaint();
 	}
 }
 
-//当用户拖动最小化窗口时系统调用此函数取得光标
-//显示。
-HCURSOR Ctest_fingerDlg::OnQueryDragIcon()
-{
+//当用户拖动最小化窗口时系统调用此函数取得光标显示。
+HCURSOR Ctest_fingerDlg::OnQueryDragIcon(){
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
 //支持串口热拔插的设备更改监听函数
-#include<Dbt.h>
-#include "test_fingerDlg.h"
-afx_msg BOOL Ctest_fingerDlg::OnDeviceChange(UINT nEventType, DWORD dwData){
+BOOL Ctest_fingerDlg::OnDeviceChange(UINT nEventType, DWORD dwData){
 	switch(nEventType){
 		case DBT_DEVICEREMOVECOMPLETE://移除设备
 		case DBT_DEVICEARRIVAL://添加设备
@@ -223,39 +202,26 @@ afx_msg BOOL Ctest_fingerDlg::OnDeviceChange(UINT nEventType, DWORD dwData){
 //连接下位机按钮的点击事件
 void Ctest_fingerDlg::OnBnClickedBtnconnect(){
 	//根据按钮上的文字判断当前连接状态
-	WCHAR str[512];
+	WCHAR str[64];
 	btnConnect->GetWindowTextW(str,512);
 	if(lstrcmp(str,_T("连接下位机"))==0){
 		updateControlDisable(actOpeningPort);
 
-		LONG baud=GetDlgItemInt(IDC_CMBBaud);//读取波特率
-		cmbWay->GetWindowText(str,512);
-		CString way(str);int com;
-		swscanf(way,_T("COM%d"),&com);//读取通信方式
+		int com,baud=GetDlgItemInt(IDC_CMBBaud);//读取波特率
+		cmbWay->GetWindowText(str,64);
+		swscanf(str,_T("COM%d"),&com);//读取通信方式
 		
-		way.Format(_T("\\\\.\\COM%d"),com);//得到端口地址
-		LONG retCode=ERROR_SUCCESS;
-
-		if(retCode==ERROR_SUCCESS)
-			retCode=serial.Open(way,2048,2048,true);
-
-		//其余三参数均采用默认参数
-		if(retCode==ERROR_SUCCESS)
-			retCode=serial.Setup((CSerial::EBaudrate)baud);
-
-		if(retCode==ERROR_SUCCESS)
-			retCode=serial.SetMask(CSerial::EEventRecv);
-		if(retCode==ERROR_SUCCESS){
-			log(LOGU,"连接COM%d成功",com);
-			updateControlDisable(actOpenedPort);
+		bool ret=CCommunication::connect(com,baud);
+		if(ret){
 			btnConnect->SetWindowText(_T("断开连接"));
-			serial.Purge();
+			updateControlDisable(actOpenedPort);
+			log(LOGU,"连接COM%d成功",com);
 		}else{
-			log(LOGU,"连接COM%d失败",com);
 			updateControlDisable(actClosedPort);
+			log(LOGU,"连接COM%d失败",com);
 		}
 	}else{
-		serial.Close();
+		CCommunication::disConnect();
 		updateControlDisable(actClosedPort);
 		log(LOGU,"断开连接成功");
 		btnConnect->SetWindowText(_T("连接下位机"));
@@ -289,12 +255,11 @@ void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
 
 //获取原始图像的线程函数
 DWORD WINAPI threadGetRawImage(LPVOID params){
-	serial.Purge();
-	SendCommand(CMD_GET_RAW_IMAGE,0,0);
+	CCommunication::sendCommand(CMD_GET_RAW_IMAGE);
 	progress->SetPos(30);
 	log(LOGD,"Serial Thread:3向下位机发送命令:CMD_GET_RAW_IMAGE");
 	log(LOGU,"请放手指");
-	serial.Read(packet,sizeof packet,&packetCnt,0,10*1000);
+	CCommunication::waitForPacket(10*1000);
 	progress->SetPos(50);
 	log(LOGD,"Serial Thread:4接收到数据包,大小为%d",packetCnt);
 	log(LOGD,"Serial Thread:5线程向主线程发送消息WM_GET_RAW_IMAGE");
@@ -330,7 +295,15 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 				path=_T("collectedImage/")+path+_T(".bmp");
 				if(packetDataLen!=160*160)
 					ASF_WARNING(03);
-				saveBmp(160,160,packetData,path);
+
+				//320*320是放大后的图像,原图160*160
+				BYTE*img=new BYTE[320*320];
+				for(int i=0;i<320;i++)
+					for(int j=0;j<320;j++)
+						img[i*320+j]=packetData[i/2*160+j/2];
+				saveBmp(320,320,img,path);
+
+				delete [] img;
 				loadImage((LPTSTR)(LPCTSTR)path);
 				progress->SetPos(100);
 				log(LOGD,"Main Thread:7加载图片完成");
@@ -338,8 +311,8 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 				CloseHandle(serialThread);
 				serialThread=0;
 			}
-			updateControlDisable(actGotImage);
 			if(!continueImage){
+				updateControlDisable(actGotImage);
 				break;
 			}
 		}//if continueImage then can exec next
@@ -408,6 +381,7 @@ void Ctest_fingerDlg::OnBnClickedBtndevlog(){
 	log(LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
 	log(LOGU,"V1.1 <2019年3月16日15:54:23>:完成按钮互斥,防止线程冲突,添加开发日志");
 	log(LOGU,"V1.2 <2019年3月18日00:57:44>:添加读写寄存器,添加进度条,添加选图像大小");
+	log(LOGU,"V1.3 <2019年3月24日13:59:42>:完成了无用功能删减,放大了指纹图像,修复了按钮互斥bug");
 }
 
 //读寄存器的线程函数
@@ -416,12 +390,10 @@ DWORD WINAPI threadReadReg(LPVOID params){
 	int integer;
 	editReadRegAddr->GetWindowText(hex);
 	sscanf(CString2char(hex),"%X",&integer);
-	U8 address=integer;
+	uint8_t address=integer;
 
-    serial.Purge();
-    SendCommand(CMD_READ_NOTE_BOOK,&address,1);
-
-	serial.Read(packet,sizeof packet,&packetCnt,NULL,1000);
+	CCommunication::sendCommand(CMD_READ_NOTE_BOOK,&address,1);
+	CCommunication::waitForPacket(1*1000);
 
 	SendMessage((HWND)params,WM_READ_REGISTER,WM_READ_REGISTER,0);
 	return 0;
@@ -431,7 +403,7 @@ DWORD WINAPI threadReadReg(LPVOID params){
 DWORD WINAPI threadWriteReg(LPVOID params){
 	CString hex;
 	int integer;
-	U8 addrVal[2];
+	uint8_t addrVal[2];
 	editWriteRegAddr->GetWindowText(hex);
 	sscanf(CString2char(hex),"%X",&integer);
 	addrVal[0]=integer;
@@ -439,8 +411,7 @@ DWORD WINAPI threadWriteReg(LPVOID params){
 	sscanf(CString2char(hex),"%X",&integer);
 	addrVal[1]=integer;
 
-    serial.Purge();
-    SendCommand(CMD_WRITE_NOTE_BOOK,addrVal,2);
+    CCommunication::sendCommand(CMD_WRITE_NOTE_BOOK,addrVal,2);
 
 	SendMessage((HWND)params,WM_WRITE_REGISTER,WM_WRITE_REGISTER,0);
 	return 0;
@@ -463,4 +434,45 @@ void Ctest_fingerDlg::OnBnClickedBtnwritereg(){
 	serialThread=CreateThread(0,0,threadWriteReg,this->m_hWnd,0,0);
 	progress->SetPos(20);
     log(LOGD,"Main Thread:2写寄存器线程地址:%d",serialThread);
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnsetsecurity(){
+	int security=GetDlgItemInt(IDC_CMBSecurity);
+	log(LOGU,"设置安全等级为%d",security);
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnsetcmos(){
+	WCHAR a[100],b[100];
+	GetDlgItemText(IDC_EDITLightTime,a,100);
+	GetDlgItemText(IDC_EDITSensitivity,b,100);
+	if(a[0]==0&&b[0]==0)
+		log(LOGU,"设置失败,两个均为空");
+	else if(a[0]==0)
+		log(LOGU,CString(_T("设置灵敏度为"))+b);
+	else if(b[0]==0)
+		log(LOGU,CString(_T("设置曝光时间为"))+a);
+	else
+		log(LOGU,CString(_T("设置曝光时间为"))+a+_T(" , ")+_T("设置灵敏度为")+b);
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnsetbaud(){
+	int baud=GetDlgItemInt(IDC_CMBBaudSet);
+	log(LOGU,"设置串口波特率为%d",baud);
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnsetpassword(){
+	WCHAR str[100];
+	GetDlgItemText(IDC_EDITPasswordSet,str,100);
+	log(LOGU,CString(_T("设置串口通信密码为"))+str);
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnsetaddress(){
+	WCHAR str[100];
+	GetDlgItemText(IDC_EDITAddressSet,str,100);
+	log(LOGU,CString(_T("设置串口通信地址为"))+str);
 }

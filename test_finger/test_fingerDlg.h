@@ -35,4 +35,9 @@ public:
 	afx_msg void OnBnClickedBtndevlog();
 	afx_msg void OnBnClickedBtnreadreg();
 	afx_msg void OnBnClickedBtnwritereg();
+	afx_msg void OnBnClickedBtnsetsecurity();
+	afx_msg void OnBnClickedBtnsetcmos();
+	afx_msg void OnBnClickedBtnsetbaud();
+	afx_msg void OnBnClickedBtnsetpassword();
+	afx_msg void OnBnClickedBtnsetaddress();
 };

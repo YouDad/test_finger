@@ -1,6 +1,5 @@
 #pragma once
 #include"stdafx.h"
-CSerial serial;//串口对象
 
 char* CString2char(CString&c){
 	static char text[65536+10];
@@ -98,7 +97,7 @@ void log(int level,const char* format,...){
 	va_start(ap,format);
 	vsprintf(tmp,format,ap);
 	va_end(ap);
-	
+
 	CString info(tmp);
 	log(level,info);
 }
@@ -127,7 +126,6 @@ actInit://一个标签
 		disable(editSensitivity);
 		disable(cmbBaudSet);
 		disable(cmbSecurity);
-		disable(btnReset);
 		disable(btnRawImage);
 		disable(btnContinueImage);
 		disable(btnSetSecurity);
@@ -137,10 +135,6 @@ actInit://一个标签
 		disable(btnSetAddress);
 		disable(btnReadReg);
 		disable(btnWriteReg);
-		disable(radImgSize1);
-		disable(radImgSize2);
-		disable(radImgSize3);
-		disable(radImgSize4);
 		break;
 	case actOpeningPort:
 	case actClosingPort:
@@ -158,7 +152,6 @@ actInit://一个标签
 		enable(editSensitivity);
 		enable(cmbBaudSet);
 		enable(cmbSecurity);
-		enable(btnReset);
 		enable(btnRawImage);
 		enable(btnContinueImage);
 		enable(btnSetSecurity);
@@ -168,10 +161,6 @@ actInit://一个标签
 		enable(btnSetAddress);
 		enable(btnReadReg);
 		enable(btnWriteReg);
-		enable(radImgSize1);
-		enable(radImgSize2);
-		enable(radImgSize3);
-		enable(radImgSize4);
 
 		disable(cmbBaud);
 		disable(cmbWay);
@@ -192,7 +181,6 @@ actInit://一个标签
 		disable(editSensitivity);
 		disable(cmbBaudSet);
 		disable(cmbSecurity);
-		disable(btnReset);
 		disable(btnRawImage);
 		disable(btnSetSecurity);
 		disable(btnSetCmos);
@@ -202,10 +190,6 @@ actInit://一个标签
 		disable(btnContinueImage);
 		disable(btnReadReg);
 		disable(btnWriteReg);
-		disable(radImgSize1);
-		disable(radImgSize2);
-		disable(radImgSize3);
-		disable(radImgSize4);
 		break;
 	case actReadedReg:
 	case actWritedReg:
@@ -219,7 +203,6 @@ actInit://一个标签
 		enable(editSensitivity);
 		enable(cmbBaudSet);
 		enable(cmbSecurity);
-		enable(btnReset);
 		enable(btnRawImage);
 		enable(btnContinueImage);
 		enable(btnSetSecurity);
@@ -229,15 +212,10 @@ actInit://一个标签
 		enable(btnSetAddress);
 		enable(btnReadReg);
 		enable(btnWriteReg);
-		enable(radImgSize1);
-		enable(radImgSize2);
-		enable(radImgSize3);
-		enable(radImgSize4);
 		break;
 	case actGetConImage:
 		enable(btnContinueImage);
 		
-		disable(btnConnect);
 		disable(editAddress);
 		disable(editPassword);
 		disable(editAddressSet);
@@ -246,7 +224,6 @@ actInit://一个标签
 		disable(editSensitivity);
 		disable(cmbBaudSet);
 		disable(cmbSecurity);
-		disable(btnReset);
 		disable(btnRawImage);
 		disable(btnSetSecurity);
 		disable(btnSetCmos);
@@ -255,10 +232,7 @@ actInit://一个标签
 		disable(btnSetAddress);
 		disable(btnReadReg);
 		disable(btnWriteReg);
-		disable(radImgSize1);
-		disable(radImgSize2);
-		disable(radImgSize3);
-		disable(radImgSize4);
+		disable(btnConnect);
 		break;
 	case actStpGetImage:
 		enable(btnConnect);
@@ -270,7 +244,6 @@ actInit://一个标签
 		enable(editSensitivity);
 		enable(cmbBaudSet);
 		enable(cmbSecurity);
-		enable(btnReset);
 		enable(btnRawImage);
 		enable(btnContinueImage);
 		enable(btnSetSecurity);
@@ -280,10 +253,6 @@ actInit://一个标签
 		enable(btnSetAddress);
 		enable(btnReadReg);
 		enable(btnWriteReg);
-		enable(radImgSize1);
-		enable(radImgSize2);
-		enable(radImgSize3);
-		enable(radImgSize4);
 		break;
 	}
 }
@@ -325,7 +294,7 @@ bool saveBmp(int h,int w,BYTE*pData,CString path){
 	bmpFileInfo.bfReserved2=0;
 	bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+
 		sizeof(BITMAPINFOHEADER);
-	
+
 	CreateDirectory(_T("collectedImage"),0);
 
 	char* filePath=CString2char(path);

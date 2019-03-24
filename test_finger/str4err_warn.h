@@ -45,6 +45,13 @@
 "!位图对象句柄为0x00"
 #endif
 
+#ifdef ASF_WARNING05
+#error macro is repeated!
+#else
+#define ASF_WARNING05 \
+"!串口关闭返回值不是ERROR_SUCCESS"
+#endif
+
 #ifdef ASF_WARNING__
 #error macro is repeated!
 #else

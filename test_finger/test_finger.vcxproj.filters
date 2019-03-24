@@ -48,10 +48,10 @@
     <ClInclude Include="Serial.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="protocol.h">
+    <ClInclude Include="str4err_warn.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="str4err_warn.h">
+    <ClInclude Include="CCommunication.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,7 +71,7 @@
     <ClCompile Include="Serial.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="protocol.cpp">
+    <ClCompile Include="CCommunication.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
