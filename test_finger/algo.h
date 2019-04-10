@@ -12,6 +12,8 @@ enum action{
 	actGotImage,	//获取了图像
 	actGetConImage,	//开始连续取图
 	actStpGetImage,	//停止连续取图
+	actGetConBKI,	//开始连续取图
+	actStpGetBKI,	//停止连续取图
 	actReadingReg,	//读寄存器中
 	actReadedReg,	//读完了寄存器
 	actWritingReg,	//写寄存器中
@@ -46,7 +48,7 @@ void updateControlDisable(action a);
 //将filePath的图像加载到图片控件上
 void loadImage(WCHAR* filePath);
 
-bool saveBmp(int height,int width,BYTE*pData,CString path);
+bool saveBmp(int height,int width,BYTE*pData,CString dir,CString path);
 
 //清洗串口包的函数,把包头和校验码洗掉,留下来数据放入packetData
 void getDataFromPacket();

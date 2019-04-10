@@ -28,6 +28,7 @@ CComboBox* cmbLogLevel;
 CButton* btnConnect;
 CButton* btnRawImage;
 CButton* btnContinueImage;
+CButton* btnContinueBackGroundImage;
 CButton* btnSetSecurity;
 CButton* btnSetCmos;
 CButton* btnSetBaud;
@@ -65,6 +66,9 @@ BEGIN_MESSAGE_MAP(Ctest_fingerDlg, CDialogEx)
 	ON_MESSAGE(WM_STP_GET_IMAGE,serialResponse)
 	ON_MESSAGE(WM_READ_REGISTER,serialResponse)
 	ON_MESSAGE(WM_WRITE_REGISTER,serialResponse)
+	ON_MESSAGE(WM_GET_TEST_IMAGE,serialResponse)
+	ON_MESSAGE(WM_GET_CON_BKI,serialResponse)
+	ON_MESSAGE(WM_STP_GET_BKI,serialResponse)
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DEVICECHANGE()
 	ON_BN_CLICKED(IDC_BTNConnect, &Ctest_fingerDlg::OnBnClickedBtnconnect)
@@ -80,6 +84,8 @@ BEGIN_MESSAGE_MAP(Ctest_fingerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTNSetPassword, &Ctest_fingerDlg::OnBnClickedBtnsetpassword)
 	ON_BN_CLICKED(IDC_BTNSetAddress, &Ctest_fingerDlg::OnBnClickedBtnsetaddress)
 	ON_BN_CLICKED(IDC_BTNOpenImage, &Ctest_fingerDlg::OnBnClickedBtnopenimage)
+	ON_BN_CLICKED(IDC_BTNContinueBackGroundImage, &Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage)
+	ON_BN_CLICKED(IDC_BTNOpenBackGroundImage, &Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage)
 END_MESSAGE_MAP()
 
 
@@ -116,6 +122,7 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	btnConnect		= (CButton*) GetDlgItem(IDC_BTNConnect);
 	btnRawImage		= (CButton*) GetDlgItem(IDC_BTNRawImage);
 	btnContinueImage= (CButton*) GetDlgItem(IDC_BTNContinueImage);
+	btnContinueBackGroundImage=(CButton*) GetDlgItem(IDC_BTNContinueBackGroundImage);
 	btnSetSecurity	= (CButton*) GetDlgItem(IDC_BTNSetSecurity);
 	btnSetCmos		= (CButton*) GetDlgItem(IDC_BTNSetCmos);
 	btnSetBaud		= (CButton*) GetDlgItem(IDC_BTNSetBaud);
@@ -302,7 +309,7 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 				for(int i=0;i<320;i++)
 					for(int j=0;j<320;j++)
 						img[i*320+j]=packetData[i/2*160+j/2];
-				saveBmp(320,320,img,path);
+				saveBmp(320,320,img,_T("collectedImage"),path);
 
 				delete [] img;
 				loadImage((LPTSTR)(LPCTSTR)path);
@@ -353,6 +360,49 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 			serialThread=0;
 			updateControlDisable(actWritedReg);
 		}break;
+		case WM_GET_TEST_IMAGE:{
+			progress->SetPos(75);
+			log(LOGD,"Main Thread:4消息处理函数收到消息WM_GET_TEST_IMAGE");
+			getDataFromPacket();
+			
+			if(packetDataLen==0){
+				log(LOGU,"接收背景数据超时");
+				CloseHandle(serialThread);
+				serialThread=0;
+			}else{
+				CString path=CTime::GetCurrentTime().Format("%Y_%m_%d_%H_%M_%S");
+				path=_T("collectedBGI/")+path+_T(".bmp");
+				if(packetDataLen!=160*160)
+					ASF_WARNING(03);
+
+				//320*320是放大后的图像,原图160*160
+				BYTE*img=new BYTE[320*320];
+				for(int i=0;i<320;i++)
+					for(int j=0;j<320;j++)
+						img[(319-i)*320+j]=packetData[i/2*160+j/2];
+				saveBmp(320,320,img,_T("collectedBGI"),path);
+
+				delete [] img;
+				loadImage((LPTSTR)(LPCTSTR)path);
+				progress->SetPos(100);
+				log(LOGD,"Main Thread:5加载图片完成");
+				log(LOGU,"接收背景数据成功");
+				CloseHandle(serialThread);
+				serialThread=0;
+			}
+		}
+		DWORD WINAPI threadGetTestImage(LPVOID params);
+		case WM_GET_CON_BKI:{
+			assert(serialThread==0);
+			serialThread=CreateThread(0,0,threadGetTestImage,this->m_hWnd,0,0);
+		}break;
+		case WM_STP_GET_BKI:{
+			if(serialThread){
+				TerminateThread(serialThread,-1);
+				CloseHandle(serialThread);
+				serialThread=0;
+			}
+		}break;
 	}
 	progress->SetPos(0);
 	return 1;
@@ -384,6 +434,7 @@ void Ctest_fingerDlg::OnBnClickedBtndevlog(){
 	log(LOGU,"V1.2 <2019年3月18日00:57:44>:添加读写寄存器,添加进度条,添加选图像大小");
 	log(LOGU,"V1.3 <2019年3月24日13:59:42>:完成了无用功能删减,放大了指纹图像,修复了按钮互斥bug");
 	log(LOGU,"V1.4 <2019年3月24日14:12:08>:添加了在release模式下取消warning的代码,添加了打开文件夹按钮");
+	log(LOGU,"V1.5 <2019年4月10日17:15:45>:完成连续取背景功能");
 }
 
 //读寄存器的线程函数
@@ -482,4 +533,40 @@ void Ctest_fingerDlg::OnBnClickedBtnsetaddress(){
 
 void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
 	system("explorer collectedImage");
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
+	//根据按钮上的文字判断当前连接状态
+	WCHAR str[512];
+	btnContinueBackGroundImage->GetWindowTextW(str,512);
+	if(lstrcmp(str,_T("连续获取背景"))==0){
+		log(LOGU,"开始连续获取背景");
+		updateControlDisable(actGetConBKI);
+		btnContinueBackGroundImage->SetWindowText(_T("停止获取背景"));
+		SendMessage(WM_GET_CON_BKI,WM_GET_CON_BKI,0);
+	}else{
+		log(LOGU,"停止连续获取背景");
+		updateControlDisable(actStpGetBKI);
+		btnContinueBackGroundImage->SetWindowText(_T("连续获取背景"));
+		SendMessage(WM_STP_GET_BKI,WM_STP_GET_BKI,0);
+	}
+}
+
+
+void Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage(){
+	system("explorer collectedBGI");
+}
+
+//获取背景的线程函数
+DWORD WINAPI threadGetTestImage(LPVOID params){
+	CCommunication::sendCommand(CMD_GET_TEST_IMAGE);
+	progress->SetPos(30);
+	log(LOGD,"Serial Thread:1向下位机发送命令:CMD_GET_TEST_IMAGE");
+	CCommunication::waitForPacket(10*1000);
+	progress->SetPos(50);
+	log(LOGD,"Serial Thread:2接收到数据包,大小为%d",packetCnt);
+	log(LOGD,"Serial Thread:3线程向主线程发送消息CMD_GET_TEST_IMAGE");
+	SendMessage((HWND)params,WM_GET_TEST_IMAGE,WM_GET_TEST_IMAGE,0);
+	return 0;
 }

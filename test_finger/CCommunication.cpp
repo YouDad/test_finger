@@ -45,6 +45,7 @@ bool CCommunication::sendCommand(int CmdCode,uint8_t* Data,uint16_t Len){
     SendPack.Length=Len;
 	memcpy(SendPack.Sendbuf,Data,Len);
 	switch(CmdCode){
+		case CMD_GET_TEST_IMAGE:      break;/*获得背景图片*/
 		case CMD_DEVICE_RESET:        break;/*系统复位*/
 		case CMD_DETECT_FINGER:       break;/*探测指纹*/
 		case CMD_GET_RAW_IMAGE:       break;/*采集原始图像*/

@@ -128,6 +128,7 @@ actInit://一个标签
 		disable(cmbSecurity);
 		disable(btnRawImage);
 		disable(btnContinueImage);
+		disable(btnContinueBackGroundImage);
 		disable(btnSetSecurity);
 		disable(btnSetCmos);
 		disable(btnSetBaud);
@@ -154,6 +155,7 @@ actInit://一个标签
 		enable(cmbSecurity);
 		enable(btnRawImage);
 		enable(btnContinueImage);
+		enable(btnContinueBackGroundImage);
 		enable(btnSetSecurity);
 		enable(btnSetCmos);
 		enable(btnSetBaud);
@@ -213,8 +215,15 @@ actInit://一个标签
 		enable(btnReadReg);
 		enable(btnWriteReg);
 		break;
+	case actGetConBKI:
 	case actGetConImage:
-		enable(btnContinueImage);
+		if(a==actGetConBKI){
+			disable(btnContinueImage);
+			enable(btnContinueBackGroundImage);
+		}else{
+			enable(btnContinueImage);
+			disable(btnContinueBackGroundImage);
+		}
 		
 		disable(editAddress);
 		disable(editPassword);
@@ -234,6 +243,7 @@ actInit://一个标签
 		disable(btnWriteReg);
 		disable(btnConnect);
 		break;
+	case actStpGetBKI:
 	case actStpGetImage:
 		enable(btnConnect);
 		enable(editAddress);
@@ -246,6 +256,7 @@ actInit://一个标签
 		enable(cmbSecurity);
 		enable(btnRawImage);
 		enable(btnContinueImage);
+		enable(btnContinueBackGroundImage);
 		enable(btnSetSecurity);
 		enable(btnSetCmos);
 		enable(btnSetBaud);
@@ -267,7 +278,7 @@ void loadImage(WCHAR* filePath){
 	}
 }
 
-bool saveBmp(int h,int w,BYTE*pData,CString path){
+bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
 	BITMAPINFOHEADER bmpInfo;
 	bmpInfo.biSize=sizeof bmpInfo;
 	bmpInfo.biWidth=w;
@@ -294,8 +305,8 @@ bool saveBmp(int h,int w,BYTE*pData,CString path){
 	bmpFileInfo.bfReserved2=0;
 	bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+
 		sizeof(BITMAPINFOHEADER);
-
-	CreateDirectory(_T("collectedImage"),0);
+	
+	CreateDirectory(dir,0);
 
 	char* filePath=CString2char(path);
 	FILE* fp=fopen(filePath,"wb");

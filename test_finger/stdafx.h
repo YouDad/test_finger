@@ -80,6 +80,7 @@ extern CComboBox* cmbLogLevel;
 extern CButton* btnConnect;
 extern CButton* btnRawImage;
 extern CButton* btnContinueImage;
+extern CButton* btnContinueBackGroundImage;
 extern CButton* btnSetSecurity;
 extern CButton* btnSetCmos;
 extern CButton* btnSetBaud;
@@ -97,6 +98,9 @@ extern CProgressCtrl* progress;
 #define WM_STP_GET_IMAGE	WM_USER+7
 #define WM_READ_REGISTER	WM_USER+8
 #define WM_WRITE_REGISTER	WM_USER+9
+#define WM_GET_CON_BKI		WM_USER+10
+#define WM_STP_GET_BKI		WM_USER+11
+#define WM_GET_TEST_IMAGE	WM_USER+12
 
 typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;

@@ -28,6 +28,7 @@ uint16_t GetCRC16(uint8_t *pSource,uint16_t len);
 
 
 ///////////////////////命令码///////////////////////////////
+#define	CMD_GET_TEST_IMAGE			0x031F			//获得背景图片
 #define	CMD_DEVICE_RESET	    	0x0320	    	//系统复位
 #define	CMD_DETECT_FINGER	    	0x0321	    	//探测指纹
 #define	CMD_GET_RAW_IMAGE	    	0x0322	    	//采集原始图像
