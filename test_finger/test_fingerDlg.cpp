@@ -27,6 +27,7 @@ CComboBox* cmbSecurity;
 CComboBox* cmbLogLevel;
 CButton* btnConnect;
 CButton* btnRawImage;
+CButton* btnTestImage;
 CButton* btnContinueImage;
 CButton* btnContinueBackGroundImage;
 CButton* btnSetSecurity;
@@ -86,6 +87,7 @@ BEGIN_MESSAGE_MAP(Ctest_fingerDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTNOpenImage, &Ctest_fingerDlg::OnBnClickedBtnopenimage)
 	ON_BN_CLICKED(IDC_BTNContinueBackGroundImage, &Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage)
 	ON_BN_CLICKED(IDC_BTNOpenBackGroundImage, &Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage)
+	ON_BN_CLICKED(IDC_BTNBackGroundImage, &Ctest_fingerDlg::OnBnClickedBtnbackgroundimage)
 END_MESSAGE_MAP()
 
 
@@ -121,6 +123,7 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	cmbLogLevel		= (CComboBox*) GetDlgItem(IDC_CMBLogLevel);
 	btnConnect		= (CButton*) GetDlgItem(IDC_BTNConnect);
 	btnRawImage		= (CButton*) GetDlgItem(IDC_BTNRawImage);
+	btnTestImage	= (CButton*) GetDlgItem(IDC_BTNTestImage);
 	btnContinueImage= (CButton*) GetDlgItem(IDC_BTNContinueImage);
 	btnContinueBackGroundImage=(CButton*) GetDlgItem(IDC_BTNContinueBackGroundImage);
 	btnSetSecurity	= (CButton*) GetDlgItem(IDC_BTNSetSecurity);
@@ -308,7 +311,7 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 				BYTE*img=new BYTE[320*320];
 				for(int i=0;i<320;i++)
 					for(int j=0;j<320;j++)
-						img[i*320+j]=packetData[i/2*160+j/2];
+						img[(319-i)*320+j]=packetData[i/2*160+j/2];
 				saveBmp(320,320,img,_T("collectedImage"),path);
 
 				delete [] img;
@@ -390,14 +393,20 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 				CloseHandle(serialThread);
 				serialThread=0;
 			}
+			if(!continueImage){
+				updateControlDisable(actGotImage);
+				break;
+			}
 		}
 		DWORD WINAPI threadGetTestImage(LPVOID params);
 		case WM_GET_CON_BKI:{
+			continueImage=true;
 			assert(serialThread==0);
 			serialThread=CreateThread(0,0,threadGetTestImage,this->m_hWnd,0,0);
 		}break;
 		case WM_STP_GET_BKI:{
 			if(serialThread){
+				continueImage=false;
 				TerminateThread(serialThread,-1);
 				CloseHandle(serialThread);
 				serialThread=0;
@@ -569,4 +578,13 @@ DWORD WINAPI threadGetTestImage(LPVOID params){
 	log(LOGD,"Serial Thread:3线程向主线程发送消息CMD_GET_TEST_IMAGE");
 	SendMessage((HWND)params,WM_GET_TEST_IMAGE,WM_GET_TEST_IMAGE,0);
 	return 0;
+}
+
+void Ctest_fingerDlg::OnBnClickedBtnbackgroundimage(){
+	updateControlDisable(actGetingImage);
+	progress->SetPos(10);
+	log(LOGD,"Main Thread:开始采集背景");
+	serialThread=CreateThread(0,0,threadGetTestImage,this->m_hWnd,0,0);
+	progress->SetPos(20);
+    log(LOGD,"Main Thread:采集背景线程地址:%d",serialThread);
 }

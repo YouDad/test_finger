@@ -127,6 +127,7 @@ actInit://一个标签
 		disable(cmbBaudSet);
 		disable(cmbSecurity);
 		disable(btnRawImage);
+		disable(btnTestImage);
 		disable(btnContinueImage);
 		disable(btnContinueBackGroundImage);
 		disable(btnSetSecurity);
@@ -154,6 +155,7 @@ actInit://一个标签
 		enable(cmbBaudSet);
 		enable(cmbSecurity);
 		enable(btnRawImage);
+		enable(btnTestImage);
 		enable(btnContinueImage);
 		enable(btnContinueBackGroundImage);
 		enable(btnSetSecurity);
@@ -184,12 +186,14 @@ actInit://一个标签
 		disable(cmbBaudSet);
 		disable(cmbSecurity);
 		disable(btnRawImage);
+		disable(btnTestImage);
 		disable(btnSetSecurity);
 		disable(btnSetCmos);
 		disable(btnSetBaud);
 		disable(btnSetPassword);
 		disable(btnSetAddress);
 		disable(btnContinueImage);
+		disable(btnContinueBackGroundImage);
 		disable(btnReadReg);
 		disable(btnWriteReg);
 		break;
@@ -206,6 +210,7 @@ actInit://一个标签
 		enable(cmbBaudSet);
 		enable(cmbSecurity);
 		enable(btnRawImage);
+		enable(btnTestImage);
 		enable(btnContinueImage);
 		enable(btnSetSecurity);
 		enable(btnSetCmos);
@@ -234,6 +239,7 @@ actInit://一个标签
 		disable(cmbBaudSet);
 		disable(cmbSecurity);
 		disable(btnRawImage);
+		disable(btnTestImage);
 		disable(btnSetSecurity);
 		disable(btnSetCmos);
 		disable(btnSetBaud);
@@ -255,6 +261,7 @@ actInit://一个标签
 		enable(cmbBaudSet);
 		enable(cmbSecurity);
 		enable(btnRawImage);
+		enable(btnTestImage);
 		enable(btnContinueImage);
 		enable(btnContinueBackGroundImage);
 		enable(btnSetSecurity);

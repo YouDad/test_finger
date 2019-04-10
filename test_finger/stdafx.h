@@ -79,6 +79,7 @@ extern CComboBox* cmbSecurity;
 extern CComboBox* cmbLogLevel;
 extern CButton* btnConnect;
 extern CButton* btnRawImage;
+extern CButton* btnTestImage;
 extern CButton* btnContinueImage;
 extern CButton* btnContinueBackGroundImage;
 extern CButton* btnSetSecurity;
