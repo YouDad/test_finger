@@ -50,5 +50,4 @@ void loadImage(WCHAR* filePath);
 
 bool saveBmp(int height,int width,BYTE*pData,CString dir,CString path);
 
-//清洗串口包的函数,把包头和校验码洗掉,留下来数据放入packetData
-void getDataFromPacket();
+void saveImage(CString x);

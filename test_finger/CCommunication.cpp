@@ -27,15 +27,102 @@ bool CCommunication::disConnect(){
 	if(ret==ERROR_SUCCESS){
 		return true;
 	}else{
-		ASF_WARNING(05);
+		ASF_WARNING(5);
 		return false;
 	}
 }
 
 bool CCommunication::sendCommand(int CmdCode,uint8_t* Data,uint16_t Len){
+	switch(cmbChipType->GetCurSel()){
+	case 0:return sendCommand_Default(CmdCode,Data,Len);
+	case 1:
+		switch(CmdCode){
+			case CMD_GET_TEST_IMAGE:      break;/*获得背景图片*/
+			case CMD_DEVICE_RESET:        break;/*系统复位*/
+			case CMD_DETECT_FINGER:       break;/*探测指纹*/
+			case CMD_GET_RAW_IMAGE:
+				sendCommand_HangXin(USR_CMD_GRAB_NO_CHECK);
+				waitForPacket(10*1000);
+				return sendCommand_HangXin(USR_CMD_UP_IMG);
+				break;/*采集原始图像*/
+			case CMD_GET_REDRESS_IMAGE:   break;/*采集矫正图像*/
+			case CMD_UPLOAD_IMAGE:        break;/*上传图像(包括原始图像和矫正图像)*/
+			case CMD_GEN_CHAR:            break;/*生成模板*/
+			case CMD_MATCH_CHAR:          break;/*比对模板*/
+			case CMD_STORE_CHAR:          break;/*存储模板*/
+			case CMD_SEARCH_CHAR:         break;/*搜索模板*/
+			case CMD_DELETE_CHAR:         break;/*删除指定模板*/
+			case CMD_EMPTY_CHAR:          break;/*清空模板库*/
+			case CMD_VERIFY_CHAR:         break;/*单一比对模板*/
+			case CMD_GET_CHAR:            break;/*获取模板*/
+			case CMD_PUT_CHAR:            break;/*下载模板*/
+			case CMD_GET_MBINDEX:         break;/*获取MBIndex*/
+			case CMD_READ_NOTE_BOOK:      break;/*读记事本*/
+			case CMD_WRITE_NOTE_BOOK:     break;/*写记事本*/
+			case CMD_READ_PAR_TABLE:      break;/*读取参数表*/
+			case CMD_SET_BAUD_RATE:       break;/*设置波特率*/
+			case CMD_SET_SECURLEVEL:      break;/*设置指纹安全级别*/
+			case CMD_SET_CMOS_PARA:       break;/*设置CMOS参数*/
+			case CMD_RESUME_FACTORY:      break;/*恢复出厂设置*/
+			case CMD_MERGE_CHAR:          break;/*合并特征*/
+			case CMD_SET_PSW:             break;/*密码设置*/
+			case CMD_SET_ADDRESS:         break;/*地址设置*/
+			case CMD_GET_RANDOM:          break;/*获取随机数*/
+			case CMD_DOWNLOAD_IMAGE:      break;/*下载指纹图像*/
+			case CMD_ERASE_PROGRAM:       break;/*擦除程序标识*/
+			case CMD_STORE_CHAR_DIRECT:   break;/*直接存储指纹模板*/
+			case CMD_READ_CHAR_DIRECT:    break;/*直接根据地址读取指纹模板*/
+			case CMD_GET_FIRSTVALID_ADD:  break;/*获取第一个空闲的指纹索引*/
+			case CMD_CHIP_ERASE:          break;/*整片擦除FLASH*/
+		}
+		return sendCommand_HangXin(CmdCode,Data,Len);
+	default:
+		ASF_ERROR(2);
+		return false;
+	}
+}
+
+bool CCommunication::sendCommand_HangXin(int CmdCode,uint8_t* Data,uint16_t Len){
+	serial.Purge();
+	uint8_t err=FALSE;
+	static struct HangXinSendPacket sendPacket;
+	memcpy(sendPacket.fixed,"zt\0",3);
+	memcpy(sendPacket.fixed2,"\0\0\0\0",3);
+	sendPacket.cmd=CmdCode;
+	if((CmdCode>=1&&CmdCode<=0x1f)||CmdCode==0x22){
+		err=TRUE;
+	}
+    if(err!=FALSE){
+		uint8_t* p=(uint8_t*)&sendPacket;
+		sendPacket.sumVal=0;
+		for(int i=2;i<sendPacket.len+12;i++){
+			sendPacket.sumVal+=p[i];
+		}
+		memcpy(p+sendPacket.len+12,&sendPacket.sumVal,2);
+		
+		memcpy(packet,p,sendPacket.len+14);
+
+		////用于获取命令的16进制表示
+		//freopen("1.txt","w",stdout);
+		////printf("CmdCode:%x\n",CmdCode);
+		//for(int i=0;i<length;i++){
+		//	printf("%c",packet[i]);
+		//}
+		
+		DWORD    sendCnt=0;
+		LONG     result=0;
+        result=serial.Write(packet,sendPacket.len+14,&sendCnt,NULL,10*1000);
+        return TRUE;
+    } else{
+        //没有该命令
+        return FALSE;
+    }
+}
+
+bool CCommunication::sendCommand_Default(int CmdCode,uint8_t* Data,uint16_t Len){
 	serial.Purge();
 	uint8_t err=TRUE;
-	struct _Send_pack_struct SendPack;
+	struct DefaultSendPacket SendPack;
     SendPack.Head=0x02EF;
     SendPack.Addr=0x04030201;
     SendPack.Password=0x01020304;
@@ -109,6 +196,38 @@ bool CCommunication::sendCommand(int CmdCode,uint8_t* Data,uint16_t Len){
 bool CCommunication::waitForPacket(int timeOutMs){
 	LONG ret=serial.Read(packet,sizeof packet,&packetCnt,0,timeOutMs);
 	return ret==ERROR_SUCCESS;
+}
+
+//清洗串口包的函数,把包头和校验码洗掉,留下来数据放入packetData
+void CCommunication::getDataFromPacket(){
+	packetDataLen=0;
+	switch(cmbChipType->GetCurSel()){
+	case 0://Default
+		for(int i=0,j=0;i<packetCnt;){
+			//包数据部分长度
+			int k=packet[i+15]+packet[i+16]*256;
+			//兼容以前的bug
+			if(k==530)k=528;
+			//跳过包头
+			i+=19;
+			//累计数据长度
+			packetDataLen+=k;
+			while(k--){
+				packetData[j++]=packet[i++];
+			}
+			//TODO: CRC校验
+			//跳过CRC
+			i+=2;
+			if(i>packetCnt)
+				ASF_WARNING(2);
+		}
+		break;
+	case 1://HangXin
+		memcpy(&packetDataLen,packet+8,4);
+		memcpy(packetData,packet+12,packetDataLen);
+		break;
+	}
+	
 }
 
 const UINT16 CRC16Table[256]={

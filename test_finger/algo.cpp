@@ -68,19 +68,23 @@ void updateCommunityWay(){
 
 char* timeStr(){
 	static char tstr[64];
-	sprintf(tstr,"%s %s ",__DATE__,__TIME__);
+	time_t curtime;
+	time(&curtime);
+	sprintf(tstr,"%s ",ctime(&curtime));
 	return tstr;
 }
 
 void log(int level,CString info){
 	if(level>LOGT){
-		ASF_WARNING(01);
+		ASF_WARNING(1);
 	}
 	if(level>cmbLogLevel->GetCurSel())return;
 	CString time(timeStr()),old;
-	editLog->GetWindowText(old);
-	editLog->SetWindowText(old+time+info+"\r\n");
-	editLog->SendMessage(WM_VSCROLL,SB_BOTTOM,0);//滚动条始终在底部
+	int len=editLog->GetWindowTextLength();
+	//选定当前文本的末端
+	editLog->SetSel(len,len);
+	//追加文本
+	editLog->ReplaceSel(time+info+"\r\n");
 
 	//自动备份
 	editLog->GetWindowText(old);
@@ -125,12 +129,11 @@ actInit://一个标签
 		disable(editLightTime);
 		disable(editSensitivity);
 		disable(cmbBaudSet);
-		disable(cmbSecurity);
+		disable(cmbChipType);
 		disable(btnRawImage);
 		disable(btnTestImage);
 		disable(btnContinueImage);
 		disable(btnContinueBackGroundImage);
-		disable(btnSetSecurity);
 		disable(btnSetCmos);
 		disable(btnSetBaud);
 		disable(btnSetPassword);
@@ -153,12 +156,11 @@ actInit://一个标签
 		enable(editLightTime);
 		enable(editSensitivity);
 		enable(cmbBaudSet);
-		enable(cmbSecurity);
+		enable(cmbChipType);
 		enable(btnRawImage);
 		enable(btnTestImage);
 		enable(btnContinueImage);
 		enable(btnContinueBackGroundImage);
-		enable(btnSetSecurity);
 		enable(btnSetCmos);
 		enable(btnSetBaud);
 		enable(btnSetPassword);
@@ -184,10 +186,9 @@ actInit://一个标签
 		disable(editLightTime);
 		disable(editSensitivity);
 		disable(cmbBaudSet);
-		disable(cmbSecurity);
+		disable(cmbChipType);
 		disable(btnRawImage);
 		disable(btnTestImage);
-		disable(btnSetSecurity);
 		disable(btnSetCmos);
 		disable(btnSetBaud);
 		disable(btnSetPassword);
@@ -208,11 +209,11 @@ actInit://一个标签
 		enable(editLightTime);
 		enable(editSensitivity);
 		enable(cmbBaudSet);
-		enable(cmbSecurity);
+		enable(cmbChipType);
 		enable(btnRawImage);
 		enable(btnTestImage);
 		enable(btnContinueImage);
-		enable(btnSetSecurity);
+		enable(btnContinueBackGroundImage);
 		enable(btnSetCmos);
 		enable(btnSetBaud);
 		enable(btnSetPassword);
@@ -237,10 +238,9 @@ actInit://一个标签
 		disable(editLightTime);
 		disable(editSensitivity);
 		disable(cmbBaudSet);
-		disable(cmbSecurity);
+		disable(cmbChipType);
 		disable(btnRawImage);
 		disable(btnTestImage);
-		disable(btnSetSecurity);
 		disable(btnSetCmos);
 		disable(btnSetBaud);
 		disable(btnSetPassword);
@@ -259,12 +259,11 @@ actInit://一个标签
 		enable(editLightTime);
 		enable(editSensitivity);
 		enable(cmbBaudSet);
-		enable(cmbSecurity);
+		enable(cmbChipType);
 		enable(btnRawImage);
 		enable(btnTestImage);
 		enable(btnContinueImage);
 		enable(btnContinueBackGroundImage);
-		enable(btnSetSecurity);
 		enable(btnSetCmos);
 		enable(btnSetBaud);
 		enable(btnSetPassword);
@@ -281,7 +280,7 @@ void loadImage(WCHAR* filePath){
 		image->ModifyStyle(0xf,SS_BITMAP|SS_CENTERIMAGE);
 		image->SetBitmap(hBmp);
 	}else{
-		ASF_WARNING(04);
+		ASF_WARNING(4);
 	}
 }
 
@@ -318,7 +317,7 @@ bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
 	char* filePath=CString2char(path);
 	FILE* fp=fopen(filePath,"wb");
 	if(fp==NULL){
-		ASF_ERROR(01);
+		ASF_ERROR(1);
 		return false;
 	}
 	fwrite(&bmpFileInfo,sizeof bmpFileInfo,1,fp);
@@ -329,24 +328,33 @@ bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
 	return true;
 }
 
-void getDataFromPacket(){
-	packetDataLen=0;
-	for(int i=0,j=0;i<packetCnt;){
-		//包数据部分长度
-		int k=packet[i+15]+packet[i+16]*256;
-		//兼容以前的bug
-		if(k==530)k=528;
-		//跳过包头
-		i+=19;
-		//累计数据长度
-		packetDataLen+=k;
-		while(k--){
-			packetData[j++]=packet[i++];
-		}
-		//TODO: CRC校验
-		//跳过CRC
-		i+=2;
-		if(i>packetCnt)
-			ASF_WARNING(02);
+void saveImage(CString x){
+	CString path=CTime::GetCurrentTime().Format("%Y_%m_%d_%H_%M_%S");
+	path=x+_T("/")+path+_T(".bmp");
+	//if(packetDataLen!=160*160)
+	//	ASF_WARNING(3);
+
+	BYTE*img;
+
+	int w,h;
+	if(packetDataLen==160*160){
+		log(LOGU,"接收到160x160的图像");
+		w=h=160;
+		int ww=w+w,hh=h+h;
+		img=new BYTE[ww*hh];
+		for(int i=0;i<ww;i++)
+			for(int j=0;j<hh;j++)
+				img[(hh-1-i)*ww+j]=packetData[i/2*w+j/2];
+		saveBmp(ww,hh,img,_T("_")+x,_T("_")+path);
+		saveBmp(w,h,packetData,x,path);
+		loadImage((LPTSTR)(LPCTSTR)(_T("_")+path));
+		delete [] img;
+	}else if(packetDataLen==192*192){
+		log(LOGU,"接收到192x192的图像");
+		w=h=192;
+		saveBmp(w,h,packetData,x,path);
+		loadImage((LPTSTR)(LPCTSTR)path);
+	}else{
+		log(LOGU,"既不是160x160也不是192x192,没法渲染图像");
 	}
 }

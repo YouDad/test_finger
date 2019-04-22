@@ -2,7 +2,7 @@
 #include"stdafx.h"
 #include"Serial.h"
 #pragma pack(1)
-struct _Send_pack_struct{
+struct DefaultSendPacket{
     uint16_t	Head;
     uint32_t	Addr;
     uint32_t	Password;
@@ -13,15 +13,29 @@ struct _Send_pack_struct{
     uint8_t		Sendbuf[530];
 };
 
+struct HangXinSendPacket{
+	char fixed[3];//'z','t','\0'
+	uint8_t cmd;
+	char fixed2[4];//'\0','\0','\0','\0'
+	uint32_t len;
+	uint8_t data[242*266+2];
+	uint16_t sumVal;
+};
+#pragma pack()
+
 class CCommunication{
 private:
 	static CSerial serial;
 	static bool use;
+	static bool sendCommand_Default(int cmdCode,uint8_t* Data=0,uint16_t Len=0);
+	static bool sendCommand_HangXin(int cmdCode,uint8_t* Data=0,uint16_t Len=0);
 public:
 	static bool connect(int id,int baud);
 	static bool disConnect();
 	static bool sendCommand(int cmdCode,uint8_t* Data=0,uint16_t Len=0);
 	static bool waitForPacket(int timeOutMs);
+	//清洗串口包的函数,把包头和校验码洗掉,留下来数据放入packetData
+	static void CCommunication::getDataFromPacket();
 };
 
 uint16_t GetCRC16(uint8_t *pSource,uint16_t len);
@@ -94,3 +108,40 @@ uint16_t GetCRC16(uint8_t *pSource,uint16_t len);
 #define	CMD_RT_NOTE_BOOK_ADDRESS_OVERFLOW	0x0019			//记事本地址溢出
 #define	CMD_RT_PARA_ERR	    				0x001A	    	//设置参数错误
 #define	CMD_RT_NO_CMD	    				0x001B	    	//命令不存在
+
+
+//HangXin
+enum HangXinCmd{
+	USR_CMD_GET_INFO=1,
+	USR_CMD_GET_DEVICESN,
+	USR_CMD_SET_DEVICESN,
+	USR_CMD_GET_SESSION,
+	USR_CMD_SET_SESSION,
+	USR_CMD_GET_SENSOR_INFO,
+	USR_CMD_CONFIG_SENSOR,
+	USR_CMD_GRAB,
+	USR_CMD_GRAB_NO_CHECK,
+	USR_CMD_GRAB_WAIT,
+	USR_CMD_GENERATE,
+	USR_CMD_MERGE,
+	USR_CMD_STORE,
+	USR_CMD_SEARCH,
+	USR_CMD_MATCH,
+	USR_CMD_UP_IMG,
+	USR_CMD_DOWN_IMG,
+	USR_CMD_LOAD_CHAR,
+	USR_CMD_UP_CHAR	 ,
+	USR_CMD_DOWN_CHAR,
+	USR_CMD_LIST,
+	USR_CMD_GET_EMPTY_ID,
+	USR_CMD_CHECK_ID,
+	USR_CMD_DELETE_ID,
+	USR_CMD_REMOVE_ALL,
+	USR_CMD_SET_LED,
+	USR_CMD_ENTER_IAP,
+	USR_CMD_CANCEL,
+	USR_CMD_WIRTE_PRODUCT_SESSION,
+	USR_CMD_SLEEP,
+	USR_CMD_DEV_BOOTLOADER,
+	USR_CMD_UP_IMG_EX=0x22
+};

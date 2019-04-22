@@ -21,38 +21,38 @@
 #endif
 
 //WARNING STRING
-#ifdef ASF_WARNING01
+#ifdef ASF_WARNING1
 #error macro is repeated!
 #else
-#define ASF_WARNING01 \
+#define ASF_WARNING1 \
 "~好像调用了过于高级的log"
 #endif
 
-#ifdef ASF_WARNING02
+#ifdef ASF_WARNING2
 #error macro is repeated!
 #else
-#define ASF_WARNING02 \
+#define ASF_WARNING2 \
 "~数据包格式不完全正确"
 #endif
 
-#ifdef ASF_WARNING03
+#ifdef ASF_WARNING3
 #error macro is repeated!
 #else
-#define ASF_WARNING03 \
+#define ASF_WARNING3 \
 "~图片像素个数不是160*160个"
 #endif
 
-#ifdef ASF_WARNING04
+#ifdef ASF_WARNING4
 #error macro is repeated!
 #else
-#define ASF_WARNING04 \
+#define ASF_WARNING4 \
 "!位图对象句柄为0x00"
 #endif
 
-#ifdef ASF_WARNING05
+#ifdef ASF_WARNING5
 #error macro is repeated!
 #else
-#define ASF_WARNING05 \
+#define ASF_WARNING5 \
 "!串口关闭返回值不是ERROR_SUCCESS"
 #endif
 
@@ -70,11 +70,18 @@
 	log(LOGE,"%s at %s(%d)FuncName:<%s>",ASF_ERROR##ID,__FILE__,__LINE__,__FUNCTION__)
 #endif
 
-#ifdef ASF_ERROR01
+#ifdef ASF_ERROR1
 #error macro is repeated!
 #else
-#define ASF_ERROR01 \
+#define ASF_ERROR1 \
 "!试图保存文件时失败"
+#endif
+
+#ifdef ASF_ERROR2
+#error macro is repeated!
+#else
+#define ASF_ERROR2 \
+"!芯片类型错误"
 #endif
 
 #ifdef ASF_ERROR__
