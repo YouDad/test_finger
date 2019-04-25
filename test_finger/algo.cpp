@@ -115,6 +115,8 @@ void enable(CWnd* pWnd){
 	pWnd->EnableWindow(TRUE);
 }
 
+
+
 void updateControlDisable(action a){
 	switch(a){
 	case actInit:

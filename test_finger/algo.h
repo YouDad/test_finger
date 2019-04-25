@@ -4,10 +4,12 @@
 //枚举类型 动作,用于控制控件的可用性
 enum action{
 	actInit,        //初始化
+
 	actOpeningPort,	//打开端口中
 	actClosingPort,	//关闭端口中
 	actOpenedPort,	//打开了端口
 	actClosedPort,	//关闭了端口
+
 	actGetingImage,	//获取图像中
 	actGotImage,	//获取了图像
 	actGetConImage,	//开始连续取图

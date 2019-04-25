@@ -89,6 +89,7 @@ extern CButton* btnSetAddress;
 extern CButton* btnSaveLog;
 extern CButton* btnReadReg;
 extern CButton* btnWriteReg;
+extern CButton* chkTimeoutContinue;
 extern CStatic* textDevice;
 extern CStatic* image;
 extern CProgressCtrl* progress;

@@ -37,6 +37,7 @@ CButton* btnSetAddress;
 CButton* btnSaveLog;
 CButton* btnReadReg;
 CButton* btnWriteReg;
+CButton* chkTimeoutContinue;
 CStatic* textDevice;
 CStatic* image;
 CProgressCtrl* progress;
@@ -131,6 +132,7 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	btnSaveLog		= (CButton*) GetDlgItem(IDC_BTNSaveLog);
 	btnReadReg		= (CButton*) GetDlgItem(IDC_BTNreadReg);
 	btnWriteReg		= (CButton*) GetDlgItem(IDC_BTNwriteReg);
+	chkTimeoutContinue=(CButton*) GetDlgItem(IDC_CHKTimeoutContinue);
 	textDevice		= (CStatic*) GetDlgItem(IDC_TEXTDevice);
 	image			= (CStatic*) GetDlgItem(IDC_IMAGE);
 	progress		= (CProgressCtrl*) GetDlgItem(IDC_PROGRESS);

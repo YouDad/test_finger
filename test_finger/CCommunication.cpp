@@ -194,7 +194,13 @@ bool CCommunication::sendCommand_Default(int CmdCode,uint8_t* Data,uint16_t Len)
 }
 
 bool CCommunication::waitForPacket(int timeOutMs){
-	LONG ret=serial.Read(packet,sizeof packet,&packetCnt,0,timeOutMs);
+	timeOutMs = 60*1000;
+	LONG ret,time=1;
+	do {
+		ret=serial.Read(packet,sizeof packet,&packetCnt,0,timeOutMs);
+		log(LOGT,"超时重试第%d次",time++);
+	}
+	while(chkTimeoutContinue->GetCheck()&&ret!=ERROR_SUCCESS);
 	return ret==ERROR_SUCCESS;
 }
 
@@ -206,6 +212,7 @@ void CCommunication::getDataFromPacket(){
 		for(int i=0,j=0;i<packetCnt;){
 			//包数据部分长度
 			int k=packet[i+15]+packet[i+16]*256;
+			log(LOGT,"Default singlePacketLen=%d",k);
 			//兼容以前的bug
 			if(k==530)k=528;
 			//跳过包头
@@ -224,6 +231,7 @@ void CCommunication::getDataFromPacket(){
 		break;
 	case 1://HangXin
 		memcpy(&packetDataLen,packet+8,4);
+		log(LOGT,"HangXin packetDataLen=%d",packetDataLen);
 		memcpy(packetData,packet+12,packetDataLen);
 		break;
 	}

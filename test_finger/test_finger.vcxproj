@@ -114,6 +114,7 @@
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
     <ClCompile Include="CCommunication.cpp" />
+    <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="Serial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
