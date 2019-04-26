@@ -7,24 +7,12 @@
     </Filter>
     <Filter Include="头文件">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
-    <None Include="res\test_finger.rc2">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="res\test_finger.ico">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="res\preview.bmp">
-      <Filter>资源文件</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_finger.h">
@@ -45,13 +33,22 @@
     <ClInclude Include="algo.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CCommunication.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="enumcd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="Serial.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="str4err_warn.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CCommunication.h">
+    <ClInclude Include="UsbPort.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="comm.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,19 +65,35 @@
     <ClCompile Include="algo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Serial.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CCommunication.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ControlAvailability.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="enumcd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Serial.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UsbPort.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\test_finger.ico">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="test_finger.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\test_finger.rc2">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

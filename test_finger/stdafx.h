@@ -107,6 +107,9 @@ typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
 
+#include"comm.h"
+#include"enumcd.h"
+#include"UsbPort.h"
 #include"CCommunication.h"
 //extern CSerial serial;
 
