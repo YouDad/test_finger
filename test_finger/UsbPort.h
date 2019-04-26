@@ -9,7 +9,7 @@ extern "C"
 	#include "hidsdi.h"
 };
 
-#define DEVICE_NAME						"YW_FPM_YW606_YW0192"
+#define DEVICE_NAME "ASF0002"
 #define SCSI_TIMEOUT 5
 
 #define IOCTRL_CDB_LEN	16
@@ -28,11 +28,11 @@ public:
 public:
 	int		InitUsbPort(int CommType, char *pDesc);
 
-	BOOL	USBSCSIRead(HANDLE hHandle, BYTE* pCDB, DWORD nCDBLen, BYTE* pData, DWORD nLength, DWORD nTimeOut);
-	BOOL	USBSCSIWrite(HANDLE hHandle,BYTE* pCDB, DWORD nCDBLen, BYTE* pData, DWORD nLength, DWORD nTimeOut);
+	bool	USBSCSIRead(HANDLE hHandle, BYTE* pCDB, DWORD nCDBLen, BYTE* pData, DWORD nLength, DWORD nTimeOut);
+	bool	USBSCSIWrite(HANDLE hHandle,BYTE* pCDB, DWORD nCDBLen, BYTE* pData, DWORD nLength, DWORD nTimeOut);
 
-	BOOL	USBHidWrite(HANDLE hHandle,BYTE* pData, DWORD nLength, DWORD nTimeOut);
-	BOOL	USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTimeOut);
+	bool	USBHidWrite(HANDLE hHandle,BYTE* pData, DWORD nLength, DWORD nTimeOut);
+	bool	USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTimeOut);
 
 	int		CloseUsbPort(void);
 

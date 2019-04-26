@@ -23,12 +23,23 @@ struct HangXinSendPacket{
 };
 #pragma pack()
 
+class DefaultResponsePacket{
+    uint16_t	Head;
+    uint32_t	Addr;
+    uint32_t	Password;
+    uint16_t	CMD;
+    uint16_t	Length;
+    uint8_t*    Data;
+};
+
 class CCommunication{
 private:
 	static CSerial serial;
 	static bool use;
 	static bool sendCommand_Default(int cmdCode,uint8_t* Data=0,uint16_t Len=0);
 	static bool sendCommand_HangXin(int cmdCode,uint8_t* Data=0,uint16_t Len=0);
+    static bool USB_Send(BYTE CmdBuf[],DWORD CmdLength);
+    static bool USB_Receive(BYTE RspBuf[],DWORD RspLength);
 public:
 	static bool connect(int id,int baud);
 	static bool disConnect();

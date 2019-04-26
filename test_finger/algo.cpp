@@ -287,6 +287,11 @@ void loadImage(WCHAR* filePath){
 }
 
 bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
+    for(int i=0;i<w*h-1-i;i++){
+        BYTE t = pData[w*h-1-i];
+        pData[w*h-1-i]=pData[i];
+        pData[i]=t;
+    }
 	BITMAPINFOHEADER bmpInfo;
 	bmpInfo.biSize=sizeof bmpInfo;
 	bmpInfo.biWidth=w;
@@ -336,21 +341,13 @@ void saveImage(CString x){
 	//if(packetDataLen!=160*160)
 	//	ASF_WARNING(3);
 
-	BYTE*img;
 
 	int w,h;
 	if(packetDataLen==160*160){
 		log(LOGU,"接收到160x160的图像");
 		w=h=160;
-		int ww=w+w,hh=h+h;
-		img=new BYTE[ww*hh];
-		for(int i=0;i<ww;i++)
-			for(int j=0;j<hh;j++)
-				img[(hh-1-i)*ww+j]=packetData[i/2*w+j/2];
-		saveBmp(ww,hh,img,_T("_")+x,_T("_")+path);
 		saveBmp(w,h,packetData,x,path);
-		loadImage((LPTSTR)(LPCTSTR)(_T("_")+path));
-		delete [] img;
+		loadImage((LPTSTR)(LPCTSTR)path);
 	}else if(packetDataLen==192*192){
 		log(LOGU,"接收到192x192的图像");
 		w=h=192;

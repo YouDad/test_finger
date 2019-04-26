@@ -60,6 +60,8 @@
 #include<afxpriv.h>
 #include<Dbt.h>
 #include<assert.h>
+#include<vector>
+#include<map>
 
 extern CEdit* editLog;
 extern CEdit* editAddress;
@@ -106,6 +108,9 @@ extern CProgressCtrl* progress;
 typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
+
+#include"CommListener.h"
+#include"CommProtocolConverter.h"
 
 #include"comm.h"
 #include"enumcd.h"

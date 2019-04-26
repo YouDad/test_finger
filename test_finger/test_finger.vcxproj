@@ -182,6 +182,8 @@
     <ClInclude Include="algo.h" />
     <ClInclude Include="CCommunication.h" />
     <ClInclude Include="comm.h" />
+    <ClInclude Include="CommListener.h" />
+    <ClInclude Include="CommProtocolConverter.h" />
     <ClInclude Include="enumcd.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serial.h" />
@@ -195,6 +197,7 @@
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
     <ClCompile Include="CCommunication.cpp" />
+    <ClCompile Include="CommListener.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="enumcd.cpp" />
     <ClCompile Include="Serial.cpp" />

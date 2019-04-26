@@ -51,6 +51,12 @@
     <ClInclude Include="comm.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CommListener.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommProtocolConverter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_finger.cpp">
@@ -78,6 +84,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UsbPort.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommListener.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

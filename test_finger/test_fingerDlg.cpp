@@ -139,6 +139,11 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 
 	///2.对组合框的初始化
 	updateCommunityWay();
+	//通讯方式
+	const WCHAR* way[]={_T("USB"),0};
+	for(int i=0;way[i];i++){
+		cmbWay->InsertString(i,way[i]);
+	}
 	//常用波特率
 	const WCHAR* baud[]={_T("9600"),_T("115200"),_T("256000"),0};
 	for(int i=0;baud[i];i++){

@@ -2,16 +2,23 @@
 CSerial CCommunication::serial;
 int CommType;
 
+bool isUSB(){
+    return cmbWay->GetCurSel()==0;
+}
+
 bool CCommunication::connect(int id,int baud){
-
-    if(UsbPort.InitUsbPort(COMM_USB_MASS,"UD")){
-        CommType=COMM_USB_MASS;
-        return true;
-    } else{
-        CommType=-1;
-        return false;
+    if(isUSB()){
+        if(UsbPort.InitUsbPort(COMM_USB_MASS,"UD")){
+            CommType=COMM_USB_MASS;
+            cmbChipType->SetCurSel(1);
+            bool ret=sendCommand(USR_CMD_GET_INFO);
+            ret = waitForPacket(100*1000);
+            return true;
+        } else{
+            CommType=-1;
+            return false;
+        }
     }
-
     CString way;
     way.Format(_T("\\\\.\\COM%d"),id);//得到端口地址
     LONG retCode=ERROR_SUCCESS;
@@ -33,7 +40,9 @@ bool CCommunication::connect(int id,int baud){
 }
 
 bool CCommunication::disConnect(){
-    return UsbPort.CloseUsbPort()==0;
+    if(isUSB()){
+        return UsbPort.CloseUsbPort()==0;
+    }
     int ret=serial.Close();
     if(ret==ERROR_SUCCESS){
         return true;
@@ -48,6 +57,9 @@ bool CCommunication::sendCommand(int CmdCode,uint8_t* Data,uint16_t Len){
         case 0:return sendCommand_Default(CmdCode,Data,Len);
         case 1:
             switch(CmdCode){
+                case USR_CMD_GET_INFO:
+                    return sendCommand_HangXin(USR_CMD_GET_INFO);
+                    break;/*航芯:返回芯片信息*/
                 case CMD_GET_TEST_IMAGE:      break;/*获得背景图片*/
                 case CMD_DEVICE_RESET:        break;/*系统复位*/
                 case CMD_DETECT_FINGER:       break;/*探测指纹*/
@@ -110,19 +122,15 @@ bool CCommunication::sendCommand_HangXin(int CmdCode,uint8_t* Data,uint16_t Len)
             sendPacket.sumVal+=p[i];
         }
         memcpy(p+sendPacket.len+12,&sendPacket.sumVal,2);
-
         memcpy(packet,p,sendPacket.len+14);
-
-        ////用于获取命令的16进制表示
-        //freopen("1.txt","w",stdout);
-        ////printf("CmdCode:%x\n",CmdCode);
-        //for(int i=0;i<length;i++){
-        //	printf("%c",packet[i]);
-        //}
 
         DWORD    sendCnt=0;
         LONG     result=0;
-        result=serial.Write(packet,sendPacket.len+14,&sendCnt,NULL,10*1000);
+        if(isUSB()){
+            result=USB_Send(packet,sendPacket.len+14);
+        } else{
+            result=serial.Write(packet,sendPacket.len+14,&sendCnt,NULL,10*1000);
+        }
         return TRUE;
     } else{
         //没有该命令
@@ -180,8 +188,8 @@ bool CCommunication::sendCommand_Default(int CmdCode,uint8_t* Data,uint16_t Len)
     }
     if(err!=FALSE){
 
-        DWORD    w_nSendCnt=0;
-        LONG     w_nResult=0;
+        DWORD    sendCnt=0;
+        LONG     result=0;
         UINT16   length=SendPack.Length+19;
         uint8_t* SendPt=(uint8_t *)&SendPack;
         UINT16   crcValue=GetCRC16(SendPt,length-2);
@@ -196,7 +204,11 @@ bool CCommunication::sendCommand_Default(int CmdCode,uint8_t* Data,uint16_t Len)
         //	printf("%c",packet[i]);
         //}
 
-        w_nResult=serial.Write(packet,length,&w_nSendCnt,NULL,10*1000);
+        if(isUSB()){
+            result=USB_Send(packet,length);
+        } else{
+            result=serial.Write(packet,length,&sendCnt,NULL,10*1000);
+        }
         return TRUE;
     } else{
         //没有该命令
@@ -205,10 +217,15 @@ bool CCommunication::sendCommand_Default(int CmdCode,uint8_t* Data,uint16_t Len)
 }
 
 bool CCommunication::waitForPacket(int timeOutMs){
+    //临时debug代码,设定超时时间为60s
     timeOutMs=60*1000;
     LONG ret,time=1;
     do{
-        ret=serial.Read(packet,sizeof packet,&packetCnt,0,timeOutMs);
+        if(isUSB()){
+            ret=USB_Receive(packet,sizeof packet);
+        } else{
+            ret=serial.Read(packet,sizeof packet,&packetCnt,0,timeOutMs);
+        }
         log(LOGT,"超时重试第%d次",time++);
     } while(chkTimeoutContinue->GetCheck()&&ret!=ERROR_SUCCESS);
     return ret==ERROR_SUCCESS;
@@ -292,43 +309,13 @@ uint16_t GetCRC16(UINT8 *pSource,UINT16 len){
     return result;
 }
 
-extern int CommType;
-/**
-  *没打开设备对的时候让CommType = -1
-  *打开USB时让CommType=COMM_USB_MASS
-  */
-
 BYTE cdb_w[16]={0xef,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 BYTE cdb_r[16]={0xef,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-int USB_SendReceive(BYTE CmdBuf[],DWORD CmdLength,BYTE RspBuf[],DWORD RspLength){
+bool CCommunication::USB_Send(BYTE CmdBuf[],DWORD CmdLength){
+    return UsbPort.USBSCSIWrite(UsbPort.m_DeviceHandle,cdb_w,IOCTRL_CDB_LEN,CmdBuf,CmdLength,SCSI_TIMEOUT);
+}
 
-    int ret;
-    DWORD nBytesWrite,nBytesRead;
-
-    if(CommType==COMM_USB_MASS){
-        if(TRUE!=UsbPort.USBSCSIWrite(UsbPort.m_DeviceHandle,cdb_w,IOCTRL_CDB_LEN,CmdBuf,CmdLength,SCSI_TIMEOUT)){
-            return -1;
-        }
-        if(TRUE!=UsbPort.USBSCSIRead(UsbPort.m_DeviceHandle,cdb_r,IOCTRL_CDB_LEN,RspBuf,RspLength,SCSI_TIMEOUT)){
-            return -1;
-        }
-        return 0;
-    } else if(CommType==COMM_USB_HID){
-        if(TRUE!=UsbPort.USBHidWrite(UsbPort.m_DeviceHandle,CmdBuf,CmdLength,0)){
-            return -1;
-        }
-        if(TRUE!=UsbPort.USBHidRead(UsbPort.m_DeviceHandle,RspBuf,RspLength,0)){
-            return -1;
-        }
-        return 0;
-    } else if(CommType==COMM_USB_DRIVER){
-        if(0==WriteFile(UsbPort.m_DeviceHandle,CmdBuf,CmdLength,&nBytesWrite,NULL)){
-            return -1;
-        }
-        if(0==ReadFile(UsbPort.m_DeviceHandle,RspBuf,RspLength,&nBytesRead,NULL)){
-            return -1;
-        }
-        return 0;
-    }
+bool CCommunication::USB_Receive(BYTE RspBuf[],DWORD RspLength){
+    return UsbPort.USBSCSIRead(UsbPort.m_DeviceHandle,cdb_r,IOCTRL_CDB_LEN,RspBuf,RspLength,SCSI_TIMEOUT);
 }

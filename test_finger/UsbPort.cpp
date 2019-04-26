@@ -148,12 +148,12 @@ int CUsbPort::InitUsbPort(int CommType, char *pDesc)
 
 
 
-BOOL CUsbPort::USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength, DWORD nTimeOut)
+bool CUsbPort::USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength, DWORD nTimeOut)
 {
 
 	SCSI_PASS_THROUGH_WITH_BUFFERS sptwb;
 	ULONG returned,length;
-	BOOL status;
+	bool status;
 
 	// Get nand information
 	SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER sptdwb;
@@ -192,25 +192,25 @@ BOOL CUsbPort::USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,D
 		&sptwb,
 		length,
 		&returned,
-		FALSE);
+		false);
 
 	DWORD dwErrCode = GetLastError();
 	if( !status )
 	{
-		return FALSE;
+		return false;
 	}
 	else
 	{
 		memcpy(pData, sptwb.DataBuf, nLength);
-		return TRUE;
+		return true;
 	}
 }
 
-BOOL CUsbPort::USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength, DWORD nTimeOut)
+bool CUsbPort::USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength, DWORD nTimeOut)
 {
 	ULONG returned,length;
 	DWORD dwErrCode;
-	BOOL status;
+	bool status;
 
 //	ASSERT(pData);
 
@@ -241,20 +241,20 @@ BOOL CUsbPort::USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,
 		&sptdwb,
 		length,
 		&returned,
-		FALSE);
+		false);
 
 
 	dwErrCode = GetLastError();
 
 
 	if( !status )
-		return FALSE;
+		return false;
 	else
-		return TRUE;
+		return true;
 }
 
 
-BOOL CUsbPort::USBHidWrite(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTimeOut)
+bool CUsbPort::USBHidWrite(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTimeOut)
 {
 	BYTE *OutputReport = NULL;
 	OutputReport = (BYTE *)malloc(Capabilities.OutputReportByteLength);
@@ -264,7 +264,7 @@ BOOL CUsbPort::USBHidWrite(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTi
 	DWORD n;
 	DWORD l;
 	DWORD i;
-	BOOL Success;
+	bool Success;
 	DWORD ErrorNnr;
 	DWORD	bWritten;
 
@@ -290,11 +290,11 @@ BOOL CUsbPort::USBHidWrite(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTi
 
 	free(OutputReport);
 
-	return TRUE;
+	return true;
 
 }
 
-BOOL CUsbPort::USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTimeOut)
+bool CUsbPort::USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTimeOut)
 {
 	BYTE *InputReport = NULL;
 	InputReport = (BYTE *)malloc(Capabilities.InputReportByteLength);
@@ -302,7 +302,7 @@ BOOL CUsbPort::USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTim
 	HidPackSize = Capabilities.InputReportByteLength - 1;
 
 	DWORD bRead;
-	BOOL Result;
+	bool Result;
 	DWORD	ErrorNnr;
 	DWORD offset = 0;
 
@@ -315,7 +315,7 @@ BOOL CUsbPort::USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTim
 	if((Length+14) <= HidPackSize)
 	{
 		memcpy(pData, &InputReport[1], (Length+14));
-		return TRUE;
+		return true;
 	}
 
 	memcpy(pData, &InputReport[1], HidPackSize);
@@ -343,7 +343,7 @@ BOOL CUsbPort::USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTim
 
 	free(InputReport);
 
-	return TRUE;
+	return true;
 }
 
 
@@ -362,7 +362,7 @@ int CUsbPort::OpenUsbMsc(char *pDesc)
 {
 	HDEVINFO        hDevInfo, hIntDevInfo;
 	DWORD           index;
-	BOOL            status;
+	bool            status;
 
 	//
 	// Open the device using device interface registered by the driver
@@ -383,7 +383,7 @@ int CUsbPort::OpenUsbMsc(char *pDesc)
 		if (hDevInfo == INVALID_HANDLE_VALUE)
 		{
 			//DebugPrint(1, "SetupDiGetClassDevs failed with error: %d\n", GetLastError());
-			return FALSE;
+			return false;
 		}
 
 		hIntDevInfo = SetupDiGetClassDevs(
@@ -395,7 +395,7 @@ int CUsbPort::OpenUsbMsc(char *pDesc)
 
 		if (hDevInfo == INVALID_HANDLE_VALUE) {
 			//DebugPrint(1, "SetupDiGetClassDevs failed with error: %d\n", GetLastError());
-			return FALSE;
+			return false;
 		}
 	}
 	else if (0 == strcmp(pDesc, "UD"))
@@ -408,7 +408,7 @@ int CUsbPort::OpenUsbMsc(char *pDesc)
 		if (hDevInfo == INVALID_HANDLE_VALUE)
 		{
 			//DebugPrint(1, "SetupDiGetClassDevs failed with error: %d\n", GetLastError());
-			return FALSE;
+			return false;
 		}
 
 		hIntDevInfo = SetupDiGetClassDevs(
@@ -420,12 +420,12 @@ int CUsbPort::OpenUsbMsc(char *pDesc)
 
 		if (hDevInfo == INVALID_HANDLE_VALUE) {
 			//DebugPrint(1, "SetupDiGetClassDevs failed with error: %d\n", GetLastError());
-			return FALSE;
+			return false;
 		}
 	}
 	else 
 	{
-		return FALSE;
+		return false;
 	}
 
 	//
@@ -437,11 +437,11 @@ int CUsbPort::OpenUsbMsc(char *pDesc)
 	//	CloseAllScsiDevice();
 	//	m_arrDeviceHandle.RemoveAll();
 	DWORD dwDeviceHandle = 0;
-	while (TRUE)
+	while (true)
 	{
 		dwDeviceHandle = 0;
 		status = OpenScsiDiskDevice(hIntDevInfo, index, &dwDeviceHandle, pDesc);
-		if (status == FALSE)
+		if (status == false)
 		{
 			break;
 		}
@@ -477,7 +477,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 	PSTORAGE_DEVICE_DESCRIPTOR          devDesc;
 	SCSI_PASS_THROUGH_WITH_BUFFERS      sptwb;
 	HANDLE                              hDevice;
-	BOOL                                status;
+	bool                                status;
 	PUCHAR                              p;
 	UCHAR                               outBuf[512];
 	UCHAR                               cdTypeString[20];
@@ -503,7 +503,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 			&interfaceData           // Device Interface Data
 			);
 
-		if (status == FALSE) {
+		if (status == false) {
 			errorCode = GetLastError();
 			if (errorCode == ERROR_NO_MORE_ITEMS) {
 				//DebugPrint(2, "\nNo more interfaces\n");
@@ -511,7 +511,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 			else {
 				//DebugPrint(1, "SetupDiEnumDeviceInterfaces failed with error: %d\n", errorCode);
 			}
-			return FALSE;
+			return false;
 		}
 	}
 	else if (0 == strcmp(pDesc, "UD"))
@@ -524,7 +524,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 			&interfaceData           // Device Interface Data
 			);
 
-		if (status == FALSE) {
+		if (status == false) {
 			errorCode = GetLastError();
 			if (errorCode == ERROR_NO_MORE_ITEMS) {
 				//DebugPrint(2, "\nNo more interfaces\n");
@@ -532,12 +532,12 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 			else {
 				//DebugPrint(1, "SetupDiEnumDeviceInterfaces failed with error: %d\n", errorCode);
 			}
-			return FALSE;
+			return false;
 		}
 	}
 	else
 	{
-		return FALSE;
+		return false;
 	}
 
 	//
@@ -559,11 +559,11 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 	// pass a bigger buffer to get the detail data
 	//
 
-	if (status == FALSE) {
+	if (status == false) {
 		errorCode = GetLastError();
 		if (errorCode != ERROR_INSUFFICIENT_BUFFER) {
 			//DebugPrint(1, "SetupDiGetDeviceInterfaceDetail failed with error: %d\n", errorCode);
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -576,7 +576,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 	interfaceDetailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(interfaceDetailDataSize);
 	if (interfaceDetailData == NULL) {
 		//DebugPrint(1, "Unable to allocate memory to get the interface detail data.\n");
-		return FALSE;
+		return false;
 	}
 	interfaceDetailData->cbSize = sizeof(SP_INTERFACE_DEVICE_DETAIL_DATA);
 
@@ -588,9 +588,9 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 		&reqSize,                 // Buffer size required to get the detail data
 		NULL);                    // Interface device info
 
-	if (status == FALSE) {
+	if (status == false) {
 		//DebugPrint(1, "Error in SetupDiGetDeviceInterfaceDetail failed with error: %d\n", GetLastError());
-		return FALSE;
+		return false;
 	}
 
 	//
@@ -619,7 +619,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 	if (hDevice == INVALID_HANDLE_VALUE) {
 		//DebugPrint(1, "CreateFile failed with error: %d\n", GetLastError());
 		errorCode = GetLastError();
-		return TRUE;
+		return true;
 	}
 
 	query.PropertyId = StorageAdapterProperty;
@@ -746,7 +746,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 		&sptwb,
 		length,
 		&returned,
-		FALSE);
+		false);
 
 
 	//PrintStatusResults(status, returned, &sptwb);
@@ -776,7 +776,7 @@ int CUsbPort::OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDevic
 	}
 	///////////////////////////////////////////////////////////////////////////////////
 
-	return TRUE;
+	return true;
 }
 
 
@@ -784,7 +784,7 @@ ULONG CUsbPort::GetMediaType(HANDLE hDevice, PUCHAR cdTypeString)
 {
 
 	PGET_MEDIA_TYPES    mediaTypes;
-	BOOL                status = 0;
+	bool                status = 0;
 	UCHAR               buffer[2048];   // Must be big enough hold DEVICE_MEDIA_INFO
 	ULONG               returned;
 
@@ -799,7 +799,7 @@ ULONG CUsbPort::GetMediaType(HANDLE hDevice, PUCHAR cdTypeString)
 		buffer,
 		sizeof(buffer),
 		&returned,
-		FALSE);
+		false);
 
 	if (!status) {
 //		DebugPrint(2, "IOCTL_STORAGE_GET_MEDIA_TYPES_EX failed with error code%d.\n\n", GetLastError());
@@ -848,7 +848,7 @@ int CUsbPort::OpenUsbDriver(char *pDesc)
 
 	deviceInfoData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 	i = 0;
-	done = FALSE;
+	done = false;
 	while (!done)
 	{
 		if (SetupDiEnumDeviceInterfaces(hardwareDeviceInfo, 0, pGuid, i, &deviceInfoData))
@@ -857,7 +857,7 @@ int CUsbPort::OpenUsbDriver(char *pDesc)
 			if (hOut != INVALID_HANDLE_VALUE)
 			{
 				m_DeviceHandle = hOut;
-				done = TRUE;
+				done = true;
 				ret = 0;
 			}
 			else
@@ -867,7 +867,7 @@ int CUsbPort::OpenUsbDriver(char *pDesc)
 		}
 		else
 		{
-			done = TRUE;
+			done = true;
 			ret = -1;
 		}
 	}
