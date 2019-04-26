@@ -1,7 +1,17 @@
 #include"stdafx.h"
 CSerial CCommunication::serial;
+int CommType;
 
 bool CCommunication::connect(int id,int baud){
+
+    if(UsbPort.InitUsbPort(COMM_USB_MASS,"UD")){
+        CommType=COMM_USB_MASS;
+        return true;
+    } else{
+        CommType=-1;
+        return false;
+    }
+
     CString way;
     way.Format(_T("\\\\.\\COM%d"),id);//得到端口地址
     LONG retCode=ERROR_SUCCESS;
@@ -23,6 +33,7 @@ bool CCommunication::connect(int id,int baud){
 }
 
 bool CCommunication::disConnect(){
+    return UsbPort.CloseUsbPort()==0;
     int ret=serial.Close();
     if(ret==ERROR_SUCCESS){
         return true;
@@ -282,11 +293,16 @@ uint16_t GetCRC16(UINT8 *pSource,UINT16 len){
 }
 
 extern int CommType;
+/**
+  *没打开设备对的时候让CommType = -1
+  *打开USB时让CommType=COMM_USB_MASS
+  */
 
 BYTE cdb_w[16]={0xef,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 BYTE cdb_r[16]={0xef,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 int USB_SendReceive(BYTE CmdBuf[],DWORD CmdLength,BYTE RspBuf[],DWORD RspLength){
+
     int ret;
     DWORD nBytesWrite,nBytesRead;
 
