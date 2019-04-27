@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="MyLog">
+      <UniqueIdentifier>{776c8fa5-97d1-4b05-80c7-966f6821203f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Comm">
+      <UniqueIdentifier>{3b34ac33-bd01-417d-89f1-5f96d430ca56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{65dc0a81-6c03-4228-91ec-9463f415f8ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_finger.h">
@@ -33,29 +42,35 @@
     <ClInclude Include="algo.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CCommunication.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="enumcd.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Serial.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="str4err_warn.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="UsbPort.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="MyLog.h">
+      <Filter>MyLog</Filter>
     </ClInclude>
-    <ClInclude Include="comm.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="CCommunication.h">
+      <Filter>Comm</Filter>
     </ClInclude>
     <ClInclude Include="CommListener.h">
-      <Filter>头文件</Filter>
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="comm.h">
+      <Filter>Comm</Filter>
     </ClInclude>
     <ClInclude Include="CommProtocolConverter.h">
-      <Filter>头文件</Filter>
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="enumcd.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="UsbPort.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,23 +86,26 @@
     <ClCompile Include="algo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CCommunication.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ControlAvailability.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="enumcd.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Serial.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="UsbPort.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="MyLog.cpp">
+      <Filter>MyLog</Filter>
+    </ClCompile>
+    <ClCompile Include="CCommunication.cpp">
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlAvailability.cpp">
+      <Filter>Comm</Filter>
     </ClCompile>
     <ClCompile Include="CommListener.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="enumcd.cpp">
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="UsbPort.cpp">
+      <Filter>Comm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -143,7 +143,7 @@ int CUsbPort::InitUsbPort(int CommType, char *pDesc)
 			return -1;
 		}
 	}
-
+    return -1;
 }
 
 
@@ -156,7 +156,7 @@ bool CUsbPort::USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,D
 	bool status;
 
 	// Get nand information
-	SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER sptdwb;
+	//SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER sptdwb;
 	ZeroMemory(&sptwb,sizeof(SCSI_PASS_THROUGH_WITH_BUFFERS));
 	sptwb.Spt.Length				= sizeof(SCSI_PASS_THROUGH);
 	sptwb.Spt.PathId				= 0;
@@ -916,7 +916,8 @@ HANDLE CUsbPort::OpenOneDevice(HDEVINFO HardwareDeviceInfo, PSP_DEVICE_INTERFACE
 	}
 
     static char _temp[1024]={};
-    wcstombs(_temp,functionClassDeviceData->DevicePath,1024);
+    size_t t;
+    wcstombs_s(&t,_temp,functionClassDeviceData->DevicePath,1024);
 
 	if (strstr(_temp, pDesc) != NULL)
 	{

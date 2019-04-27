@@ -230,15 +230,15 @@ void Ctest_fingerDlg::OnBnClickedBtnconnect(){
 		if(ret){
 			btnConnect->SetWindowText(_T("断开连接"));
 			updateControlDisable(actOpenedPort);
-			log(LOGU,"连接COM%d成功",com);
+			MyLog.print(Log::LOGU,"连接COM%d成功",com);
 		}else{
 			updateControlDisable(actClosedPort);
-			log(LOGU,"连接COM%d失败",com);
+			MyLog.print(Log::LOGU,"连接COM%d失败",com);
 		}
 	}else{
 		CCommunication::disConnect();
 		updateControlDisable(actClosedPort);
-		log(LOGU,"断开连接成功");
+		MyLog.print(Log::LOGU,"断开连接成功");
 		btnConnect->SetWindowText(_T("连接下位机"));
 	}
 }
@@ -258,12 +258,10 @@ void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
 			path=path+_T(".txt");
 		}
 		//CString->char*
-		char filePath[256]={},* text=CString2char(logText);
-		int len=WideCharToMultiByte(0,0,path,path.GetLength(),0,0,0,0);
-		WideCharToMultiByte(0,0,path,path.GetLength(),filePath,len,0,0);
+        char* filePath=CString2char(path);
 		//write into file
 		FILE* fp=fopen(filePath,"w");
-		fprintf(fp,"%s",text);
+		fwprintf_s(fp,_T("%s"),logText);
 		fclose(fp);
 	}
 }
@@ -272,12 +270,12 @@ void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
 DWORD WINAPI threadGetRawImage(LPVOID params){
 	CCommunication::sendCommand(CMD_GET_RAW_IMAGE);
 	progress->SetPos(30);
-	log(LOGD,"Serial Thread:3向下位机发送命令:CMD_GET_RAW_IMAGE");
-	log(LOGU,"请放手指");
+	MyLog.print(Log::LOGD,"Serial Thread:3向下位机发送命令:CMD_GET_RAW_IMAGE");
+	MyLog.print(Log::LOGU,"请放手指");
 	CCommunication::waitForPacket(10*1000);
 	progress->SetPos(50);
-	log(LOGD,"Serial Thread:4接收到数据包,大小为%d",packetCnt);
-	log(LOGD,"Serial Thread:5线程向主线程发送消息WM_GET_RAW_IMAGE");
+	MyLog.print(Log::LOGD,"Serial Thread:4接收到数据包,大小为%d",packetCnt);
+	MyLog.print(Log::LOGD,"Serial Thread:5线程向主线程发送消息WM_GET_RAW_IMAGE");
 	SendMessage((HWND)params,WM_GET_RAW_IMAGE,WM_GET_RAW_IMAGE,0);
 	return 0;
 }
@@ -286,10 +284,10 @@ DWORD WINAPI threadGetRawImage(LPVOID params){
 void Ctest_fingerDlg::OnBnClickedBtnrawimage(){
 	updateControlDisable(actGetingImage);
 	progress->SetPos(10);
-	log(LOGD,"Main Thread:1开始采集原始图像");
+	MyLog.print(Log::LOGD,"Main Thread:1开始采集原始图像");
 	serialThread=CreateThread(0,0,threadGetRawImage,this->m_hWnd,0,0);
 	progress->SetPos(20);
-    log(LOGD,"Main Thread:2采集图像线程地址:%d",serialThread);
+    MyLog.print(Log::LOGD,"Main Thread:2采集图像线程地址:%d",serialThread);
 }
 
 //串口线程消息处理函数
@@ -298,18 +296,18 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 	switch(w){
 		case WM_GET_RAW_IMAGE:{
 			progress->SetPos(75);
-			log(LOGD,"Main Thread:6消息处理函数收到消息WM_GET_RAW_IMAGE");
+			MyLog.print(Log::LOGD,"Main Thread:6消息处理函数收到消息WM_GET_RAW_IMAGE");
 			CCommunication::getDataFromPacket();
 			
 			if(packetDataLen==0){
-				log(LOGU,"接收数据超时");
+				MyLog.print(Log::LOGU,"接收数据超时");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}else{
 				saveImage(_T("collectedImage"));
 				progress->SetPos(100);
-				log(LOGD,"Main Thread:7加载图片完成");
-				log(LOGU,"接收数据成功");
+				MyLog.print(Log::LOGD,"Main Thread:7加载图片完成");
+				MyLog.print(Log::LOGU,"接收数据成功");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}
@@ -335,39 +333,39 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 		case WM_READ_REGISTER:{
 			CCommunication::getDataFromPacket();
 			if(packetDataLen==0){
-				log(LOGU,"接收数据超时");
+				MyLog.print(Log::LOGU,"接收数据超时");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}else{
 				CString tmp;
 				tmp.Format(_T("%X"),packetData[0]);
 				editReadRegVal->SetWindowText(tmp);
-				log(LOGU,"接收数据成功");
+				MyLog.print(Log::LOGU,"接收数据成功");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}
 			updateControlDisable(actReadedReg);
 		}break;
 		case WM_WRITE_REGISTER:{
-			log(LOGU,"修改寄存器命令发送成功");
+			MyLog.print(Log::LOGU,"修改寄存器命令发送成功");
 			CloseHandle(serialThread);
 			serialThread=0;
 			updateControlDisable(actWritedReg);
 		}break;
 		case WM_GET_TEST_IMAGE:{
 			progress->SetPos(75);
-			log(LOGD,"Main Thread:4消息处理函数收到消息WM_GET_TEST_IMAGE");
+			MyLog.print(Log::LOGD,"Main Thread:4消息处理函数收到消息WM_GET_TEST_IMAGE");
 			CCommunication::getDataFromPacket();
 			
 			if(packetDataLen==0){
-				log(LOGU,"接收背景数据超时");
+				MyLog.print(Log::LOGU,"接收背景数据超时");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}else{
 				saveImage(_T("collectedBGI"));
 				progress->SetPos(100);
-				log(LOGD,"Main Thread:5加载图片完成");
-				log(LOGU,"接收背景数据成功");
+				MyLog.print(Log::LOGD,"Main Thread:5加载图片完成");
+				MyLog.print(Log::LOGU,"接收背景数据成功");
 				CloseHandle(serialThread);
 				serialThread=0;
 			}
@@ -401,12 +399,12 @@ void Ctest_fingerDlg::OnBnClickedBtncontinueimage(){
 	WCHAR str[512];
 	btnContinueImage->GetWindowTextW(str,512);
 	if(lstrcmp(str,_T("连续获取图像"))==0){
-		log(LOGU,"开始连续获取图像");
+		MyLog.print(Log::LOGU,"开始连续获取图像");
 		updateControlDisable(actGetConImage);
 		btnContinueImage->SetWindowText(_T("停止获取图像"));
 		SendMessage(WM_GET_CON_IMAGE,WM_GET_CON_IMAGE,0);
 	}else{
-		log(LOGU,"停止连续获取图像");
+		MyLog.print(Log::LOGU,"停止连续获取图像");
 		updateControlDisable(actStpGetImage);
 		btnContinueImage->SetWindowText(_T("连续获取图像"));
 		SendMessage(WM_STP_GET_IMAGE,WM_STP_GET_IMAGE,0);
@@ -415,14 +413,14 @@ void Ctest_fingerDlg::OnBnClickedBtncontinueimage(){
 
 
 void Ctest_fingerDlg::OnBnClickedBtndevlog(){
-	log(LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
-	log(LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
-	log(LOGU,"V1.1 <2019年3月16日15:54:23>:完成按钮互斥,防止线程冲突,添加开发日志");
-	log(LOGU,"V1.2 <2019年3月18日00:57:44>:添加读写寄存器,添加进度条,添加选图像大小");
-	log(LOGU,"V1.3 <2019年3月24日13:59:42>:完成了无用功能删减,放大了指纹图像,修复了按钮互斥bug");
-	log(LOGU,"V1.4 <2019年3月24日14:12:08>:添加了在release模式下取消warning的代码,添加了打开文件夹按钮");
-	log(LOGU,"V1.5 <2019年4月10日17:15:45>:完成连续取背景功能");
-	log(LOGU,"V1.6 <2019年4月22日22:42:59>:适配了航芯的取原始图像功能,修复了时间和编辑框鬼畜bug");
+	MyLog.print(Log::LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
+	MyLog.print(Log::LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
+	MyLog.print(Log::LOGU,"V1.1 <2019年3月16日15:54:23>:完成按钮互斥,防止线程冲突,添加开发日志");
+	MyLog.print(Log::LOGU,"V1.2 <2019年3月18日00:57:44>:添加读写寄存器,添加进度条,添加选图像大小");
+	MyLog.print(Log::LOGU,"V1.3 <2019年3月24日13:59:42>:完成了无用功能删减,放大了指纹图像,修复了按钮互斥bug");
+	MyLog.print(Log::LOGU,"V1.4 <2019年3月24日14:12:08>:添加了在release模式下取消warning的代码,添加了打开文件夹按钮");
+	MyLog.print(Log::LOGU,"V1.5 <2019年4月10日17:15:45>:完成连续取背景功能");
+	MyLog.print(Log::LOGU,"V1.6 <2019年4月22日22:42:59>:适配了航芯的取原始图像功能,修复了时间和编辑框鬼畜bug");
 }
 
 //读寄存器的线程函数
@@ -461,20 +459,20 @@ DWORD WINAPI threadWriteReg(LPVOID params){
 void Ctest_fingerDlg::OnBnClickedBtnreadreg(){
 	updateControlDisable(actReadingReg);
 	progress->SetPos(10);
-	log(LOGD,"Main Thread:1开始读寄存器");
+	MyLog.print(Log::LOGD,"Main Thread:1开始读寄存器");
 	serialThread=CreateThread(0,0,threadReadReg,this->m_hWnd,0,0);
 	progress->SetPos(20);
-    log(LOGD,"Main Thread:2读寄存器线程地址:%d",serialThread);
+    MyLog.print(Log::LOGD,"Main Thread:2读寄存器线程地址:%d",serialThread);
 }
 
 
 void Ctest_fingerDlg::OnBnClickedBtnwritereg(){
 	updateControlDisable(actWritingReg);
 	progress->SetPos(10);
-	log(LOGD,"Main Thread:1开始写寄存器");
+	MyLog.print(Log::LOGD,"Main Thread:1开始写寄存器");
 	serialThread=CreateThread(0,0,threadWriteReg,this->m_hWnd,0,0);
 	progress->SetPos(20);
-    log(LOGD,"Main Thread:2写寄存器线程地址:%d",serialThread);
+    MyLog.print(Log::LOGD,"Main Thread:2写寄存器线程地址:%d",serialThread);
 }
 
 
@@ -483,38 +481,38 @@ void Ctest_fingerDlg::OnBnClickedBtnsetcmos(){
 	GetDlgItemText(IDC_EDITLightTime,a,100);
 	GetDlgItemText(IDC_EDITSensitivity,b,100);
 	if(a[0]==0&&b[0]==0)
-		log(LOGU,"设置失败,两个均为空");
+		MyLog.print(Log::LOGU,"设置失败,两个均为空");
 	else if(a[0]==0)
-		log(LOGU,CString(_T("设置灵敏度为"))+b);
+		MyLog.print(Log::LOGU,CString(_T("设置灵敏度为"))+b);
 	else if(b[0]==0)
-		log(LOGU,CString(_T("设置曝光时间为"))+a);
+		MyLog.print(Log::LOGU,CString(_T("设置曝光时间为"))+a);
 	else
-		log(LOGU,CString(_T("设置曝光时间为"))+a+_T(" , ")+_T("设置灵敏度为")+b);
+		MyLog.print(Log::LOGU,CString(_T("设置曝光时间为"))+a+_T(" , ")+_T("设置灵敏度为")+b);
 }
 
 
 void Ctest_fingerDlg::OnBnClickedBtnsetbaud(){
 	int baud=GetDlgItemInt(IDC_CMBBaudSet);
-	log(LOGU,"设置串口波特率为%d",baud);
+	MyLog.print(Log::LOGU,"设置串口波特率为%d",baud);
 }
 
 
 void Ctest_fingerDlg::OnBnClickedBtnsetpassword(){
 	WCHAR str[100];
 	GetDlgItemText(IDC_EDITPasswordSet,str,100);
-	log(LOGU,CString(_T("设置串口通信密码为"))+str);
+	MyLog.print(Log::LOGU,CString(_T("设置串口通信密码为"))+str);
 }
 
 
 void Ctest_fingerDlg::OnBnClickedBtnsetaddress(){
 	WCHAR str[100];
 	GetDlgItemText(IDC_EDITAddressSet,str,100);
-	log(LOGU,CString(_T("设置串口通信地址为"))+str);
+	MyLog.print(Log::LOGU,CString(_T("设置串口通信地址为"))+str);
 }
 
 
 void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
-	system("explorer collectedImage");
+    ShellExecuteA(NULL, "explore", "collectedImage", NULL, NULL, SW_HIDE);
 }
 
 
@@ -523,12 +521,12 @@ void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
 	WCHAR str[512];
 	btnContinueBackGroundImage->GetWindowTextW(str,512);
 	if(lstrcmp(str,_T("连续获取背景"))==0){
-		log(LOGU,"开始连续获取背景");
+		MyLog.print(Log::LOGU,"开始连续获取背景");
 		updateControlDisable(actGetConBKI);
 		btnContinueBackGroundImage->SetWindowText(_T("停止获取背景"));
 		SendMessage(WM_GET_CON_BKI,WM_GET_CON_BKI,0);
 	}else{
-		log(LOGU,"停止连续获取背景");
+		MyLog.print(Log::LOGU,"停止连续获取背景");
 		updateControlDisable(actStpGetBKI);
 		btnContinueBackGroundImage->SetWindowText(_T("连续获取背景"));
 		SendMessage(WM_STP_GET_BKI,WM_STP_GET_BKI,0);
@@ -537,18 +535,18 @@ void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
 
 
 void Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage(){
-	system("explorer collectedBGI");
+    ShellExecuteA(NULL, "explore", "collectedBGI", NULL, NULL, SW_HIDE);
 }
 
 //获取背景的线程函数
 DWORD WINAPI threadGetTestImage(LPVOID params){
 	CCommunication::sendCommand(CMD_GET_TEST_IMAGE);
 	progress->SetPos(30);
-	log(LOGD,"Serial Thread:1向下位机发送命令:CMD_GET_TEST_IMAGE");
+	MyLog.print(Log::LOGD,"Serial Thread:1向下位机发送命令:CMD_GET_TEST_IMAGE");
 	CCommunication::waitForPacket(10*1000);
 	progress->SetPos(50);
-	log(LOGD,"Serial Thread:2接收到数据包,大小为%d",packetCnt);
-	log(LOGD,"Serial Thread:3线程向主线程发送消息CMD_GET_TEST_IMAGE");
+	MyLog.print(Log::LOGD,"Serial Thread:2接收到数据包,大小为%d",packetCnt);
+	MyLog.print(Log::LOGD,"Serial Thread:3线程向主线程发送消息CMD_GET_TEST_IMAGE");
 	SendMessage((HWND)params,WM_GET_TEST_IMAGE,WM_GET_TEST_IMAGE,0);
 	return 0;
 }
@@ -556,8 +554,8 @@ DWORD WINAPI threadGetTestImage(LPVOID params){
 void Ctest_fingerDlg::OnBnClickedBtnbackgroundimage(){
 	updateControlDisable(actGetingImage);
 	progress->SetPos(10);
-	log(LOGD,"Main Thread:开始采集背景");
+	MyLog.print(Log::LOGD,"Main Thread:开始采集背景");
 	serialThread=CreateThread(0,0,threadGetTestImage,this->m_hWnd,0,0);
 	progress->SetPos(20);
-    log(LOGD,"Main Thread:采集背景线程地址:%d",serialThread);
+    MyLog.print(Log::LOGD,"Main Thread:采集背景线程地址:%d",serialThread);
 }

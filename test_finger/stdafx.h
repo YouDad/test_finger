@@ -109,17 +109,18 @@ typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
 
-#include"CommListener.h"
-#include"CommProtocolConverter.h"
+#include"str4err_warn.h"
+#include"MyLog.h"
 
 #include"comm.h"
 #include"enumcd.h"
 #include"UsbPort.h"
 #include"CCommunication.h"
+#include"CommListener.h"
+#include"CommProtocolConverter.h"
 //extern CSerial serial;
 
 
-#include"str4err_warn.h"
 #include"test_finger.h"
 #include"test_fingerDlg.h"
 #include"algo.h"//这个项目用的算法头文件
