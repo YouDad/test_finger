@@ -111,15 +111,20 @@ typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
 
+#include"Serial.h"
 #include"str4err_warn.h"
 #include"MyLog.h"
 
-#include"comm.h"
+#include"CommProtocolConverter.h"
+#include"RequestConverterGD32F30.h"
+#include"ResponseConverterGD32F30.h"
+#include"RequestConverterACH512.h"
+#include"CommListener.h"
 #include"enumcd.h"
 #include"UsbPort.h"
+#include"CommDevice.h"
+#include"Comm.h"
 #include"CCommunication.h"
-#include"CommListener.h"
-#include"CommProtocolConverter.h"
 
 #include"test_finger.h"
 #include"test_fingerDlg.h"

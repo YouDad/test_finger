@@ -1,4 +1,4 @@
-#include "CommProtocolConverter.h"
+#include"stdafx.h"
 
 DataPacket::DataPacket(const void * d,int l){
     data=new BYTE[l+1];

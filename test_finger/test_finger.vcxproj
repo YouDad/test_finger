@@ -182,7 +182,8 @@
   <ItemGroup>
     <ClInclude Include="algo.h" />
     <ClInclude Include="CCommunication.h" />
-    <ClInclude Include="comm.h" />
+    <ClInclude Include="Comm.h" />
+    <ClInclude Include="CommDevice.h" />
     <ClInclude Include="CommListener.h" />
     <ClInclude Include="CommProtocolConverter.h" />
     <ClInclude Include="Config.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="RequestConverterGD32F30.h" />
     <ClInclude Include="MyLog.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResponseConverterGD32F30.h" />
     <ClInclude Include="Serial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="str4err_warn.h" />
@@ -202,6 +204,7 @@
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
     <ClCompile Include="CCommunication.cpp" />
+    <ClCompile Include="CommDevice.cpp" />
     <ClCompile Include="CommListener.cpp" />
     <ClCompile Include="CommProtocolConverter.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />

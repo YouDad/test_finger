@@ -41,6 +41,19 @@ enum CmdCodeGD32F30{
     //AdjustImage=0x0403,
 };
 
+#pragma pack(1)
+struct RequestPacketGD32F30{
+    uint16_t	Head;
+    uint32_t	Addr;
+    uint32_t	Password;
+    uint16_t	NO;
+    uint16_t	CMD;
+    uint8_t		Sign;
+    uint16_t	Length;
+    uint8_t		Sendbuf[530];
+};
+#pragma pack(4)
+
 class RequestConverterGD32F30:public ICommProtocolRequestConverter<CmdCodeGD32F30>{
 public:
     bool checkProtocol(uint16_t head);
