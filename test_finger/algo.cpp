@@ -1,6 +1,12 @@
 #pragma once
 #include"stdafx.h"
 
+int CString2int(CString c){
+    int ret;
+    swscanf(c,_T("%d"),&ret);
+    return ret;
+}
+
 char* CString2char(CString&c){
     static char text[65536+10];
     int len=WideCharToMultiByte(0,0,c,c.GetLength(),0,0,0,0);
@@ -9,7 +15,10 @@ char* CString2char(CString&c){
     return text;
 }
 
-void enumerateSerialPorts(std::vector<int>* idle){
+std::vector<int>* idle=new std::vector<int>();
+std::vector<int>* lastIdle=NULL;
+
+void enumerateSerialPorts(){
     //清除串口数组内容
     idle->clear();
     //因为至多有255个串口，所以依次检查各串口是否存在
@@ -30,47 +39,48 @@ void enumerateSerialPorts(std::vector<int>* idle){
 }
 
 void updateCommunityWay(){
-    static std::vector<int>* idle=new std::vector<int>();
-    static std::vector<int>* lastIdle=NULL;
-    enumerateSerialPorts(idle);
+    if(lastIdle){
+        delete lastIdle;
+    }
+    lastIdle=idle;
+    idle=new std::vector<int>();
 
+    enumerateSerialPorts();
     //UI:组合框 更新
+    cmbWay->ResetContent();
     if(idle->size()==0){
         MyLog.print(Log::LOGU,"未发现空闲的串口");
         return;
     } else{
         MyLog.print(Log::LOGU,"发现%d个串口",idle->size());
-        cmbWay->ResetContent();
         for(int i=0;i<idle->size();i++){
             CString name;
             name.Format(_T("COM%d"),(*idle)[i]);
             cmbWay->InsertString(i,name);
         }
     }
+}
 
-    //没有可比较的对象,第一次枚举
-    if(lastIdle==NULL){
-        lastIdle=idle;
-        idle=new std::vector<int>();
-        return;
-    }
 
+void autoConnect(){
     int id=CCommunication::getConnectId();
-    //处于未连接状态,可能有两种动作:1.直接插入触发这个事件 2.断开之后拔触发事件
+    //自动连接只在未连接状态生效
     if(id==0){
-        if(idle->size()==lastIdle->size()+1){
-            //1.直接插入触发这个事件
+        if(idle->size()==lastIdle->size()+1){ //应该会增加一个空闲设备
             std::vector<int> diff;
             std::set_difference(
                 idle->begin(),idle->end(),
                 lastIdle->begin(),lastIdle->end(),
                 std::inserter(diff,diff.begin())
             );//求idle-lastIdle
-            if(diff.size()==1){
+            if(diff.size()==1){ //差集应该只有一个元素
                 int needConnectId=diff[0];
                 for(int i=0;i<idle->size();i++){
                     if((*idle)[i]==needConnectId){
                         cmbWay->SetCurSel(i);
+                        CString baud;
+                        cmbBaud->GetWindowTextW(baud);
+                        CCommunication::connect(needConnectId,CString2int(baud));
                     }
                 }
             } else{
@@ -85,8 +95,6 @@ void updateCommunityWay(){
                     MyLog.print(Log::LOGE,error);
                 }
             }
-        } else if(idle->size()==lastIdle->size()-1){
-            //2.断开之后拔触发事件
         } else{
             //其他异常情况
             MyLog.print(Log::LOGE,"发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle并不比lastIdle多,详细信息:");
@@ -109,7 +117,13 @@ void updateCommunityWay(){
                 MyLog.print(Log::LOGE,error);
             }
         }
-    } else{
+    }
+}
+
+void autoDisconnect(){
+    int id=CCommunication::getConnectId();
+    //自动断开仅当连接状态下
+    if(id!=0){
         bool needDisconnect=true;
         for(int i=0;i<idle->size();i++){
             if((*idle)[i]==id){
@@ -119,10 +133,7 @@ void updateCommunityWay(){
         if(needDisconnect){
             CCommunication::disConnect();
         }
-
     }
-    lastIdle=idle;
-    idle=new std::vector<int>();
 }
 
 //本地函数,禁用控件

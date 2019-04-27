@@ -1,5 +1,6 @@
 #include"stdafx.h"
 CSerial CCommunication::serial;
+int CCommunication::id=0;
 int CommType;
 
 bool isUSB(){
@@ -8,13 +9,17 @@ bool isUSB(){
     return selectionText.Compare(_T("USB"))==0;
 }
 
+int CCommunication::getConnectId(){
+    return CCommunication::id;
+}
+
 bool CCommunication::connect(int id,int baud){
     if(isUSB()){
         if(UsbPort.InitUsbPort(COMM_USB_MASS,"UD")){
             CommType=COMM_USB_MASS;
             cmbChipType->SetCurSel(1);
             bool ret=sendCommand(USR_CMD_GET_INFO);
-            ret = waitForPacket(100*1000);
+            ret=waitForPacket(100*1000);
             return true;
         } else{
             CommType=-1;
@@ -38,6 +43,10 @@ bool CCommunication::connect(int id,int baud){
     if(retCode==ERROR_SUCCESS){
         serial.Purge();
     }
+    MyLog.print(Log::LOGU,"连接COM%d%s",id,retCode==ERROR_SUCCESS?"成功":"失败");
+    if(retCode==ERROR_SUCCESS){
+        CCommunication::id=id;
+    }
     return retCode==ERROR_SUCCESS;
 }
 
@@ -46,7 +55,9 @@ bool CCommunication::disConnect(){
         return UsbPort.CloseUsbPort()==0;
     }
     int ret=serial.Close();
+    MyLog.print(Log::LOGU,"断开连接成功");
     if(ret==ERROR_SUCCESS){
+        CCommunication::id=0;
         return true;
     } else{
         ASF_WARNING(5);
@@ -267,7 +278,7 @@ void CCommunication::getDataFromPacket(){
 
 }
 
-const UINT16 CRC16Table[256]={
+const uint16_t CRC16Table[256]={
     0x0000,0x1021,0x2042,0x3063,0x4084,0x50a5,0x60c6,0x70e7,
     0x8108,0x9129,0xa14a,0xb16b,0xc18c,0xd1ad,0xe1ce,0xf1ef,
     0x1231,0x0210,0x3273,0x2252,0x52b5,0x4294,0x72f7,0x62d6,
@@ -302,11 +313,11 @@ const UINT16 CRC16Table[256]={
     0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
 };
 //X16 + X12 + X5 + 1 余式表
-uint16_t GetCRC16(UINT8 *pSource,UINT16 len){
-    UINT16 i;
-    UINT16 result=0;
+uint16_t GetCRC16(uint8_t *pSource,UINT16 len){
+    uint16_t i;
+    uint16_t result=0;
     for(i=0; i<len; i++){
-        result=(result<<8)^CRC16Table[(result>>8)^(UINT8)*pSource++];
+        result=(result<<8)^CRC16Table[(result>>8)^(uint8_t)*pSource++];
     }
     return result;
 }

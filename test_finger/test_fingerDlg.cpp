@@ -6,9 +6,6 @@
 #define new DEBUG_NEW
 #endif
 
-
-
-
 CEdit* editLog;
 CEdit* editAddress;
 CEdit* editPassword;
@@ -45,7 +42,6 @@ BYTE packet[65536];
 DWORD packetCnt;
 BYTE packetData[65536];
 DWORD packetDataLen;
-
 
 // Ctest_fingerDlg 对话框
 
@@ -207,8 +203,12 @@ HCURSOR Ctest_fingerDlg::OnQueryDragIcon(){
 BOOL Ctest_fingerDlg::OnDeviceChange(UINT nEventType, DWORD dwData){
 	switch(nEventType){
 		case DBT_DEVICEREMOVECOMPLETE://移除设备
+            updateCommunityWay();
+            autoDisconnect();
+            break;
 		case DBT_DEVICEARRIVAL://添加设备
-			updateCommunityWay();
+            updateCommunityWay();
+			autoConnect();
 			break;
 	}
 	return TRUE;
@@ -230,15 +230,12 @@ void Ctest_fingerDlg::OnBnClickedBtnconnect(){
 		if(ret){
 			btnConnect->SetWindowText(_T("断开连接"));
 			updateControlDisable(actOpenedPort);
-			MyLog.print(Log::LOGU,"连接COM%d成功",com);
 		}else{
 			updateControlDisable(actClosedPort);
-			MyLog.print(Log::LOGU,"连接COM%d失败",com);
 		}
 	}else{
 		CCommunication::disConnect();
 		updateControlDisable(actClosedPort);
-		MyLog.print(Log::LOGU,"断开连接成功");
 		btnConnect->SetWindowText(_T("连接下位机"));
 	}
 }

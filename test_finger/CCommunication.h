@@ -35,7 +35,7 @@ class DefaultResponsePacket{
 class CCommunication{
 private:
 	static CSerial serial;
-	static bool use;
+    static int id;
 	static bool sendCommand_Default(int cmdCode,uint8_t* Data=0,uint16_t Len=0);
 	static bool sendCommand_HangXin(int cmdCode,uint8_t* Data=0,uint16_t Len=0);
     static bool USB_Send(BYTE CmdBuf[],DWORD CmdLength);

@@ -27,11 +27,13 @@ enum action{
 //需要学这个函数,自己写两个转化
 char* CString2char(CString&c);
 
-//枚举串口 useful返回空闲的串口,used返回被占用的串口
-void enumerateSerialPorts(std::vector<int>* idle);
-
 //更新通信方式组合框
 void updateCommunityWay();
+
+//自动连接
+void autoConnect();
+//自动断开连接
+void autoDisconnect();
 
 //根据动作更新控件可用性
 void updateControlDisable(action a);
