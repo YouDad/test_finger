@@ -5,14 +5,14 @@ bool RequestConverterGD32F30::checkProtocol(uint16_t head){
     return head==0xEF02;
 }
 
-std::vector<DataPacket> RequestConverterGD32F30::convert(CmdCodeGD32F30 CmdCode,uint8_t * Data,uint16_t Len){
+std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * Data,uint16_t Len){
     std::vector<DataPacket> ret;
 
-    struct RequestPacketGD32F30 SendPack={};
+    struct DataPacketGD32F30 SendPack={};
     SendPack.Head=0x02EF;
     SendPack.CMD=CmdCode;
 
-    const int interval=sizeof RequestPacketGD32F30::Sendbuf-2;
+    const int interval=sizeof DataPacketGD32F30::Sendbuf-2;
     for(int i=0;Len>interval+i*interval;i++){
         SendPack.NO=i;
         SendPack.Sign=RequestNotEnd;

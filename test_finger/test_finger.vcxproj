@@ -183,7 +183,6 @@
     <ClInclude Include="algo.h" />
     <ClInclude Include="CCommunication.h" />
     <ClInclude Include="Comm.h" />
-    <ClInclude Include="CommDevice.h" />
     <ClInclude Include="CommListener.h" />
     <ClInclude Include="CommProtocolConverter.h" />
     <ClInclude Include="Config.h" />
@@ -204,7 +203,7 @@
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
     <ClCompile Include="CCommunication.cpp" />
-    <ClCompile Include="CommDevice.cpp" />
+    <ClCompile Include="Comm.cpp" />
     <ClCompile Include="CommListener.cpp" />
     <ClCompile Include="CommProtocolConverter.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
@@ -212,6 +211,7 @@
     <ClCompile Include="MyLog.cpp" />
     <ClCompile Include="RequestConverterACH512.cpp" />
     <ClCompile Include="RequestConverterGD32F30.cpp" />
+    <ClCompile Include="ResponseConverterGD32F30.cpp" />
     <ClCompile Include="Serial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

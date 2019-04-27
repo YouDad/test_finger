@@ -42,7 +42,7 @@ enum CmdCodeGD32F30{
 };
 
 #pragma pack(1)
-struct RequestPacketGD32F30{
+struct DataPacketGD32F30{
     uint16_t	Head;
     uint32_t	Addr;
     uint32_t	Password;
@@ -54,8 +54,8 @@ struct RequestPacketGD32F30{
 };
 #pragma pack(4)
 
-class RequestConverterGD32F30:public ICommProtocolRequestConverter<CmdCodeGD32F30>{
+class RequestConverterGD32F30:public ICommProtocolRequestConverter{
 public:
-    bool checkProtocol(uint16_t head);
-    std::vector<DataPacket> convert(CmdCodeGD32F30 CmdCode,uint8_t * Data,uint16_t Len);
+    virtual bool checkProtocol(uint16_t head) override;
+    virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
 };

@@ -154,7 +154,7 @@ bool CCommunication::sendCommand_HangXin(int CmdCode,uint8_t* Data,uint16_t Len)
 bool CCommunication::sendCommand_Default(int CmdCode,uint8_t* Data,uint16_t Len){
     serial.Purge();
     uint8_t err=TRUE;
-    struct RequestPacketGD32F30 SendPack;
+    struct DataPacketGD32F30 SendPack;
     SendPack.Head=0x02EF;
     SendPack.Addr=0x04030201;
     SendPack.Password=0x01020304;

@@ -63,6 +63,7 @@
 #include<iterator>
 #include<algorithm>
 #include<vector>
+#include<queue>
 #include<map>
 
 extern CEdit* editLog;

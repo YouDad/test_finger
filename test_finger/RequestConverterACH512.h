@@ -36,8 +36,19 @@ enum CmdCodeACH512{
     USR_CMD_UP_IMG_EX=0x22
 };
 
+#pragma pack(1)
+struct HangXinSendPacket{
+    char fixed[3];//'z','t','\0'
+    uint8_t cmd;
+    char fixed2[4];//'\0','\0','\0','\0'
+    uint32_t len;
+    uint8_t data[242*266+2];
+    uint16_t sumVal;
+};
+#pragma pack(4)
 
-class RequestConverterACH512:public ICommProtocolRequestConverter<RequestPacketGD32F30>{
+class RequestConverterACH512:public ICommProtocolRequestConverter{
 public:
-    bool checkProtocol(uint16_t head);
+    virtual bool checkProtocol(uint16_t head) override;
+    virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
 };

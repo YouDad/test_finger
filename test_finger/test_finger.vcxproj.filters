@@ -78,9 +78,6 @@
     <ClInclude Include="RequestConverterACH512.h">
       <Filter>CommProtocolConverter</Filter>
     </ClInclude>
-    <ClInclude Include="CommDevice.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
     <ClInclude Include="Comm.h">
       <Filter>Comm</Filter>
     </ClInclude>
@@ -131,8 +128,11 @@
     <ClCompile Include="RequestConverterACH512.cpp">
       <Filter>CommProtocolConverter</Filter>
     </ClCompile>
-    <ClCompile Include="CommDevice.cpp">
-      <Filter>Comm</Filter>
+    <ClCompile Include="Comm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseConverterGD32F30.cpp">
+      <Filter>CommProtocolConverter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

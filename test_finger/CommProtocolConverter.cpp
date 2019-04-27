@@ -6,6 +6,16 @@ DataPacket::DataPacket(const void * d,int l){
     memcpy(data,d,l);
 }
 
+DataPacket::DataPacket(){
+    data=0;
+    len=-1;
+}
+
 void DataPacket::Destruction(){
     delete data;
+    len=-1;
+}
+
+bool DataPacket::isValid(){
+    return len==-1;
 }

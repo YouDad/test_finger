@@ -52,4 +52,8 @@ class DefaultResponsePacket{
 };
 #pragma pack(4)
 
-class ResponseConverterGD32F30:public ICommProtocolResponseConverter<DefaultResponsePacket>{};
+class ResponseConverterGD32F30:public ICommProtocolResponseConverter{
+    virtual bool checkProtocol(uint16_t head) override;
+    virtual DataPacket convert(DataPacket data) override;
+    virtual int getCmdCode(DataPacket data) override;
+};
