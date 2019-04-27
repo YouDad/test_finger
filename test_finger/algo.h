@@ -28,7 +28,7 @@ enum action{
 char* CString2char(CString&c);
 
 //枚举串口 useful返回空闲的串口,used返回被占用的串口
-void enumerateSerialPorts(CUIntArray* idle,CUIntArray* buzy);
+void enumerateSerialPorts(std::vector<int>* idle);
 
 //更新通信方式组合框
 void updateCommunityWay();

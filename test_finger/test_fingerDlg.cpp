@@ -140,7 +140,7 @@ BOOL Ctest_fingerDlg::OnInitDialog()
 	///2.对组合框的初始化
 	updateCommunityWay();
 	//通讯方式
-	const WCHAR* way[]={_T("USB"),0};
+	const WCHAR* way[]={0};
 	for(int i=0;way[i];i++){
 		cmbWay->InsertString(i,way[i]);
 	}

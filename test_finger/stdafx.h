@@ -60,6 +60,8 @@
 #include<afxpriv.h>
 #include<Dbt.h>
 #include<assert.h>
+#include<iterator>
+#include<algorithm>
 #include<vector>
 #include<map>
 

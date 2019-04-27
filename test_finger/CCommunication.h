@@ -41,6 +41,7 @@ private:
     static bool USB_Send(BYTE CmdBuf[],DWORD CmdLength);
     static bool USB_Receive(BYTE RspBuf[],DWORD RspLength);
 public:
+    static int getConnectId();
 	static bool connect(int id,int baud);
 	static bool disConnect();
 	static bool sendCommand(int cmdCode,uint8_t* Data=0,uint16_t Len=0);

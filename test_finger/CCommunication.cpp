@@ -3,7 +3,9 @@ CSerial CCommunication::serial;
 int CommType;
 
 bool isUSB(){
-    return cmbWay->GetCurSel()==0;
+    CString selectionText;
+    cmbWay->GetWindowText(selectionText);
+    return selectionText.Compare(_T("USB"))==0;
 }
 
 bool CCommunication::connect(int id,int baud){

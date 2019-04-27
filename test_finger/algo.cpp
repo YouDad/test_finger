@@ -9,10 +9,9 @@ char* CString2char(CString&c){
     return text;
 }
 
-void enumerateSerialPorts(CUIntArray* idle,CUIntArray* buzy){
+void enumerateSerialPorts(std::vector<int>* idle){
     //清除串口数组内容
-    idle->RemoveAll();
-    buzy->RemoveAll();
+    idle->clear();
     //因为至多有255个串口，所以依次检查各串口是否存在
     //如果能打开某一串口，或打开串口不成功，但返回的是 ERROR_ACCESS_DENIED错误信息，
     //都认为串口存在，只不过后者表明串口已经被占用,否则串口不存在
@@ -22,45 +21,108 @@ void enumerateSerialPorts(CUIntArray* idle,CUIntArray* buzy){
         CString sPort;
         sPort.Format(_T("\\\\.\\COM%d"),i);
 
-        //试图打开此串口
-        BOOL bSuccess;
         HANDLE hPort=::CreateFile(sPort,GENERIC_READ|GENERIC_WRITE,0,0,OPEN_EXISTING,0,0);
-        if(hPort==INVALID_HANDLE_VALUE){
-            //打开串口失败
-            bSuccess=FALSE;
-            DWORD dwError=GetLastError();
-            if(dwError==ERROR_ACCESS_DENIED){
-                bSuccess=TRUE;
-                buzy->Add(i);//已占用的串口
-            }
-        } else{
-            //打开串口成功
-            bSuccess=TRUE;
-            idle->Add(i);//可用的串口
-            if(!CloseHandle(hPort)){
-                DWORD dwError=GetLastError();//关闭不成功的原因
-            }
+        if(hPort!=INVALID_HANDLE_VALUE){
+            idle->push_back(i);
+            CloseHandle(hPort);
         }
     }
 }
 
 void updateCommunityWay(){
-    CUIntArray*idle,*buzy;
-    CUIntArray*lastIdle=0,*lastBuzy=0;
-    cmbWay->ResetContent();
-    enumerateSerialPorts(idle,buzy);
-    if(lastIdle)
-    if(idle->GetSize()>0){
-        for(int i=0;i<idle->GetSize();i++){
+    static std::vector<int>* idle=new std::vector<int>();
+    static std::vector<int>* lastIdle=NULL;
+    enumerateSerialPorts(idle);
+
+    //UI:组合框 更新
+    if(idle->size()==0){
+        MyLog.print(Log::LOGU,"未发现空闲的串口");
+        return;
+    } else{
+        MyLog.print(Log::LOGU,"发现%d个串口",idle->size());
+        cmbWay->ResetContent();
+        for(int i=0;i<idle->size();i++){
             CString name;
-            name.Format(_T("COM%d"),idle->ElementAt(i));
+            name.Format(_T("COM%d"),(*idle)[i]);
             cmbWay->InsertString(i,name);
         }
-        cmbWay->SetCurSel(0);
-        MyLog.print(Log::LOGU,"发现%d个串口",idle->GetSize());
-    } else{
-        MyLog.print(Log::LOGU,"未发现存在的串口");
     }
+
+    //没有可比较的对象,第一次枚举
+    if(lastIdle==NULL){
+        lastIdle=idle;
+        idle=new std::vector<int>();
+        return;
+    }
+
+    int id=CCommunication::getConnectId();
+    //处于未连接状态,可能有两种动作:1.直接插入触发这个事件 2.断开之后拔触发事件
+    if(id==0){
+        if(idle->size()==lastIdle->size()+1){
+            //1.直接插入触发这个事件
+            std::vector<int> diff;
+            std::set_difference(
+                idle->begin(),idle->end(),
+                lastIdle->begin(),lastIdle->end(),
+                std::inserter(diff,diff.begin())
+            );//求idle-lastIdle
+            if(diff.size()==1){
+                int needConnectId=diff[0];
+                for(int i=0;i<idle->size();i++){
+                    if((*idle)[i]==needConnectId){
+                        cmbWay->SetCurSel(i);
+                    }
+                }
+            } else{
+                MyLog.print(Log::LOGE,"发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle和lastIdle的差集元素个数不是一个,详细信息:");
+                {
+                    CString error=_T("diff:");
+                    for(std::vector<int>::iterator it=diff.begin();it!=diff.end();it++){
+                        char number[20];
+                        sprintf(number," %d",*it);
+                        error+=number;
+                    }
+                    MyLog.print(Log::LOGE,error);
+                }
+            }
+        } else if(idle->size()==lastIdle->size()-1){
+            //2.断开之后拔触发事件
+        } else{
+            //其他异常情况
+            MyLog.print(Log::LOGE,"发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle并不比lastIdle多,详细信息:");
+            {
+                CString error=_T("idle:");
+                for(std::vector<int>::iterator it=idle->begin();it!=idle->end();it++){
+                    char number[20];
+                    sprintf(number," %d",*it);
+                    error+=number;
+                }
+                MyLog.print(Log::LOGE,error);
+            }
+            {
+                CString error=_T("lastIdle:");
+                for(std::vector<int>::iterator it=lastIdle->begin();it!=lastIdle->end();it++){
+                    char number[20];
+                    sprintf(number," %d",*it);
+                    error+=number;
+                }
+                MyLog.print(Log::LOGE,error);
+            }
+        }
+    } else{
+        bool needDisconnect=true;
+        for(int i=0;i<idle->size();i++){
+            if((*idle)[i]==id){
+                needDisconnect=false;
+            }
+        }
+        if(needDisconnect){
+            CCommunication::disConnect();
+        }
+
+    }
+    lastIdle=idle;
+    idle=new std::vector<int>();
 }
 
 //本地函数,禁用控件
