@@ -187,6 +187,8 @@
     <ClInclude Include="CommProtocolConverter.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="enumcd.h" />
+    <ClInclude Include="RequestConverterACH512.h" />
+    <ClInclude Include="RequestConverterGD32F30.h" />
     <ClInclude Include="MyLog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serial.h" />
@@ -201,9 +203,12 @@
     <ClCompile Include="algo.cpp" />
     <ClCompile Include="CCommunication.cpp" />
     <ClCompile Include="CommListener.cpp" />
+    <ClCompile Include="CommProtocolConverter.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="enumcd.cpp" />
     <ClCompile Include="MyLog.cpp" />
+    <ClCompile Include="RequestConverterACH512.cpp" />
+    <ClCompile Include="RequestConverterGD32F30.cpp" />
     <ClCompile Include="Serial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -120,8 +120,6 @@ typedef unsigned int   uint32_t;
 #include"CCommunication.h"
 #include"CommListener.h"
 #include"CommProtocolConverter.h"
-//extern CSerial serial;
-
 
 #include"test_finger.h"
 #include"test_fingerDlg.h"
@@ -130,4 +128,3 @@ extern BYTE packet[65536];
 extern DWORD packetCnt;
 extern BYTE packetData[65536];
 extern DWORD packetDataLen;
-//#include"protocol.h"

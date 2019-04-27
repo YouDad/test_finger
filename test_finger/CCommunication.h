@@ -2,7 +2,7 @@
 #include"stdafx.h"
 #include"Serial.h"
 #pragma pack(1)
-struct DefaultSendPacket{
+struct RequestPacketGD32F30{
     uint16_t	Head;
     uint32_t	Addr;
     uint32_t	Password;
@@ -50,7 +50,7 @@ public:
 	static void CCommunication::getDataFromPacket();
 };
 
-uint16_t GetCRC16(uint8_t *pSource,uint16_t len);
+uint16_t GetCRC16(const void*pSource,uint16_t len);
 
 
 ///////////////////////ÃüÁîÂë///////////////////////////////

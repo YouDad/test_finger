@@ -154,7 +154,7 @@ bool CCommunication::sendCommand_HangXin(int CmdCode,uint8_t* Data,uint16_t Len)
 bool CCommunication::sendCommand_Default(int CmdCode,uint8_t* Data,uint16_t Len){
     serial.Purge();
     uint8_t err=TRUE;
-    struct DefaultSendPacket SendPack;
+    struct RequestPacketGD32F30 SendPack;
     SendPack.Head=0x02EF;
     SendPack.Addr=0x04030201;
     SendPack.Password=0x01020304;
@@ -313,11 +313,12 @@ const uint16_t CRC16Table[256]={
     0x6e17,0x7e36,0x4e55,0x5e74,0x2e93,0x3eb2,0x0ed1,0x1ef0
 };
 //X16 + X12 + X5 + 1 ”‡ Ω±Ì
-uint16_t GetCRC16(uint8_t *pSource,UINT16 len){
+uint16_t GetCRC16(const void*pSource,uint16_t len){
     uint16_t i;
     uint16_t result=0;
+    uint8_t* p=(uint8_t*)pSource;
     for(i=0; i<len; i++){
-        result=(result<<8)^CRC16Table[(result>>8)^(uint8_t)*pSource++];
+        result=(result<<8)^CRC16Table[(result>>8)^*p++];
     }
     return result;
 }

@@ -2,10 +2,12 @@
 #include"stdafx.h"
 
 class DataPacket{
+public:
     BYTE* data;
     int   len;
+    DataPacket(const void* d,int l);
+    void Destruction();
 };
-
 
 class ICommProtocolConverter{
 public:
@@ -15,15 +17,18 @@ public:
 template<class T>
 class ICommProtocolRequestConverter:public ICommProtocolConverter{
 public:
-    virtual DataPacket convert(T data)=0;
+    virtual std::vector<DataPacket> convert(T CmdCode,uint8_t* Data,uint16_t Len)=0;
 };
 
 template<class T>
 class ICommProtocolResponseConverter:public ICommProtocolConverter{
 public:
-    virtual T convert(DataPacket data)=0;
+    virtual std::vector<T> convert(DataPacket data)=0;
 };
 
-class RequestConverterDefault:public ICommProtocolRequestConverter<DefaultSendPacket>{
-
+enum ProtocolSign{
+    RequestNotEnd,
+    RequestEnd,
+    ResponseNotEnd,
+    ResponseEnd
 };

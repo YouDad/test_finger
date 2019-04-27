@@ -22,6 +22,9 @@
     <Filter Include="Config">
       <UniqueIdentifier>{65dc0a81-6c03-4228-91ec-9463f415f8ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CommProtocolConverter">
+      <UniqueIdentifier>{55f006a2-bb12-469f-a8b9-b1323804578d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_finger.h">
@@ -60,9 +63,6 @@
     <ClInclude Include="comm.h">
       <Filter>Comm</Filter>
     </ClInclude>
-    <ClInclude Include="CommProtocolConverter.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
     <ClInclude Include="enumcd.h">
       <Filter>Comm</Filter>
     </ClInclude>
@@ -71,6 +71,15 @@
     </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="CommProtocolConverter.h">
+      <Filter>CommProtocolConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestConverterGD32F30.h">
+      <Filter>CommProtocolConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestConverterACH512.h">
+      <Filter>CommProtocolConverter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="UsbPort.cpp">
       <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestConverterGD32F30.cpp">
+      <Filter>CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="CommProtocolConverter.cpp">
+      <Filter>CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestConverterACH512.cpp">
+      <Filter>CommProtocolConverter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
