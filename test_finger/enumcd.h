@@ -19,7 +19,7 @@ Notes:
 Revision History:
 
 
---*/ 
+--*/
 
 #ifndef _ENUMCD_H_
 #define _ENUMCD_H_
@@ -120,7 +120,7 @@ Revision History:
 // Bus Type
 //
 
-static char* BusType[] = {
+static char* BusType[]={
     "UNKNOWN",  // 0x00
     "SCSI",
     "ATAPI",
@@ -136,7 +136,7 @@ static char* BusType[] = {
 // SCSI Device Type
 //
 
-static char* DeviceType[] = {
+static char* DeviceType[]={
     "Direct Access Device", // 0x00
     "Tape Device",          // 0x01
     "Printer Device",       // 0x02
@@ -156,29 +156,29 @@ static char* DeviceType[] = {
 };
 
 #define SCSI_PASS_THROUGH_WITH_BUFFERS_DATABUF_MAX_LENGTH 360*256
-typedef struct _SCSI_PASS_THROUGH_WITH_BUFFERS {
+typedef struct _SCSI_PASS_THROUGH_WITH_BUFFERS{
     SCSI_PASS_THROUGH Spt;
     ULONG             Filler;      // realign buffers to double word boundary
     UCHAR             SenseBuf[32];
     UCHAR             DataBuf[SCSI_PASS_THROUGH_WITH_BUFFERS_DATABUF_MAX_LENGTH];//2048 +4
-} SCSI_PASS_THROUGH_WITH_BUFFERS, *PSCSI_PASS_THROUGH_WITH_BUFFERS;
+} SCSI_PASS_THROUGH_WITH_BUFFERS,*PSCSI_PASS_THROUGH_WITH_BUFFERS;
 
-typedef struct _SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER {
+typedef struct _SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER{
     SCSI_PASS_THROUGH_DIRECT sptd;
     ULONG             Filler;      // realign buffer to double word boundary
     UCHAR             SenseBuf[32];
-    } SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER, *PSCSI_PASS_THROUGH_DIRECT_WITH_BUFFER;
+} SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER,*PSCSI_PASS_THROUGH_DIRECT_WITH_BUFFER;
 
 
-VOID  PrintError( ULONG );
-VOID  PrintDataBuffer( PUCHAR, ULONG );
-VOID  PrintStatusResults( BOOL, DWORD, PSCSI_PASS_THROUGH_WITH_BUFFERS );
-VOID  PrintCapResults( BOOL, DWORD, PSCSI_PASS_THROUGH_WITH_BUFFERS );
-VOID  PrintSenseInfo( PSCSI_PASS_THROUGH_WITH_BUFFERS );
-BOOL  GetRegistryProperty( HDEVINFO, DWORD );
-BOOL  GetDeviceProperty( HDEVINFO, DWORD );
-VOID  DebugPrint( USHORT, PCHAR, ... );
-ULONG GetMediaType(HANDLE hDevice, PUCHAR cdTypeString);
+VOID  PrintError(ULONG);
+VOID  PrintDataBuffer(PUCHAR,ULONG);
+VOID  PrintStatusResults(BOOL,DWORD,PSCSI_PASS_THROUGH_WITH_BUFFERS);
+VOID  PrintCapResults(BOOL,DWORD,PSCSI_PASS_THROUGH_WITH_BUFFERS);
+VOID  PrintSenseInfo(PSCSI_PASS_THROUGH_WITH_BUFFERS);
+BOOL  GetRegistryProperty(HDEVINFO,DWORD);
+BOOL  GetDeviceProperty(HDEVINFO,DWORD);
+VOID  DebugPrint(USHORT,PCHAR,...);
+ULONG GetMediaType(HANDLE hDevice,PUCHAR cdTypeString);
 
 #endif    // _ENUMCD_H_
 

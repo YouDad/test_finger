@@ -63,6 +63,6 @@ typedef unsigned long       DWORD;
 
 typedef unsigned char       BYTE;
 
-int Comm_SendReceive(BYTE CmdBuf[], DWORD CmdLength, BYTE RspBuf[], DWORD RspLength, DWORD nTimeout);
+int Comm_SendReceive(BYTE CmdBuf[],DWORD CmdLength,BYTE RspBuf[],DWORD RspLength,DWORD nTimeout);
 
 #endif

@@ -6,7 +6,7 @@
 
 extern "C"
 {
-	#include "hidsdi.h"
+#include "hidsdi.h"
 };
 
 #define DEVICE_NAME "ASF0002"
@@ -14,34 +14,33 @@ extern "C"
 
 #define IOCTRL_CDB_LEN	16
 
-class CUsbPort
-{
+class CUsbPort{
 public:
-	CUsbPort(void);
-	~CUsbPort(void);
-
-public:
-//	CWnd*	m_pOwner;
-	HANDLE	m_DeviceHandle;
-	HIDP_CAPS	Capabilities;
+    CUsbPort(void);
+    ~CUsbPort(void);
 
 public:
-	int		InitUsbPort(int CommType, char *pDesc);
+    //	CWnd*	m_pOwner;
+    HANDLE	m_DeviceHandle;
+    HIDP_CAPS	Capabilities;
 
-	bool	USBSCSIRead(HANDLE hHandle, BYTE* pCDB, DWORD nCDBLen, BYTE* pData, DWORD nLength, DWORD nTimeOut);
-	bool	USBSCSIWrite(HANDLE hHandle,BYTE* pCDB, DWORD nCDBLen, BYTE* pData, DWORD nLength, DWORD nTimeOut);
+public:
+    int		InitUsbPort(int CommType,char *pDesc);
 
-	bool	USBHidWrite(HANDLE hHandle,BYTE* pData, DWORD nLength, DWORD nTimeOut);
-	bool	USBHidRead(HANDLE hHandle, BYTE* pData, DWORD nLength, DWORD nTimeOut);
+    bool	USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut);
+    bool	USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut);
 
-	int		CloseUsbPort(void);
+    bool	USBHidWrite(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOut);
+    bool	USBHidRead(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOut);
+
+    int		CloseUsbPort(void);
 
 private:
-	int OpenUsbMsc(char *pDesc);
-	int OpenScsiDiskDevice(HDEVINFO IntDevInfo, DWORD Index, DWORD* pDeviceHandle, char *pDesc);
-	ULONG GetMediaType(HANDLE hDevice, PUCHAR cdTypeString);
-	int OpenUsbDriver(char *pDesc);
-	HANDLE OpenOneDevice(HDEVINFO HardwareDeviceInfo, PSP_DEVICE_INTERFACE_DATA DeviceInfoData, char *pDesc);
+    int OpenUsbMsc(char *pDesc);
+    int OpenScsiDiskDevice(HDEVINFO IntDevInfo,DWORD Index,DWORD* pDeviceHandle,char *pDesc);
+    ULONG GetMediaType(HANDLE hDevice,PUCHAR cdTypeString);
+    int OpenUsbDriver(char *pDesc);
+    HANDLE OpenOneDevice(HDEVINFO HardwareDeviceInfo,PSP_DEVICE_INTERFACE_DATA DeviceInfoData,char *pDesc);
 };
 
 extern CUsbPort UsbPort;
