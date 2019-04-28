@@ -8,7 +8,7 @@ public:
     int getConnectId();
     bool connect(int id,int baud);
     bool disconnect();
-    void request(int CmdCode,uint8_t* Data,uint16_t Len);
+    void request(int CmdCode,uint8_t* Data=0,uint16_t Len=0);
     void attach(ICommProtocolRequestConverter* converter);
     void attach(ICommProtocolResponseConverter* converter);
 private:
@@ -23,3 +23,5 @@ private:
     bool startListen();
     bool terminateListen();
 };
+
+extern Comm comm;

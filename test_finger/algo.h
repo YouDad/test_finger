@@ -43,4 +43,6 @@ void loadImage(WCHAR* filePath);
 
 bool saveBmp(int height,int width,BYTE*pData,CString dir,CString path);
 
-void saveImage(CString x);
+void saveImage(CString x,DataPacket dataPacket);
+
+uint16_t GetCRC16(const void*pSource,uint16_t len);

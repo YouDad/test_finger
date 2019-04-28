@@ -181,12 +181,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="algo.h" />
-    <ClInclude Include="CCommunication.h" />
     <ClInclude Include="Comm.h" />
     <ClInclude Include="CommListener.h" />
     <ClInclude Include="CommProtocolConverter.h" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="enumcd.h" />
+    <ClInclude Include="GET_RAW_IMAGE_Listener.h" />
+    <ClInclude Include="GET_TEST_IMAGE_Listener.h" />
+    <ClInclude Include="READ_REGISTER_Listener.h" />
     <ClInclude Include="RequestConverterACH512.h" />
     <ClInclude Include="RequestConverterGD32F30.h" />
     <ClInclude Include="MyLog.h" />
@@ -198,16 +199,16 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="test_finger.h" />
     <ClInclude Include="test_fingerDlg.h" />
-    <ClInclude Include="UsbPort.h" />
+    <ClInclude Include="WRITE_REGISTER_Listener.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
-    <ClCompile Include="CCommunication.cpp" />
     <ClCompile Include="Comm.cpp" />
     <ClCompile Include="CommListener.cpp" />
     <ClCompile Include="CommProtocolConverter.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
-    <ClCompile Include="enumcd.cpp" />
+    <ClCompile Include="GET_RAW_IMAGE_Listener.cpp" />
+    <ClCompile Include="GET_TEST_IMAGE_Listener.cpp" />
     <ClCompile Include="MyLog.cpp" />
     <ClCompile Include="RequestConverterACH512.cpp" />
     <ClCompile Include="RequestConverterGD32F30.cpp" />
@@ -221,7 +222,8 @@
     </ClCompile>
     <ClCompile Include="test_finger.cpp" />
     <ClCompile Include="test_fingerDlg.cpp" />
-    <ClCompile Include="UsbPort.cpp" />
+    <ClCompile Include="READ_REGISTER_Listener.cpp" />
+    <ClCompile Include="WRITE_REGISTER_Listener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

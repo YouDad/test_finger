@@ -5,13 +5,13 @@ bool ResponseConverterGD32F30::checkProtocol(uint16_t head){
 }
 
 DataPacket ResponseConverterGD32F30::convert(DataPacket data){
-    const int size=sizeof DataPacketGD32F30;
+    const int size=sizeof ResponsePacketGD32F30;
     int len=data.len;
     void* p=data.data;
     int totalLength=0;
     BYTE* tmpArray=new BYTE[len];
     while(len){
-        DataPacketGD32F30* pData=(DataPacketGD32F30*)p;
+        ResponsePacketGD32F30* pData=(ResponsePacketGD32F30*)p;
         memcpy(tmpArray+totalLength,pData->Sendbuf,pData->Length);
         totalLength+=pData->Length;
         p=(BYTE*)p+min(len,size);

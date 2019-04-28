@@ -3,17 +3,16 @@
 
 class ICommListener{
 public:
-    virtual void listen(DefaultResponsePacket response)=0;
+    virtual void listen(DataPacket response)=0;
 };
 
 class CommBoardcast{
 public:
+    CommBoardcast();
     void attach(int event,ICommListener*listener);
-    void boardcast(int event,DefaultResponsePacket response);
+    void boardcast(int event,DataPacket response);
 private:
     std::map<int,std::vector<ICommListener*>>m;
 };
 
-class GET_RAW_IMAGE_Listener:public ICommListener{
-    void listen(DefaultResponsePacket response);
-};
+extern CommBoardcast boardcastListener;

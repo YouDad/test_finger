@@ -22,7 +22,10 @@
     <Filter Include="Config">
       <UniqueIdentifier>{65dc0a81-6c03-4228-91ec-9463f415f8ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CommProtocolConverter">
+    <Filter Include="Comm\CommListener">
+      <UniqueIdentifier>{fe89750a-13fa-4f1e-a944-7a24ca11b1f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Comm\CommProtocolConverter">
       <UniqueIdentifier>{55f006a2-bb12-469f-a8b9-b1323804578d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -54,35 +57,38 @@
     <ClInclude Include="MyLog.h">
       <Filter>MyLog</Filter>
     </ClInclude>
-    <ClInclude Include="CCommunication.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
-    <ClInclude Include="CommListener.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
-    <ClInclude Include="enumcd.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
-    <ClInclude Include="UsbPort.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="CommProtocolConverter.h">
-      <Filter>CommProtocolConverter</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
     </ClInclude>
     <ClInclude Include="RequestConverterGD32F30.h">
-      <Filter>CommProtocolConverter</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
     </ClInclude>
     <ClInclude Include="RequestConverterACH512.h">
-      <Filter>CommProtocolConverter</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
     </ClInclude>
     <ClInclude Include="Comm.h">
       <Filter>Comm</Filter>
     </ClInclude>
     <ClInclude Include="ResponseConverterGD32F30.h">
-      <Filter>CommProtocolConverter</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="CommListener.h">
+      <Filter>Comm\CommListener</Filter>
+    </ClInclude>
+    <ClInclude Include="GET_RAW_IMAGE_Listener.h">
+      <Filter>Comm\CommListener</Filter>
+    </ClInclude>
+    <ClInclude Include="GET_TEST_IMAGE_Listener.h">
+      <Filter>Comm\CommListener</Filter>
+    </ClInclude>
+    <ClInclude Include="READ_REGISTER_Listener.h">
+      <Filter>Comm\CommListener</Filter>
+    </ClInclude>
+    <ClInclude Include="WRITE_REGISTER_Listener.h">
+      <Filter>Comm\CommListener</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -104,35 +110,38 @@
     <ClCompile Include="MyLog.cpp">
       <Filter>MyLog</Filter>
     </ClCompile>
-    <ClCompile Include="CCommunication.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
-    <ClCompile Include="ControlAvailability.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
-    <ClCompile Include="CommListener.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
-    <ClCompile Include="enumcd.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
-    <ClCompile Include="UsbPort.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
     <ClCompile Include="RequestConverterGD32F30.cpp">
-      <Filter>CommProtocolConverter</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
     <ClCompile Include="CommProtocolConverter.cpp">
-      <Filter>CommProtocolConverter</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
     <ClCompile Include="RequestConverterACH512.cpp">
-      <Filter>CommProtocolConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="Comm.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
     <ClCompile Include="ResponseConverterGD32F30.cpp">
-      <Filter>CommProtocolConverter</Filter>
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="CommListener.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="GET_RAW_IMAGE_Listener.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="GET_TEST_IMAGE_Listener.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="Comm.cpp">
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="READ_REGISTER_Listener.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="WRITE_REGISTER_Listener.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlAvailability.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

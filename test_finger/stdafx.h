@@ -1,8 +1,6 @@
-
 // stdafx.h : 标准系统包含文件的包含文件，
 // 或是经常使用但不常更改的
 // 特定于项目的包含文件
-
 #pragma once
 
 #define STRICT
@@ -29,7 +27,6 @@
 #include <afxdisp.h>        // MFC 自动化类
 
 
-
 #ifndef _AFX_NO_OLE_SUPPORT
 #include <afxdtctl.h>           // MFC 对 Internet Explorer 4 公共控件的支持
 #endif
@@ -38,13 +35,6 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <afxcontrolbars.h>     // 功能区和控件条的 MFC 支持
-
-
-
-
-
-
-
 
 
 #ifdef _UNICODE
@@ -57,6 +47,7 @@
 #endif
 #endif
 
+
 #include<afxpriv.h>
 #include<Dbt.h>
 #include<assert.h>
@@ -66,38 +57,6 @@
 #include<queue>
 #include<map>
 
-extern CEdit* editLog;
-extern CEdit* editAddress;
-extern CEdit* editPassword;
-extern CEdit* editAddressSet;
-extern CEdit* editPasswordSet;
-extern CEdit* editLightTime;
-extern CEdit* editSensitivity;
-extern CEdit* editReadRegAddr;
-extern CEdit* editReadRegVal;
-extern CEdit* editWriteRegAddr;
-extern CEdit* editWriteRegVal;
-extern CComboBox* cmbWay;
-extern CComboBox* cmbBaud;
-extern CComboBox* cmbBaudSet;
-extern CComboBox* cmbChipType;
-extern CComboBox* cmbLogLevel;
-extern CButton* btnConnect;
-extern CButton* btnRawImage;
-extern CButton* btnTestImage;
-extern CButton* btnContinueImage;
-extern CButton* btnContinueBackGroundImage;
-extern CButton* btnSetCmos;
-extern CButton* btnSetBaud;
-extern CButton* btnSetPassword;
-extern CButton* btnSetAddress;
-extern CButton* btnSaveLog;
-extern CButton* btnReadReg;
-extern CButton* btnWriteReg;
-extern CButton* chkTimeoutContinue;
-extern CStatic* textDevice;
-extern CStatic* image;
-extern CProgressCtrl* progress;
 
 #define WM_GET_RAW_IMAGE	WM_USER+5
 #define WM_GET_CON_IMAGE	WM_USER+6
@@ -112,6 +71,9 @@ typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
 
+#include"test_finger.h"
+#include"test_fingerDlg.h"
+
 #include"Serial.h"
 #include"str4err_warn.h"
 #include"MyLog.h"
@@ -121,16 +83,13 @@ typedef unsigned int   uint32_t;
 #include"ResponseConverterGD32F30.h"
 #include"RequestConverterACH512.h"
 #include"CommListener.h"
-#include"enumcd.h"
-#include"UsbPort.h"
-#include"CommDevice.h"
+//#include"enumcd.h"
+//#include"UsbPort.h"
 #include"Comm.h"
 #include"CCommunication.h"
 
-#include"test_finger.h"
-#include"test_fingerDlg.h"
 #include"algo.h"//这个项目用的算法头文件
-extern BYTE packet[65536];
-extern DWORD packetCnt;
-extern BYTE packetData[65536];
-extern DWORD packetDataLen;
+//extern BYTE packet[65536];
+//extern DWORD packetCnt;
+//extern BYTE packetData[65536];
+//extern DWORD packetDataLen;

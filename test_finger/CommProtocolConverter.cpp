@@ -17,5 +17,5 @@ void DataPacket::Destruction(){
 }
 
 bool DataPacket::isValid(){
-    return len==-1;
+    return len!=-1;
 }
