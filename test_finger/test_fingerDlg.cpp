@@ -476,11 +476,6 @@ void Ctest_fingerDlg::OnBnClickedBtnsetaddress(){
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
-    HANDLE x=ShellExecuteA(NULL,"explore","collectedImage",NULL,NULL,SW_NORMAL);
-}
-
-
 void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
     //根据按钮上的文字判断当前连接状态
     WCHAR str[512];
@@ -499,8 +494,21 @@ void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
 }
 
 
+void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
+    if(access("collectedImage",0)){
+        ShellExecuteA(NULL,"explore","collectedImage",NULL,NULL,SW_NORMAL);
+    } else{
+        MyLog.print(Log::LOGU,"图片文件夹不存在,请先采一张图片");
+    }
+}
+
+
 void Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage(){
-    HANDLE x=ShellExecuteA(NULL,"explore","collectedBGI",NULL,NULL,SW_NORMAL);
+    if(access("collectedBGI",0)){
+        ShellExecuteA(NULL,"explore","collectedBGI",NULL,NULL,SW_NORMAL);
+    } else{
+        MyLog.print(Log::LOGU,"背景文件夹不存在,请先采一张背景");
+    }
 }
 
 

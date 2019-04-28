@@ -51,6 +51,8 @@
 #include<afxpriv.h>
 #include<Dbt.h>
 #include<assert.h>
+#include<io.h>
+
 #include<iterator>
 #include<algorithm>
 #include<vector>
