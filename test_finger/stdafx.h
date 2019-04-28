@@ -74,14 +74,18 @@ typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
 
+#include"resource.h"
+
 #include"Serial.h"
 #include"str4err_warn.h"
 #include"MyThread.h"
-#include"MyLog.h"
 #include"MyString.h"
+#include"MyLog.h"
 
 #include"test_finger.h"
 #include"test_fingerDlg.h"
+
+#include"MyControl.h"
 
 #include"CommProtocolConverter.h"
 #include"RequestConverterGD32F30.h"

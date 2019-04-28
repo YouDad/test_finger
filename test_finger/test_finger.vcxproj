@@ -187,6 +187,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="GET_RAW_IMAGE_Listener.h" />
     <ClInclude Include="GET_TEST_IMAGE_Listener.h" />
+    <ClInclude Include="MyControl.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyThread.h" />
     <ClInclude Include="READ_REGISTER_Listener.h" />
@@ -211,7 +212,9 @@
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="GET_RAW_IMAGE_Listener.cpp" />
     <ClCompile Include="GET_TEST_IMAGE_Listener.cpp" />
+    <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyLog.cpp" />
+    <ClCompile Include="MyString.cpp" />
     <ClCompile Include="MyThread.cpp" />
     <ClCompile Include="RequestConverterACH512.cpp" />
     <ClCompile Include="RequestConverterGD32F30.cpp" />
@@ -235,6 +238,7 @@
     <ResourceCompile Include="test_finger.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="res\test_finger.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -26,7 +26,7 @@ void Log::appendLog(wchar_t* text){
     fclose(fp);
 }
 
-void Log::print(LogLevel level,CString info){
+void Log::print(LogLevel level,MyString info){
     if(level>=LOG_HIGHEST){
         print(Log::LOGW,"%s at %s(%d)FuncName:<%s>",ASF_WARNING1,__FILE__,__LINE__,__FUNCTION__);
     }
@@ -34,15 +34,15 @@ void Log::print(LogLevel level,CString info){
 
     time_t curtime;
     time(&curtime);
-    CString time(ctime(&curtime));
-    CString content=time+info+"\r\n";
+    MyString time(ctime(&curtime));
+    MyString content=time+" "+info+"\r\n";
     int len=editLog->GetWindowTextLength();
     //选定当前文本的末端
     editLog->SetSel(len,len);
     //在编辑框中追加文本
     editLog->ReplaceSel(content);
     //在文件中追加文本
-    appendLog(content+"");
+    appendLog(content);
 }
 
 void Log::print(LogLevel level,const char* format,...){

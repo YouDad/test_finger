@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="MyLog">
-      <UniqueIdentifier>{776c8fa5-97d1-4b05-80c7-966f6821203f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Comm">
       <UniqueIdentifier>{3b34ac33-bd01-417d-89f1-5f96d430ca56}</UniqueIdentifier>
     </Filter>
@@ -28,11 +25,8 @@
     <Filter Include="Comm\CommProtocolConverter">
       <UniqueIdentifier>{55f006a2-bb12-469f-a8b9-b1323804578d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyString">
-      <UniqueIdentifier>{61f81c30-e851-41c8-bff8-88cb6b2fc2ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MyThread">
-      <UniqueIdentifier>{e58c901f-c242-4eb4-99d2-73ee6a612896}</UniqueIdentifier>
+    <Filter Include="My">
+      <UniqueIdentifier>{c84d4a32-4ca5-417e-8412-2fc68c2eec65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,9 +53,6 @@
     </ClInclude>
     <ClInclude Include="str4err_warn.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="MyLog.h">
-      <Filter>MyLog</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>Config</Filter>
@@ -96,11 +87,17 @@
     <ClInclude Include="WRITE_REGISTER_Listener.h">
       <Filter>Comm\CommListener</Filter>
     </ClInclude>
+    <ClInclude Include="MyLog.h">
+      <Filter>My</Filter>
+    </ClInclude>
     <ClInclude Include="MyString.h">
-      <Filter>MyString</Filter>
+      <Filter>My</Filter>
     </ClInclude>
     <ClInclude Include="MyThread.h">
-      <Filter>MyThread</Filter>
+      <Filter>My</Filter>
+    </ClInclude>
+    <ClInclude Include="MyControl.h">
+      <Filter>My</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,9 +115,6 @@
     </ClCompile>
     <ClCompile Include="Serial.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="MyLog.cpp">
-      <Filter>MyLog</Filter>
     </ClCompile>
     <ClCompile Include="RequestConverterGD32F30.cpp">
       <Filter>Comm\CommProtocolConverter</Filter>
@@ -155,8 +149,17 @@
     <ClCompile Include="ControlAvailability.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MyLog.cpp">
+      <Filter>My</Filter>
+    </ClCompile>
     <ClCompile Include="MyThread.cpp">
-      <Filter>MyThread</Filter>
+      <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="MyControl.cpp">
+      <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="MyString.cpp">
+      <Filter>My</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,5 +176,6 @@
     <None Include="res\test_finger.rc2">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

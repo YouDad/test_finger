@@ -16,7 +16,8 @@ public:
     void clearLog();
     void createLog();
     void appendLog(wchar_t* text);
-    void print(LogLevel level,CString info);
+    void print(LogLevel level,MyString info);
     void print(LogLevel level,const char* format,...);
 };
+
 extern Log MyLog;
