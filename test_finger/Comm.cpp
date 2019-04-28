@@ -92,7 +92,6 @@ bool Comm::disconnect(){
 }
 
 void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
-    terminateListen();
     for(auto it=requestVector.begin();it!=requestVector.end();it++){
         if((*it)->checkProtocol(getType())){
             auto dataPacket=(*it)->convert(CmdCode,Data,Len);
@@ -104,7 +103,6 @@ void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
             break;
         }
     }
-    startListen();
 }
 
 void Comm::attach(ICommProtocolRequestConverter * converter){
