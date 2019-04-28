@@ -322,11 +322,18 @@ void loadImage(WCHAR* filePath){
     }
 }
 
+void reverse(BYTE* p,int len){
+    for(int i=0;i<len-1-i;i++){
+        BYTE t=p[len-1-i];
+        p[len-1-i]=p[i];
+        p[i]=t;
+    }
+}
+
 bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
-    for(int i=0;i<w*h-1-i;i++){
-        BYTE t=pData[w*h-1-i];
-        pData[w*h-1-i]=pData[i];
-        pData[i]=t;
+    reverse(pData,w*h);
+    for(int i=0;i<h;i++){
+        reverse(pData+i*w,w);
     }
     BITMAPINFOHEADER bmpInfo;
     bmpInfo.biSize=sizeof bmpInfo;
@@ -352,8 +359,7 @@ bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
     bmpFileInfo.bfSize=0x400+w*h+(sizeof bmpInfo)+sizeof(bmpFileInfo);
     bmpFileInfo.bfReserved1=0;
     bmpFileInfo.bfReserved2=0;
-    bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+
-        sizeof(BITMAPINFOHEADER);
+    bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+sizeof(BITMAPINFOHEADER);
 
     CreateDirectory(dir,0);
 

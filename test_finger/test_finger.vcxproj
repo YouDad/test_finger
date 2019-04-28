@@ -187,6 +187,8 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="GET_RAW_IMAGE_Listener.h" />
     <ClInclude Include="GET_TEST_IMAGE_Listener.h" />
+    <ClInclude Include="MyString.h" />
+    <ClInclude Include="MyThread.h" />
     <ClInclude Include="READ_REGISTER_Listener.h" />
     <ClInclude Include="RequestConverterACH512.h" />
     <ClInclude Include="RequestConverterGD32F30.h" />
@@ -210,6 +212,7 @@
     <ClCompile Include="GET_RAW_IMAGE_Listener.cpp" />
     <ClCompile Include="GET_TEST_IMAGE_Listener.cpp" />
     <ClCompile Include="MyLog.cpp" />
+    <ClCompile Include="MyThread.cpp" />
     <ClCompile Include="RequestConverterACH512.cpp" />
     <ClCompile Include="RequestConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterGD32F30.cpp" />

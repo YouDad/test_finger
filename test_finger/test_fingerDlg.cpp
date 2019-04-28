@@ -262,17 +262,27 @@ void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
     }
 }
 
-//params为continueImage
-bool timeoutThread_continueImage=false;
-HANDLE timeoutThread=0;
-DWORD WINAPI TimeoutThread(LPVOID params){
+bool timeoutThread_continueImage;
+
+MyThread ImageTimeout(ThreadFunction__(timeoutFunction)(void){
     Sleep(10*1000);
-    MyLog.print(Log::LOGU,"超时");
     if(!timeoutThread_continueImage){
+        MyLog.print(Log::LOGU,"采图超时");
         updateControlDisable(actGotImage);
     }
-    return 0;
-}
+    return;
+});
+
+bool timeoutThread_Register;
+
+MyThread RegisterTimeout(ThreadFunction__(timeoutFunction)(void){
+    timeoutThread_Register=false;
+    Sleep(1*1000);
+    if(!timeoutThread_Register){
+        MyLog.print(Log::LOGU,"读寄存器超时");
+        updateControlDisable(actReadedReg);
+    }
+});
 
 //原始图像的点击事件
 void Ctest_fingerDlg::OnBnClickedBtnrawimage(){
@@ -284,9 +294,7 @@ void Ctest_fingerDlg::OnBnClickedBtnrawimage(){
     progress->SetPos(30);
     MyLog.print(Log::LOGD,"Serial Thread:3向下位机发送命令:CMD_GET_RAW_IMAGE");
     MyLog.print(Log::LOGU,"请放手指");
-    if(timeoutThread==0){
-        timeoutThread=CreateThread(0,0,TimeoutThread,0,0,0);
-    }
+    ImageTimeout.start();
 }
 
 //串口线程消息处理函数
@@ -300,16 +308,10 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
         }
         case WM_GET_RAW_IMAGE:
         {
-            if(timeoutThread){
-                TerminateThread(timeoutThread,-1);
-                CloseHandle(timeoutThread);
-                timeoutThread=0;
-            }
+            ImageTimeout.terminate();
             if(continueImage){
                 comm.request(CMD_GET_RAW_IMAGE);
-                if(timeoutThread==0){
-                    timeoutThread=CreateThread(0,0,TimeoutThread,0,0,0);
-                }
+                ImageTimeout.start();
             } else{
                 updateControlDisable(actGotImage);
             }
@@ -319,15 +321,11 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
             continueImage=false;
             timeoutThread_continueImage=false;
             updateControlDisable(actGotImage);
-            if(timeoutThread){
-                TerminateThread(timeoutThread,-1);
-                CloseHandle(timeoutThread);
-                timeoutThread=0;
-            }
+            ImageTimeout.terminate();
         }break;
         case WM_READ_REGISTER:
         {
-
+            timeoutThread_Register=true;
         }break;
         case WM_WRITE_REGISTER:
         {
@@ -340,16 +338,10 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
         }
         case WM_GET_TEST_IMAGE:
         {
-            if(timeoutThread){
-                TerminateThread(timeoutThread,-1);
-                CloseHandle(timeoutThread);
-                timeoutThread=0;
-            }
+            ImageTimeout.terminate();
             if(continueImage){
                 comm.request(CMD_GET_TEST_IMAGE);
-                if(timeoutThread==0){
-                    timeoutThread=CreateThread(0,0,TimeoutThread,0,0,0);
-                }
+                ImageTimeout.start();
             } else{
                 updateControlDisable(actGotImage);
             }
@@ -359,11 +351,7 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
             continueImage=false;
             timeoutThread_continueImage=false;
             updateControlDisable(actGotImage);
-            if(timeoutThread){
-                TerminateThread(timeoutThread,-1);
-                CloseHandle(timeoutThread);
-                timeoutThread=0;
-            }
+            ImageTimeout.terminate();
         }break;
     }
     progress->SetPos(0);
@@ -398,6 +386,7 @@ void Ctest_fingerDlg::OnBnClickedBtndevlog(){
     MyLog.print(Log::LOGU,"V1.4 <2019年3月24日14:12:08>:添加了在release模式下取消warning的代码,添加了打开文件夹按钮");
     MyLog.print(Log::LOGU,"V1.5 <2019年4月10日17:15:45>:完成连续取背景功能");
     MyLog.print(Log::LOGU,"V1.6 <2019年4月22日22:42:59>:适配了航芯的取原始图像功能,修复了时间和编辑框鬼畜bug");
+    MyLog.print(Log::LOGU,"V2.0 <2019年4月28日17:17:46>:升级了串口架构,支持主动和被动模式并存");
 }
 
 void Ctest_fingerDlg::OnBnClickedBtnreadreg(){
@@ -414,6 +403,7 @@ void Ctest_fingerDlg::OnBnClickedBtnreadreg(){
     comm.request(CMD_READ_NOTE_BOOK,&address,1);
 
     progress->SetPos(20);
+    RegisterTimeout.start();
 }
 
 
@@ -496,18 +486,18 @@ void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
 
 void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
     if(access("collectedImage",0)){
-        ShellExecuteA(NULL,"explore","collectedImage",NULL,NULL,SW_NORMAL);
-    } else{
         MyLog.print(Log::LOGU,"图片文件夹不存在,请先采一张图片");
+    } else{
+        ShellExecuteA(NULL,"explore","collectedImage",NULL,NULL,SW_NORMAL);
     }
 }
 
 
 void Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage(){
     if(access("collectedBGI",0)){
-        ShellExecuteA(NULL,"explore","collectedBGI",NULL,NULL,SW_NORMAL);
-    } else{
         MyLog.print(Log::LOGU,"背景文件夹不存在,请先采一张背景");
+    } else{
+        ShellExecuteA(NULL,"explore","collectedBGI",NULL,NULL,SW_NORMAL);
     }
 }
 

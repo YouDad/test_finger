@@ -28,6 +28,12 @@
     <Filter Include="Comm\CommProtocolConverter">
       <UniqueIdentifier>{55f006a2-bb12-469f-a8b9-b1323804578d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyString">
+      <UniqueIdentifier>{61f81c30-e851-41c8-bff8-88cb6b2fc2ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyThread">
+      <UniqueIdentifier>{e58c901f-c242-4eb4-99d2-73ee6a612896}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_finger.h">
@@ -90,6 +96,12 @@
     <ClInclude Include="WRITE_REGISTER_Listener.h">
       <Filter>Comm\CommListener</Filter>
     </ClInclude>
+    <ClInclude Include="MyString.h">
+      <Filter>MyString</Filter>
+    </ClInclude>
+    <ClInclude Include="MyThread.h">
+      <Filter>MyThread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_finger.cpp">
@@ -142,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="ControlAvailability.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyThread.cpp">
+      <Filter>MyThread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
