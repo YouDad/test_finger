@@ -6,6 +6,7 @@
 
 class MyString{
 public:
+    ~MyString();
     MyString();
     MyString(char* pc);
     MyString(wchar_t* pw);

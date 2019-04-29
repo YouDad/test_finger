@@ -89,4 +89,6 @@ void initMyControl(Ctest_fingerDlg* Dlg){
     textDevice=(CStatic*)Dlg->GetDlgItem(IDC_TEXTDevice);
     image=(CStatic*)Dlg->GetDlgItem(IDC_IMAGE);
     progress=(CProgressCtrl*)Dlg->GetDlgItem(IDC_PROGRESS);
+
+    editLog->SetLimitText(-1);
 }

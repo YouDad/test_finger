@@ -306,15 +306,7 @@ void Ctest_fingerDlg::OnBnClickedBtncontinueimage(){
 
 
 void Ctest_fingerDlg::OnBnClickedBtndevlog(){
-    MyLog.print(Log::LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
-    MyLog.print(Log::LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
-    MyLog.print(Log::LOGU,"V1.1 <2019年3月16日15:54:23>:完成按钮互斥,防止线程冲突,添加开发日志");
-    MyLog.print(Log::LOGU,"V1.2 <2019年3月18日00:57:44>:添加读写寄存器,添加进度条,添加选图像大小");
-    MyLog.print(Log::LOGU,"V1.3 <2019年3月24日13:59:42>:完成了无用功能删减,放大了指纹图像,修复了按钮互斥bug");
-    MyLog.print(Log::LOGU,"V1.4 <2019年3月24日14:12:08>:添加了在release模式下取消warning的代码,添加了打开文件夹按钮");
-    MyLog.print(Log::LOGU,"V1.5 <2019年4月10日17:15:45>:完成连续取背景功能");
-    MyLog.print(Log::LOGU,"V1.6 <2019年4月22日22:42:59>:适配了航芯的取原始图像功能,修复了时间和编辑框鬼畜bug");
-    MyLog.print(Log::LOGU,"V2.0 <2019年4月28日17:17:46>:升级了串口架构,支持主动和被动模式并存");
+    MyLog.DevelopLog();
 }
 
 void Ctest_fingerDlg::OnBnClickedBtnreadreg(){
@@ -387,7 +379,7 @@ void Ctest_fingerDlg::OnBnClickedBtnsetaddress(){
 
 void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
     //根据按钮上的文字判断当前连接状态
-    if("连续获取背景"==getText(btnContinueBackGroundImage)){
+    if(getText(btnContinueBackGroundImage)=="连续获取背景"){
         MyLog.print(Log::LOGU,"开始连续获取背景");
         updateControlDisable(actGetConBKI);
         setText(btnContinueBackGroundImage,"停止获取背景");

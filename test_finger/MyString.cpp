@@ -2,6 +2,11 @@
 #include"stdafx.h"
 #include<string>
 
+MyString::~MyString(){
+    if(wstr)
+        delete[] wstr;
+}
+
 MyString::MyString(){
     str="";
     updateWstr();
