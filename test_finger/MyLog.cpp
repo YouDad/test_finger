@@ -21,9 +21,9 @@ void Log::createLog(){
     fclose(fopen(LOG_FILE,"a+"));
 }
 
-void Log::appendLog(wchar_t* text){
+void Log::appendLog(const char* text){
     FILE* fp=fopen(LOG_FILE,"a+");
-    fwprintf_s(fp,_T("%s"),text);
+    fprintf_s(fp,"%s",text);
     fclose(fp);
 }
 
