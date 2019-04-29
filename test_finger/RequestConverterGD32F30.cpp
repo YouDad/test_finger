@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "RequestConverterGD32F30.h"
 
-bool RequestConverterGD32F30::checkProtocol(uint16_t head){
-    return head==0xEF02;
+bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
+    return true;
 }
 
 std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * Data,uint16_t Len){

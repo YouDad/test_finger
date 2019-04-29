@@ -7,15 +7,11 @@ Comm comm;
 
 Comm::Comm(){
     id=0;
-    type=0xEF02;
+    type=DataPacket();
     listenThread=0;
-    attach(new RequestConverterACH512());
-    attach(new RequestConverterGD32F30());
-    attach(new ResponseConverterGD32F30());
-    attach(new ResponseConverterLOG());
 }
 
-uint16_t Comm::getType(){
+DataPacket Comm::getType(){
     return type;
 }
 
@@ -24,7 +20,6 @@ int Comm::getConnectId(){
 }
 
 DWORD WINAPI ResponseThread(LPVOID params){
-    auto responseVector=(std::vector<ICommProtocolResponseConverter*>*)params;
     DataPacket dataPacket;
     while(1){
         WaitForSingleObject(dataQueueMutex,INFINITE);
@@ -33,25 +28,17 @@ DWORD WINAPI ResponseThread(LPVOID params){
             dataQueue.pop();
         }
         ReleaseMutex(dataQueueMutex);
-        if(dataPacket.isValid()){
-            int lastRead;
-            do{
-                lastRead=dataPacket.read;
-                uint16_t head=dataPacket.data[lastRead]*256+dataPacket.data[lastRead+1];
-                for(auto it=responseVector->begin();it!=responseVector->end();it++){
-                    if((*it)->checkProtocol(head)){
-                        int cmdCode=(*it)->getCmdCode(dataPacket);
-                        auto data=(*it)->convert(dataPacket);
-                        boardcastListener.boardcast(cmdCode,data);
-                        data.Destruction();
-                    }
-                }
-            } while(
-                lastRead!=dataPacket.read//有转化器识别过
-                &&dataPacket.read!=dataPacket.len//没有可读内容了
-                );
-            dataPacket.Destruction();
+        while(dataPacket.isValid()){
+            int cmdCode=converterBoardcast.ResponseGetCmdCode(dataPacket);
+            //没有协议可以转化剩下的数据了,数据废了
+            if(cmdCode==-1){
+                break;
+            }
+            auto data=converterBoardcast.ResponseConvert(dataPacket);
+            listenerBoardcast.boardcast(cmdCode,data);
+            data.Destruction();
         }
+        dataPacket.Destruction();
     }
 }
 
@@ -78,7 +65,7 @@ bool Comm::connect(int id,int baud){
     }
     MyLog.print(Log::LOGU,"连接COM%d%s",id,retCode==ERROR_SUCCESS?"成功":"失败");
     if(retCode==ERROR_SUCCESS){
-        responseThread=CreateThread(0,0,ResponseThread,&responseVector,0,0);
+        responseThread=CreateThread(0,0,ResponseThread,0,0,0);
         startListen();
         this->id=id;
     }
@@ -103,25 +90,16 @@ bool Comm::disconnect(){
 }
 
 void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
-    for(auto it=requestVector.begin();it!=requestVector.end();it++){
-        if((*it)->checkProtocol(getType())){
-            auto dataPacket=(*it)->convert(CmdCode,Data,Len);
-            std::vector<DataPacket>::iterator it;
-            for(it=dataPacket.begin();it!=dataPacket.end();it++){
-                serial.Write(it->data,it->len);
-                it->Destruction();
-            }
-            break;
+    auto converter=converterBoardcast.RequestConvert(getType());
+    if(converter){
+        auto dataPacket=converter->convert(CmdCode,Data,Len);
+        for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
+            serial.Write(it->getPointer(),it->size());
+            it->Destruction();
         }
+    } else{
+        ASF_ERROR(3);
     }
-}
-
-void Comm::attach(ICommProtocolRequestConverter * converter){
-    requestVector.push_back(converter);
-}
-
-void Comm::attach(ICommProtocolResponseConverter * converter){
-    responseVector.push_back(converter);
 }
 
 DWORD WINAPI ListenThread(LPVOID params){

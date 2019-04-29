@@ -2,25 +2,24 @@
 #include "ResponseConverterLOG.h"
 typedef DataPacketLOG Response;
 
-bool ResponseConverterLOG::checkProtocol(uint16_t head){
-    return head=='L'*256+'O';
+bool ResponseConverterLOG::checkProtocol(DataPacket dataPacket){
+    if(!dataPacket.haveData()){
+        return false;
+    }
+    BYTE* p=dataPacket.getPointer();
+    return p[0]=='L'&&p[1]=='O'&&p[2]=='G';
 }
 
 DataPacket ResponseConverterLOG::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
-    int&read=data.read;
-    int len=data.len-read;
-    BYTE* p=data.data+read;
     int totalLength=0;
-    BYTE* tmpArray=new BYTE[len];
-    Response* pData=(Response*)p;
-    while(len&&MyString("LOG")==MyString(pData->Head,3)){
+    BYTE* tmpArray=data.getTempArray();
+    Response* pData=(Response*)data.getPointer();
+    while(checkProtocol(data)){
         memcpy(tmpArray+totalLength,pData->Data,pData->Len);
         totalLength+=pData->Len;
-        p+=size+pData->Len;
-        read+=size+pData->Len;
-        len-=size+pData->Len;
-        pData=(Response*)p;
+        data.readData(size+pData->Len);
+        pData=(Response*)data.getPointer();
     }
     DataPacket ret(tmpArray,totalLength);
     delete[] tmpArray;
@@ -28,5 +27,5 @@ DataPacket ResponseConverterLOG::convert(DataPacket& data){
 }
 
 int ResponseConverterLOG::getCmdCode(DataPacket data){
-    return ((Response*)(data.data+data.read))->Cmd;
+    return ((Response*)data.getPointer())->Cmd;
 }

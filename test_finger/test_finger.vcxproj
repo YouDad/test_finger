@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -184,8 +184,9 @@
     <ClInclude Include="CmdCodeLOG_Info.h" />
     <ClInclude Include="CmdCodeLOG_MeasureTime.h" />
     <ClInclude Include="Comm.h" />
-    <ClInclude Include="CommListener.h" />
-    <ClInclude Include="CommProtocolConverter.h" />
+    <ClInclude Include="DataPacket.h" />
+    <ClInclude Include="ListenerBoardcast.h" />
+    <ClInclude Include="ConverterBoardcast.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="GET_RAW_IMAGE.h" />
     <ClInclude Include="GET_TEST_IMAGE.h" />
@@ -214,8 +215,9 @@
     <ClCompile Include="CmdCodeLOG_Info.cpp" />
     <ClCompile Include="CmdCodeLOG_MeasureTime.cpp" />
     <ClCompile Include="Comm.cpp" />
-    <ClCompile Include="CommListener.cpp" />
-    <ClCompile Include="CommProtocolConverter.cpp" />
+    <ClCompile Include="DataPacket.cpp" />
+    <ClCompile Include="ListenerBoardcast.cpp" />
+    <ClCompile Include="ConverterBoardcast.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="GET_RAW_IMAGE.cpp" />
     <ClCompile Include="GET_TEST_IMAGE.cpp" />

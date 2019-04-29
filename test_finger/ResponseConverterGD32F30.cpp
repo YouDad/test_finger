@@ -2,31 +2,30 @@
 #include "ResponseConverterGD32F30.h"
 typedef ResponsePacketGD32F30 Response;
 
-bool ResponseConverterGD32F30::checkProtocol(uint16_t head){
-    return head==0xEF02;
+bool ResponseConverterGD32F30::checkProtocol(DataPacket dataPacket){
+    if(!dataPacket.haveData()){
+        return false;
+    }
+    BYTE*p=dataPacket.getPointer();
+    return p[0]==0xEF&&p[1]==0x02;
 }
 
 DataPacket ResponseConverterGD32F30::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
-    int&read=data.read;
-    int len=data.len-read;
-    BYTE* p=data.data+read;
-    int totalLength=0;
-    BYTE* tmpArray=new BYTE[len];
-    Response* pData=(Response*)p;
-    while(len&&pData->Head==0x02EF){
-        memcpy(tmpArray+totalLength,pData->Sendbuf,pData->Length);
-        totalLength+=pData->Length;
-        len-=size+pData->Length;
-        read+=size+pData->Length;
-        p+=size+pData->Length;
-        pData=(Response*)p;
+    int tmpLength=0;
+    BYTE* tmpArray=data.getTempArray();
+    Response* pData=(Response*)data.getPointer();
+    while(checkProtocol(data)){
+        memcpy(tmpArray+tmpLength,pData->Sendbuf,pData->Length);
+        tmpLength+=pData->Length;
+        data.readData(size+pData->Length);
+        pData=(Response*)data.getPointer();
     }
-    DataPacket ret(tmpArray,totalLength);
+    DataPacket ret(tmpArray,tmpLength);
     delete[] tmpArray;
     return ret;
 }
 
 int ResponseConverterGD32F30::getCmdCode(DataPacket data){
-    return ((Response*)(data.data+data.read))->CMD;
+    return ((Response*)data.getPointer())->CMD;
 }

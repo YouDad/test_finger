@@ -84,6 +84,13 @@
 "!芯片类型错误"
 #endif
 
+#ifdef ASF_ERROR3
+#error macro is repeated!
+#else
+#define ASF_ERROR3 \
+"!没有这种convert"
+#endif
+
 #ifdef ASF_ERROR__
 #error macro is repeated!
 #else

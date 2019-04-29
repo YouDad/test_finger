@@ -96,12 +96,6 @@
     <ClInclude Include="WRITE_REGISTER.h">
       <Filter>Comm\CommListener</Filter>
     </ClInclude>
-    <ClInclude Include="CommListener.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
-    <ClInclude Include="CommProtocolConverter.h">
-      <Filter>Comm</Filter>
-    </ClInclude>
     <ClInclude Include="MyConverterHeadFile.h">
       <Filter>Comm</Filter>
     </ClInclude>
@@ -113,6 +107,15 @@
     </ClInclude>
     <ClInclude Include="CmdCodeLOG_MeasureTime.h">
       <Filter>Comm\CommListener</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerBoardcast.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="ConverterBoardcast.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="DataPacket.h">
+      <Filter>Comm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,17 +176,20 @@
     <ClCompile Include="WRITE_REGISTER.cpp">
       <Filter>Comm\CommListener</Filter>
     </ClCompile>
-    <ClCompile Include="CommListener.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
-    <ClCompile Include="CommProtocolConverter.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
     <ClCompile Include="CmdCodeLOG_Info.cpp">
       <Filter>Comm\CommListener</Filter>
     </ClCompile>
     <ClCompile Include="CmdCodeLOG_MeasureTime.cpp">
       <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="ListenerBoardcast.cpp">
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="ConverterBoardcast.cpp">
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="DataPacket.cpp">
+      <Filter>Comm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

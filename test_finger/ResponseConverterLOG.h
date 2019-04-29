@@ -1,12 +1,6 @@
 #pragma once
 #include"stdafx.h"
 
-enum CmdCodeLOG{
-    CmdCodeLOG_Info=0xCC00,
-    CmdCodeLOG_MeasureTimeStart,
-    CmdCodeLOG_MeasureTimeEnd,
-};
-
 #pragma pack(1)
 struct DataPacketLOG{
     char Head[3];
@@ -19,7 +13,7 @@ struct DataPacketLOG{
 #pragma pack(4)
 
 class ResponseConverterLOG:public ICommProtocolResponseConverter{
-    virtual bool checkProtocol(uint16_t head) override;
+    virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual DataPacket convert(DataPacket& data) override;
     virtual int getCmdCode(DataPacket data) override;
 };

@@ -6,13 +6,13 @@ public:
     virtual void listen(DataPacket response)=0;
 };
 
-class CommBoardcast{
+class ListenerBoardcast{
 public:
-    CommBoardcast();
+    ListenerBoardcast();
     void attach(int event,ICommListener*listener);
     void boardcast(int event,DataPacket response);
 private:
     std::map<int,std::vector<ICommListener*>>m;
 };
 
-extern CommBoardcast boardcastListener;
+extern ListenerBoardcast listenerBoardcast;

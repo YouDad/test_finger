@@ -87,9 +87,11 @@ typedef unsigned int   uint32_t;
 
 #include"MyControl.h"
 
-#include"CommProtocolConverter.h"
+#include"DataPacket.h"
+#include"ConverterBoardcast.h"
 #include"MyConverterHeadFile.h"
-#include"CommListener.h"
+#include"ListenerBoardcast.h"
+#include"MyListenerHeadFile.h"
 //#include"enumcd.h"
 //#include"UsbPort.h"
 #include"Comm.h"

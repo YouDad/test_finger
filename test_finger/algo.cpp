@@ -390,15 +390,15 @@ void saveImage(CString x,DataPacket dataPacket){
     path=x+_T("/")+path+_T(".bmp");
 
     int w,h;
-    if(dataPacket.len==160*160){
+    if(dataPacket.size()==160*160){
         MyLog.print(Log::LOGU,"接收到160x160的图像");
         w=h=160;
-        saveBmp(w,h,dataPacket.data,x,path);
+        saveBmp(w,h,dataPacket.getPointer(),x,path);
         loadImage((LPTSTR)(LPCTSTR)path);
-    } else if(dataPacket.len==192*192){
+    } else if(dataPacket.size()==192*192){
         MyLog.print(Log::LOGU,"接收到192x192的图像");
         w=h=192;
-        saveBmp(w,h,dataPacket.data,x,path);
+        saveBmp(w,h,dataPacket.getPointer(),x,path);
         loadImage((LPTSTR)(LPCTSTR)path);
     } else{
         MyLog.print(Log::LOGU,"既不是160x160也不是192x192,没法渲染图像");

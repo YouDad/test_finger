@@ -41,8 +41,24 @@
 //    //AdjustImage=0x0403,
 //};
 
+#pragma pack(1)
+struct ResponsePacketGD32F30{
+    uint16_t	Head;
+    uint32_t	Addr;
+    uint32_t	Password;
+    uint16_t	NO;
+    uint16_t	CMD;
+    uint8_t		Sign;
+    uint16_t	Length;
+    uint16_t    ACK;
+    uint8_t		Sendbuf[530];
+    static const int Header=19;
+    static const int Checker=2;
+};
+#pragma pack(4)
+
 class ResponseConverterGD32F30:public ICommProtocolResponseConverter{
-    virtual bool checkProtocol(uint16_t head) override;
+    virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual DataPacket convert(DataPacket& data) override;
     virtual int getCmdCode(DataPacket data) override;
 };

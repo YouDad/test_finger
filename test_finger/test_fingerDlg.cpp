@@ -190,26 +190,24 @@ void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
     }
 }
 
+HANDLE timeoutThread_continueImage_Mutex=CreateMutex(0,0,0);
 bool timeoutThread_continueImage;
 
 MyThread ImageTimeout(ThreadFunction__(timeoutFunction)(void){
     Sleep(10*1000);
+    WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
     if(!timeoutThread_continueImage){
         MyLog.print(Log::LOGU,"采图超时");
         updateControlDisable(actGotImage);
     }
-    return;
+    ReleaseMutex(timeoutThread_continueImage_Mutex);
 });
 
-bool timeoutThread_Register;
 
 MyThread RegisterTimeout(ThreadFunction__(timeoutFunction)(void){
-    timeoutThread_Register=false;
     Sleep(1*1000);
-    if(!timeoutThread_Register){
-        MyLog.print(Log::LOGU,"读寄存器超时");
-        updateControlDisable(actReadedReg);
-    }
+    MyLog.print(Log::LOGU,"读寄存器超时");
+    updateControlDisable(actReadedReg);
 });
 
 //原始图像的点击事件
@@ -228,7 +226,9 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
         case WM_GET_CON_IMAGE:
         {
             continueImage=true;
+            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
             timeoutThread_continueImage=true;
+            ReleaseMutex(timeoutThread_continueImage_Mutex);
         }
         case WM_GET_RAW_IMAGE:
         {
@@ -245,14 +245,16 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
         case WM_STP_GET_IMAGE:
         {
             continueImage=false;
+            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
             timeoutThread_continueImage=false;
+            ReleaseMutex(timeoutThread_continueImage_Mutex);
             updateControlDisable(actGotImage);
             ImageTimeout.terminate();
             progress->SetPos(0);
         }break;
         case WM_READ_REGISTER:
         {
-            timeoutThread_Register=true;
+            RegisterTimeout.terminate();
             progress->SetPos(100);
         }break;
         case WM_WRITE_REGISTER:
@@ -262,7 +264,9 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
         case WM_GET_CON_BKI:
         {
             continueImage=true;
+            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
             timeoutThread_continueImage=true;
+            ReleaseMutex(timeoutThread_continueImage_Mutex);
         }
         case WM_GET_TEST_IMAGE:
         {
@@ -278,7 +282,9 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
         case WM_STP_GET_BKI:
         {
             continueImage=false;
+            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
             timeoutThread_continueImage=false;
+            ReleaseMutex(timeoutThread_continueImage_Mutex);
             updateControlDisable(actGotImage);
             ImageTimeout.terminate();
             progress->SetPos(0);
