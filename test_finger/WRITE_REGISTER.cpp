@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "WRITE_REGISTER_Listener.h"
+#include "WRITE_REGISTER.h"
 
 void WRITE_REGISTER_Listener::listen(DataPacket response){
     MyLog.print(Log::LOGU,"修改寄存器命令发送成功");

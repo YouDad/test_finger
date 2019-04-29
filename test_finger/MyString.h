@@ -9,6 +9,7 @@ public:
     ~MyString();
     MyString();
     MyString(char* pc);
+    MyString(char* pc,int len);
     MyString(wchar_t* pw);
     MyString(CString pCS);
     MyString(MyString& other);

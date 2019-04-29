@@ -62,6 +62,8 @@ struct ResponsePacketGD32F30{
     uint16_t	Length;
     uint16_t    ACK;
     uint8_t		Sendbuf[530];
+    static const int Header=19;
+    static const int Checker=2;
 };
 #pragma pack(4)
 

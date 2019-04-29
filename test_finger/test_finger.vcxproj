@@ -181,37 +181,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="algo.h" />
+    <ClInclude Include="CmdCodeLOG_Info.h" />
+    <ClInclude Include="CmdCodeLOG_MeasureTime.h" />
     <ClInclude Include="Comm.h" />
     <ClInclude Include="CommListener.h" />
     <ClInclude Include="CommProtocolConverter.h" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="GET_RAW_IMAGE_Listener.h" />
-    <ClInclude Include="GET_TEST_IMAGE_Listener.h" />
+    <ClInclude Include="GET_RAW_IMAGE.h" />
+    <ClInclude Include="GET_TEST_IMAGE.h" />
     <ClInclude Include="MyControl.h" />
+    <ClInclude Include="MyConverterHeadFile.h" />
+    <ClInclude Include="MyListenerHeadFile.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyThread.h" />
-    <ClInclude Include="READ_REGISTER_Listener.h" />
+    <ClInclude Include="READ_REGISTER.h" />
     <ClInclude Include="RequestConverterACH512.h" />
     <ClInclude Include="RequestConverterGD32F30.h" />
     <ClInclude Include="MyLog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResponseConverterGD32F30.h" />
+    <ClInclude Include="ResponseConverterLOG.h" />
     <ClInclude Include="Serial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="str4err_warn.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="test_finger.h" />
     <ClInclude Include="test_fingerDlg.h" />
-    <ClInclude Include="WRITE_REGISTER_Listener.h" />
+    <ClInclude Include="WRITE_REGISTER.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
+    <ClCompile Include="CmdCodeLOG_Info.cpp" />
+    <ClCompile Include="CmdCodeLOG_MeasureTime.cpp" />
     <ClCompile Include="Comm.cpp" />
     <ClCompile Include="CommListener.cpp" />
     <ClCompile Include="CommProtocolConverter.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
-    <ClCompile Include="GET_RAW_IMAGE_Listener.cpp" />
-    <ClCompile Include="GET_TEST_IMAGE_Listener.cpp" />
+    <ClCompile Include="GET_RAW_IMAGE.cpp" />
+    <ClCompile Include="GET_TEST_IMAGE.cpp" />
     <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyLog.cpp" />
     <ClCompile Include="MyString.cpp" />
@@ -219,6 +226,7 @@
     <ClCompile Include="RequestConverterACH512.cpp" />
     <ClCompile Include="RequestConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterGD32F30.cpp" />
+    <ClCompile Include="ResponseConverterLOG.cpp" />
     <ClCompile Include="Serial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -228,8 +236,8 @@
     </ClCompile>
     <ClCompile Include="test_finger.cpp" />
     <ClCompile Include="test_fingerDlg.cpp" />
-    <ClCompile Include="READ_REGISTER_Listener.cpp" />
-    <ClCompile Include="WRITE_REGISTER_Listener.cpp" />
+    <ClCompile Include="READ_REGISTER.cpp" />
+    <ClCompile Include="WRITE_REGISTER.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

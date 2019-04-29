@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GET_TEST_IMAGE_Listener.h"
+#include "GET_TEST_IMAGE.h"
 
 void GET_TEST_IMAGE_Listener::listen(DataPacket response){
     progress->SetPos(50);

@@ -88,9 +88,7 @@ typedef unsigned int   uint32_t;
 #include"MyControl.h"
 
 #include"CommProtocolConverter.h"
-#include"RequestConverterGD32F30.h"
-#include"ResponseConverterGD32F30.h"
-#include"RequestConverterACH512.h"
+#include"MyConverterHeadFile.h"
 #include"CommListener.h"
 //#include"enumcd.h"
 //#include"UsbPort.h"

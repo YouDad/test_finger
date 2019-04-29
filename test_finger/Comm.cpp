@@ -12,6 +12,7 @@ Comm::Comm(){
     attach(new RequestConverterACH512());
     attach(new RequestConverterGD32F30());
     attach(new ResponseConverterGD32F30());
+    attach(new ResponseConverterLOG());
 }
 
 uint16_t Comm::getType(){
@@ -33,15 +34,22 @@ DWORD WINAPI ResponseThread(LPVOID params){
         }
         ReleaseMutex(dataQueueMutex);
         if(dataPacket.isValid()){
-            uint16_t head=dataPacket.data[0]*256+dataPacket.data[1];
-            for(auto it=responseVector->begin();it!=responseVector->end();it++){
-                if((*it)->checkProtocol(head)){
-                    auto data=(*it)->convert(dataPacket);
-                    int cmdCode=(*it)->getCmdCode(dataPacket);
-                    boardcastListener.boardcast(cmdCode,data);
-                    data.Destruction();
+            int lastRead;
+            do{
+                lastRead=dataPacket.read;
+                uint16_t head=dataPacket.data[lastRead]*256+dataPacket.data[lastRead+1];
+                for(auto it=responseVector->begin();it!=responseVector->end();it++){
+                    if((*it)->checkProtocol(head)){
+                        int cmdCode=(*it)->getCmdCode(dataPacket);
+                        auto data=(*it)->convert(dataPacket);
+                        boardcastListener.boardcast(cmdCode,data);
+                        data.Destruction();
+                    }
                 }
-            }
+            } while(
+                lastRead!=dataPacket.read//有转化器识别过
+                &&dataPacket.read!=dataPacket.len//没有可读内容了
+                );
             dataPacket.Destruction();
         }
     }
@@ -61,6 +69,9 @@ bool Comm::connect(int id,int baud){
     }
     if(retCode==ERROR_SUCCESS){
         retCode=serial.SetMask(CSerial::EEventRecv);
+    }
+    if(retCode==ERROR_SUCCESS){
+        retCode=serial.SetupReadTimeouts(CSerial::EReadTimeoutNonblocking);
     }
     if(retCode==ERROR_SUCCESS){
         serial.Purge();

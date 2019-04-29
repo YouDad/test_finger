@@ -41,19 +41,8 @@
 //    //AdjustImage=0x0403,
 //};
 
-#pragma pack(1)
-class DefaultResponsePacket{
-    uint16_t	Head;
-    uint32_t	Addr;
-    uint32_t	Password;
-    uint16_t	CMD;
-    uint16_t	Length;
-    uint8_t*    Data;
-};
-#pragma pack(4)
-
 class ResponseConverterGD32F30:public ICommProtocolResponseConverter{
     virtual bool checkProtocol(uint16_t head) override;
-    virtual DataPacket convert(DataPacket data) override;
+    virtual DataPacket convert(DataPacket& data) override;
     virtual int getCmdCode(DataPacket data) override;
 };

@@ -5,6 +5,7 @@ class DataPacket{
 public:
     BYTE* data;
     int   len;
+    int read;
     DataPacket(const void* d,int l);
     DataPacket();
     void Destruction();
@@ -23,7 +24,7 @@ public:
 
 class ICommProtocolResponseConverter:public ICommProtocolConverter{
 public:
-    virtual DataPacket convert(DataPacket data)=0;
+    virtual DataPacket convert(DataPacket& data)=0;
     virtual int getCmdCode(DataPacket data)=0;
 };
 

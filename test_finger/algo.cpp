@@ -334,7 +334,7 @@ bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
     //消除用于静电检测的竖线
     for(int i=0;i<h;i++){
         for(int j=0;j<w;j++){
-            if(j==47||j==151){
+            if(j==47||j==99||j==151){
                 pData[i*w+j]=pData[i*w+j+1]+pData[i*w+j-1]>>1;
             }
         }

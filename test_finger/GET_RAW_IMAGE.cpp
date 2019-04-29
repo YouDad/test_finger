@@ -1,6 +1,6 @@
 #pragma once
 #include "stdafx.h"
-#include "GET_RAW_IMAGE_Listener.h"
+#include "GET_RAW_IMAGE.h"
 
 void GET_RAW_IMAGE_Listener::listen(DataPacket response){
     SendMessage(hwnd,WM_GET_RAW_IMAGE,WM_GET_RAW_IMAGE,0);

@@ -53,8 +53,21 @@ void Log::print(LogLevel level,const char* format,...){
     vsprintf(tmp,format,ap);
     va_end(ap);
 
-    CString info(tmp);
-    print(level,info);
+    print(level,MyString(tmp));
+}
+
+void Log::debug(MyString info){
+    print(LOGD,info);
+}
+
+void Log::debug(const char * format,...){
+    static char tmp[512];
+    va_list ap;
+    va_start(ap,format);
+    vsprintf(tmp,format,ap);
+    va_end(ap);
+
+    print(LOGD,tmp);
 }
 
 void Log::DevelopLog(){

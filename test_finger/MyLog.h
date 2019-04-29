@@ -18,6 +18,8 @@ public:
     void appendLog(wchar_t* text);
     void print(LogLevel level,MyString info);
     void print(LogLevel level,const char* format,...);
+    void debug(MyString info);
+    void debug(const char* format,...);
     void DevelopLog();
 };
 

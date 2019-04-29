@@ -22,6 +22,14 @@ MyString::MyString(char* pc){
     updateWstr();
 }
 
+MyString::MyString(char * pc,int len){
+    BYTE b=pc[len];
+    pc[len]=0;
+    str=pc;
+    updateWstr();
+    pc[len]=b;
+}
+
 MyString::MyString(wchar_t* pw){
     int size=WideCharToMultiByte(CP_ACP,0,pw,-1,NULL,0,NULL,NULL);
     char* pc=new char[size];
