@@ -34,6 +34,8 @@ CStatic* textDevice;
 CStatic* image;
 CProgressCtrl* progress;
 
+HWND hwnd;
+
 MyString getText(CWnd * pWnd){
     static CString ret;
     pWnd->GetWindowText(ret);
@@ -91,4 +93,9 @@ void initMyControl(Ctest_fingerDlg* Dlg){
     progress=(CProgressCtrl*)Dlg->GetDlgItem(IDC_PROGRESS);
 
     editLog->SetLimitText(-1);
+    hwnd=Dlg->m_hWnd;
+}
+
+void sendMessage(int Message){
+    SendMessage(hwnd,Message,Message,0);
 }

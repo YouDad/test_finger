@@ -1,8 +1,6 @@
 #pragma once
 #include"stdafx.h"
 
-extern HWND hwnd;
-
 // Ctest_fingerDlg 对话框
 class Ctest_fingerDlg: public CDialogEx{
     // 构造

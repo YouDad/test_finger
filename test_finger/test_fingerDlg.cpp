@@ -5,7 +5,6 @@
 #define new DEBUG_NEW
 #endif
 
-HWND hwnd;
 // Ctest_fingerDlg ¶Ô»°¿ò
 
 Ctest_fingerDlg::Ctest_fingerDlg(CWnd* pParent /*=NULL*/)

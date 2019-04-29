@@ -208,7 +208,6 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="test_finger.h" />
     <ClInclude Include="test_fingerDlg.h" />
-    <ClInclude Include="WRITE_REGISTER.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
@@ -239,7 +238,6 @@
     <ClCompile Include="test_finger.cpp" />
     <ClCompile Include="test_fingerDlg.cpp" />
     <ClCompile Include="READ_REGISTER.cpp" />
-    <ClCompile Include="WRITE_REGISTER.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

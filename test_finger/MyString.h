@@ -15,6 +15,7 @@ public:
     MyString(MyString& other);
     MyString(MyString&& other);
     MyString(const char* pcc);
+    static MyString Format(const char* format,...);
     operator wchar_t*();
     operator const char*();
     operator const wchar_t*();

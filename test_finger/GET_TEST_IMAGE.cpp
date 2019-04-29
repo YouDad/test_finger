@@ -5,7 +5,7 @@ void GET_TEST_IMAGE_Listener::listen(DataPacket response){
     progress->SetPos(50);
     MyLog.print(Log::LOGD,"接收到数据包,大小为%d",response.size());
     MyLog.print(Log::LOGD,"线程向主线程发送消息CMD_GET_TEST_IMAGE");
-    SendMessage(hwnd,WM_GET_TEST_IMAGE,WM_GET_TEST_IMAGE,0);
+    sendMessage(WM_GET_TEST_IMAGE);
     progress->SetPos(75);
     MyLog.print(Log::LOGD,"消息处理函数收到消息WM_GET_TEST_IMAGE");
 

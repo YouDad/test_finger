@@ -53,6 +53,15 @@ MyString::MyString(MyString && other){
     updateWstr();
 }
 
+MyString MyString::Format(const char * format,...){
+    static char tmp[1<<16];
+    va_list ap;
+    va_start(ap,format);
+    vsprintf(tmp,format,ap);
+    va_end(ap);
+    return MyString(tmp);
+}
+
 MyString::operator wchar_t*(){
     return wstr;
 }

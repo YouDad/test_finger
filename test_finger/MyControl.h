@@ -8,6 +8,7 @@ int getInt(CWnd* pWnd);
 int getHex(CWnd* pWnd);
 
 void initMyControl(Ctest_fingerDlg* Dlg);
+void sendMessage(int Message);
 
 extern CEdit* editLog;
 extern CEdit* editAddress;
@@ -41,3 +42,5 @@ extern CButton* chkTimeoutContinue;
 extern CStatic* textDevice;
 extern CStatic* image;
 extern CProgressCtrl* progress;
+
+extern HWND hwnd;
