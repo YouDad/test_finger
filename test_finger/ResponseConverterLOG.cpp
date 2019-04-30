@@ -14,11 +14,14 @@ DataPacket ResponseConverterLOG::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
     int totalLength=0;
     BYTE* tmpArray=data.getTempArray();
-    Response* pData=(Response*)data.getPointer();
+    auto pData=(Response*)data.getPointer();
     while(checkProtocol(data)){
         memcpy(tmpArray+totalLength,pData->Data,pData->Len);
         totalLength+=pData->Len;
         data.readData(size+pData->Len);
+        if(pData->Sign==ResponseEnd){
+            break;
+        }
         pData=(Response*)data.getPointer();
     }
     DataPacket ret(tmpArray,totalLength);

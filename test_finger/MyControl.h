@@ -7,7 +7,7 @@ void setText(CWnd* pWnd,MyString str);
 int getInt(CWnd* pWnd);
 int getHex(CWnd* pWnd);
 
-void initMyControl(Ctest_fingerDlg* Dlg);
+void initMyControl(MainDialog* Dlg);
 void sendMessage(int Message);
 
 extern CEdit* editLog;
@@ -27,6 +27,7 @@ extern CComboBox* cmbBaudSet;
 extern CComboBox* cmbChipType;
 extern CComboBox* cmbLogLevel;
 extern CButton* btnConnect;
+extern CButton* btnAdvDbg;
 extern CButton* btnRawImage;
 extern CButton* btnTestImage;
 extern CButton* btnContinueImage;
@@ -44,3 +45,5 @@ extern CStatic* image;
 extern CProgressCtrl* progress;
 
 extern HWND hwnd;
+
+extern AdvancedDebugDialog* advancedDebugDialog;

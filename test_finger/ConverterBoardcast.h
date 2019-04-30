@@ -33,6 +33,7 @@ private:
 extern ConverterBoardcast converterBoardcast;
 
 enum ProtocolSign{
+    Unspecified,
     RequestNotEnd,
     RequestEnd,
     ResponseNotEnd,

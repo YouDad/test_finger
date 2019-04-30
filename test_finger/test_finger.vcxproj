@@ -181,21 +181,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="algo.h" />
-    <ClInclude Include="CmdCodeLOG_Info.h" />
-    <ClInclude Include="CmdCodeLOG_MeasureTime.h" />
+    <ClInclude Include="AdvancedDebugDialog.h" />
+    <ClInclude Include="CmdCodeGD32F30.h" />
+    <ClInclude Include="CmdCodeLOG.h" />
     <ClInclude Include="Comm.h" />
     <ClInclude Include="DataPacket.h" />
     <ClInclude Include="ListenerBoardcast.h" />
     <ClInclude Include="ConverterBoardcast.h" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="GET_RAW_IMAGE.h" />
-    <ClInclude Include="GET_TEST_IMAGE.h" />
     <ClInclude Include="MyControl.h" />
     <ClInclude Include="MyConverterHeadFile.h" />
     <ClInclude Include="MyListenerHeadFile.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyThread.h" />
-    <ClInclude Include="READ_REGISTER.h" />
     <ClInclude Include="RequestConverterACH512.h" />
     <ClInclude Include="RequestConverterGD32F30.h" />
     <ClInclude Include="MyLog.h" />
@@ -206,20 +204,20 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="str4err_warn.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="test_finger.h" />
-    <ClInclude Include="test_fingerDlg.h" />
+    <ClInclude Include="App.h" />
+    <ClInclude Include="MainDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
-    <ClCompile Include="CmdCodeLOG_Info.cpp" />
-    <ClCompile Include="CmdCodeLOG_MeasureTime.cpp" />
+    <ClCompile Include="AdvancedDebugDialog.cpp" />
+    <ClCompile Include="CmdCodeGD32F30.cpp" />
+    <ClCompile Include="CmdCodeLOG.cpp" />
     <ClCompile Include="Comm.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="DataPacket.cpp" />
     <ClCompile Include="ListenerBoardcast.cpp" />
     <ClCompile Include="ConverterBoardcast.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
-    <ClCompile Include="GET_RAW_IMAGE.cpp" />
-    <ClCompile Include="GET_TEST_IMAGE.cpp" />
     <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyLog.cpp" />
     <ClCompile Include="MyString.cpp" />
@@ -235,9 +233,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="test_finger.cpp" />
-    <ClCompile Include="test_fingerDlg.cpp" />
-    <ClCompile Include="READ_REGISTER.cpp" />
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="MainDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

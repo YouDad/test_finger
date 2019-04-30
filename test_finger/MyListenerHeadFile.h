@@ -1,14 +1,12 @@
 #pragma once
-#include"GET_RAW_IMAGE.h"
-#include"GET_TEST_IMAGE.h"
-#include"READ_REGISTER.h"
-#include"CmdCodeLOG_INFO.h"
-#include"CmdCodeLOG_MeasureTime.h"
+#include"CmdCodeGD32F30.h"
+#include"CmdCodeLOG.h"
 
 enum CmdCodeLOG{
     CmdCodeLOG_Info=0xCC00,
     CmdCodeLOG_MeasureTimeStart,
     CmdCodeLOG_MeasureTimeEnd,
+    CmdCodeLOG_AdvDbg_AdjImg,
 };
 
 enum CmdCodeGD32F30{

@@ -22,11 +22,6 @@ enum action{
     actWritedReg	//写完了寄存器
 };
 
-//将CString类型变量变成char*型变量
-//注意,由于用了static,用两次的话
-//需要学这个函数,自己写两个转化
-char* CString2char(CString&c);
-
 //更新通信方式组合框
 void updateCommunityWay();
 
@@ -39,10 +34,14 @@ void autoDisconnect();
 void updateControlDisable(action a);
 
 //将filePath的图像加载到图片控件上
-void loadImage(WCHAR* filePath);
+void loadImage(CStatic* image,MyString filePath);
 
-bool saveBmp(int height,int width,BYTE*pData,CString dir,CString path);
+bool saveBmp(int w,int h,BYTE* pData,MyString dirname,MyString filename);
 
-void saveImage(CString x,DataPacket dataPacket);
+void saveImage(MyString dir,DataPacket dataPacket);
+
+void generateHistogram(BYTE* Histogram,int hw,int hh,BYTE* pData,int w,int h);
+
+void imgSizeX2(BYTE* src,int w,int h,BYTE* dest);
 
 uint16_t GetCRC16(const void*pSource,uint16_t len);

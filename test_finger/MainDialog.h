@@ -1,26 +1,14 @@
 #pragma once
 #include"stdafx.h"
 
-// Ctest_fingerDlg 对话框
-class Ctest_fingerDlg: public CDialogEx{
-    // 构造
+class MainDialog: public CDialogEx{
 public:
-    Ctest_fingerDlg(CWnd* pParent=NULL);	// 标准构造函数
-
-// 对话框数据
+    MainDialog(CWnd* pParent=NULL);
     enum{
         IDD=IDD_TEST_FINGER_DIALOG
     };
-
-protected:
-    virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
-
-
-// 实现
 protected:
     HICON m_hIcon;
-
-    // 生成的消息映射函数
     virtual BOOL OnInitDialog();
     afx_msg void OnPaint();
     afx_msg HCURSOR OnQueryDragIcon();
@@ -28,7 +16,7 @@ protected:
     afx_msg LRESULT serialResponse(WPARAM w,LPARAM l);
     DECLARE_MESSAGE_MAP()
 public:
-    HANDLE serialThread;
+    virtual void OnOK();
     afx_msg void OnBnClickedBtnconnect();
     afx_msg void OnBnClickedBtnsavelog();
     afx_msg void OnBnClickedBtnrawimage();
@@ -44,4 +32,6 @@ public:
     afx_msg void OnBnClickedBtncontinuebackgroundimage();
     afx_msg void OnBnClickedBtnopenbackgroundimage();
     afx_msg void OnBnClickedBtnbackgroundimage();
+    afx_msg void OnCbnCloseupCmbloglevel();
+    afx_msg void OnBnClickedBtnadvdbg();
 };

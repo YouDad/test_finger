@@ -10,6 +10,7 @@ ListenerBoardcast::ListenerBoardcast(){
     attach(CmdCodeLOG_Info,(ICommListener*)(new CmdCodeLOG_Info_Listener()));
     attach(CmdCodeLOG_MeasureTimeStart,(ICommListener*)(new CmdCodeLOG_MeasureTimeStart_Listener()));
     attach(CmdCodeLOG_MeasureTimeEnd,(ICommListener*)(new CmdCodeLOG_MeasureTimeEnd_Listener()));
+    attach(CmdCodeLOG_AdvDbg_AdjImg,(ICommListener*)(new CmdCodeLOG_AdvDbg_AdjImg_Listener()));
 }
 
 void ListenerBoardcast::attach(int event,ICommListener* listener){

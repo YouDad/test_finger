@@ -16,9 +16,6 @@
     <Filter Include="Comm">
       <UniqueIdentifier>{3b34ac33-bd01-417d-89f1-5f96d430ca56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Config">
-      <UniqueIdentifier>{65dc0a81-6c03-4228-91ec-9463f415f8ec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Comm\CommListener">
       <UniqueIdentifier>{fe89750a-13fa-4f1e-a944-7a24ca11b1f5}</UniqueIdentifier>
     </Filter>
@@ -28,14 +25,11 @@
     <Filter Include="My">
       <UniqueIdentifier>{c84d4a32-4ca5-417e-8412-2fc68c2eec65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{a72b18df-e855-4d04-8887-8bd588abfade}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test_finger.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="test_fingerDlg.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -53,9 +47,6 @@
     </ClInclude>
     <ClInclude Include="str4err_warn.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="RequestConverterGD32F30.h">
       <Filter>Comm\CommProtocolConverter</Filter>
@@ -84,26 +75,11 @@
     <ClInclude Include="ResponseConverterLOG.h">
       <Filter>Comm\CommProtocolConverter</Filter>
     </ClInclude>
-    <ClInclude Include="GET_RAW_IMAGE.h">
-      <Filter>Comm\CommListener</Filter>
-    </ClInclude>
-    <ClInclude Include="GET_TEST_IMAGE.h">
-      <Filter>Comm\CommListener</Filter>
-    </ClInclude>
-    <ClInclude Include="READ_REGISTER.h">
-      <Filter>Comm\CommListener</Filter>
-    </ClInclude>
     <ClInclude Include="MyConverterHeadFile.h">
       <Filter>Comm</Filter>
     </ClInclude>
     <ClInclude Include="MyListenerHeadFile.h">
       <Filter>Comm</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdCodeLOG_Info.h">
-      <Filter>Comm\CommListener</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdCodeLOG_MeasureTime.h">
-      <Filter>Comm\CommListener</Filter>
     </ClInclude>
     <ClInclude Include="ListenerBoardcast.h">
       <Filter>Comm</Filter>
@@ -114,14 +90,26 @@
     <ClInclude Include="DataPacket.h">
       <Filter>Comm</Filter>
     </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>My</Filter>
+    </ClInclude>
+    <ClInclude Include="App.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDialog.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedDebugDialog.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdCodeLOG.h">
+      <Filter>Comm\CommListener</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdCodeGD32F30.h">
+      <Filter>Comm\CommListener</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test_finger.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="test_fingerDlg.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -161,21 +149,6 @@
     <ClCompile Include="ResponseConverterLOG.cpp">
       <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
-    <ClCompile Include="GET_RAW_IMAGE.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="GET_TEST_IMAGE.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="READ_REGISTER.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdCodeLOG_Info.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdCodeLOG_MeasureTime.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
     <ClCompile Include="ListenerBoardcast.cpp">
       <Filter>Comm</Filter>
     </ClCompile>
@@ -184,6 +157,24 @@
     </ClCompile>
     <ClCompile Include="DataPacket.cpp">
       <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvancedDebugDialog.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdCodeLOG.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdCodeGD32F30.cpp">
+      <Filter>Comm\CommListener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

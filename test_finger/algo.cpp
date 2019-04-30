@@ -1,20 +1,6 @@
 #pragma once
 #include"stdafx.h"
 
-int CString2int(CString c){
-    int ret;
-    swscanf(c,_T("%d"),&ret);
-    return ret;
-}
-
-char* CString2char(CString&c){
-    static char text[65536+10];
-    int len=WideCharToMultiByte(0,0,c,c.GetLength(),0,0,0,0);
-    WideCharToMultiByte(0,0,c,c.GetLength(),text,len,0,0);
-    text[len]=0;
-    return text;
-}
-
 std::vector<int>* idle=new std::vector<int>();
 std::vector<int>* lastIdle=NULL;
 
@@ -78,9 +64,7 @@ void autoConnect(){
                 for(int i=0;i<idle->size();i++){
                     if((*idle)[i]==needConnectId){
                         cmbWay->SetCurSel(i);
-                        CString baud;
-                        cmbBaud->GetWindowTextW(baud);
-                        bool ret=comm.connect(needConnectId,CString2int(baud));
+                        bool ret=comm.connect(needConnectId,getInt(cmbBaud));
                         if(ret){
                             btnConnect->SetWindowText(_T("断开连接"));
                             updateControlDisable(actOpenedPort);
@@ -312,7 +296,7 @@ void updateControlDisable(action a){
     }
 }
 
-void loadImage(WCHAR* filePath){
+void loadImage(CStatic* image,MyString filePath){
     HBITMAP hBmp=(HBITMAP)LoadImage(0,filePath,0,0,0,LR_LOADFROMFILE);
     if(hBmp){
         image->ModifyStyle(0xf,SS_BITMAP|SS_CENTERIMAGE);
@@ -330,19 +314,7 @@ void reverse(BYTE* p,int len){
     }
 }
 
-bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
-    //消除用于静电检测的竖线
-    for(int i=0;i<h;i++){
-        for(int j=0;j<w;j++){
-            if(j==47||j==99||j==151){
-                pData[i*w+j]=pData[i*w+j+1]+pData[i*w+j-1]>>1;
-            }
-        }
-    }
-    reverse(pData,w*h);
-    for(int i=0;i<h;i++){
-        reverse(pData+i*w,w);
-    }
+bool saveBmp(int w,int h,BYTE* pData,MyString dirname,MyString filename){
     BITMAPINFOHEADER bmpInfo;
     bmpInfo.biSize=sizeof bmpInfo;
     bmpInfo.biWidth=w;
@@ -369,10 +341,9 @@ bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
     bmpFileInfo.bfReserved2=0;
     bmpFileInfo.bfOffBits=0x400+sizeof(BITMAPFILEHEADER)+sizeof(BITMAPINFOHEADER);
 
-    CreateDirectory(dir,0);
+    CreateDirectory(dirname,0);
 
-    char* filePath=CString2char(path);
-    FILE* fp=fopen(filePath,"wb");
+    FILE* fp=fopen(dirname+"/"+filename+".bmp","wb");
     if(fp==NULL){
         ASF_ERROR(1);
         return false;
@@ -385,23 +356,82 @@ bool saveBmp(int h,int w,BYTE*pData,CString dir,CString path){
     return true;
 }
 
-void saveImage(CString x,DataPacket dataPacket){
-    CString path=CTime::GetCurrentTime().Format("%Y_%m_%d_%H_%M_%S");
-    path=x+_T("/")+path+_T(".bmp");
+void saveImage(MyString dir,DataPacket dataPacket){
+    MyString fileName=MyString::Time();
+    MyString dirFileName=dir+"/"+fileName+".bmp";
 
     int w,h;
     if(dataPacket.size()==160*160){
         MyLog.print(Log::LOGU,"接收到160x160的图像");
         w=h=160;
-        saveBmp(w,h,dataPacket.getPointer(),x,path);
-        loadImage((LPTSTR)(LPCTSTR)path);
+
+        BYTE* pData=dataPacket.getPointer();
+        //消除用于静电检测的竖线
+        for(int i=0;i<h;i++){
+            for(int j=0;j<w;j++){
+                if(j==47||j==99||j==151){
+                    pData[i*w+j]=pData[i*w+j+1]+pData[i*w+j-1]>>1;
+                }
+            }
+        }
+        reverse(pData,w*h);
+        for(int i=0;i<h;i++){
+            reverse(pData+i*w,w);
+        }
+
+        saveBmp(w,h,pData,dir,fileName);
+        loadImage(image,dirFileName);
     } else if(dataPacket.size()==192*192){
         MyLog.print(Log::LOGU,"接收到192x192的图像");
         w=h=192;
-        saveBmp(w,h,dataPacket.getPointer(),x,path);
-        loadImage((LPTSTR)(LPCTSTR)path);
+        saveBmp(w,h,dataPacket.getPointer(),dir,fileName);
+        loadImage(image,dirFileName);
     } else{
         MyLog.print(Log::LOGU,"既不是160x160也不是192x192,没法渲染图像");
+    }
+}
+
+void generateHistogram(BYTE* Histogram,int hw,int hh,BYTE* pData,int w,int h){
+    auto func=[&](int position,int height)->void{
+        for(int i=0;i<hh;i++){
+            if(i==height){
+                if(position>0){
+                    Histogram[i*hw+position-1]=127;
+                }
+                if(position<hw){
+                    Histogram[i*hw+position+1]=127;
+                }
+                Histogram[i*hw+position]=0;
+            } else if(i==height+1||i==height-1){
+                Histogram[i*hw+position]=127;
+            } else{
+                Histogram[i*hw+position]=255;
+            }
+        }
+    };
+    int* count=new int[hw];
+    memset(count,0,hw*4);
+    for(int i=0;i<w*h;i++){
+        count[pData[i]*hw/256]++;
+    }
+    int max=0;
+    for(int i=0;i<hw;i++){
+        if(max<count[i]){
+            max=count[i];
+        }
+    }
+    for(int i=0;i<hw;i++){
+        func(i,count[i]*hh/max);
+    }
+    delete[] count;
+}
+
+void imgSizeX2(BYTE * src,int w,int h,BYTE * dest){
+    int dw=w+w,dh=h+h;
+    for(int i=0;i<dh;i++){
+        for(int j=0;j<dw;j++){
+            dest[i*dw+j]=src[i/2*w+j/2];
+        }
     }
 }
 

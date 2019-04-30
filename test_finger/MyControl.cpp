@@ -18,6 +18,7 @@ CComboBox* cmbBaudSet;
 CComboBox* cmbChipType;
 CComboBox* cmbLogLevel;
 CButton* btnConnect;
+CButton* btnAdvDbg;
 CButton* btnRawImage;
 CButton* btnTestImage;
 CButton* btnContinueImage;
@@ -35,6 +36,8 @@ CStatic* image;
 CProgressCtrl* progress;
 
 HWND hwnd;
+
+AdvancedDebugDialog* advancedDebugDialog;
 
 MyString getText(CWnd * pWnd){
     static CString ret;
@@ -58,7 +61,7 @@ int getHex(CWnd * pWnd){
     return ret;
 }
 
-void initMyControl(Ctest_fingerDlg* Dlg){
+void initMyControl(MainDialog* Dlg){
     editLog=(CEdit*)Dlg->GetDlgItem(IDC_EDITLog);
     editAddress=(CEdit*)Dlg->GetDlgItem(IDC_EDITAddress);
     editPassword=(CEdit*)Dlg->GetDlgItem(IDC_EDITPassword);
@@ -76,6 +79,7 @@ void initMyControl(Ctest_fingerDlg* Dlg){
     cmbChipType=(CComboBox*)Dlg->GetDlgItem(IDC_CMBChipType);
     cmbLogLevel=(CComboBox*)Dlg->GetDlgItem(IDC_CMBLogLevel);
     btnConnect=(CButton*)Dlg->GetDlgItem(IDC_BTNConnect);
+    btnAdvDbg=(CButton*)Dlg->GetDlgItem(IDC_BTNAdvDbg);
     btnRawImage=(CButton*)Dlg->GetDlgItem(IDC_BTNRawImage);
     btnTestImage=(CButton*)Dlg->GetDlgItem(IDC_BTNTestImage);
     btnContinueImage=(CButton*)Dlg->GetDlgItem(IDC_BTNContinueImage);
@@ -94,6 +98,11 @@ void initMyControl(Ctest_fingerDlg* Dlg){
 
     editLog->SetLimitText(-1);
     hwnd=Dlg->m_hWnd;
+
+    if($::conf["AdvDbg"]=="true"){
+        btnAdvDbg->ShowWindow(SW_SHOW);
+    }
+    advancedDebugDialog=0;
 }
 
 void sendMessage(int Message){

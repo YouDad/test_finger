@@ -6,8 +6,9 @@ struct DataPacketLOG{
     char Head[3];
     uint16_t Cmd;
     uint16_t Len;
+	uint8_t Sign;
     uint8_t Data[93];
-    static const int Header=7;
+    static const int Header=8;
     static const int Checker=0;
 };
 #pragma pack(4)

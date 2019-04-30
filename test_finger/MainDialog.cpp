@@ -5,58 +5,48 @@
 #define new DEBUG_NEW
 #endif
 
-// Ctest_fingerDlg 对话框
-
-Ctest_fingerDlg::Ctest_fingerDlg(CWnd* pParent /*=NULL*/)
-    : CDialogEx(Ctest_fingerDlg::IDD,pParent){
+MainDialog::MainDialog(CWnd* pParent /*=NULL*/)
+    : CDialogEx(MainDialog::IDD,pParent){
     m_hIcon=AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
-void Ctest_fingerDlg::DoDataExchange(CDataExchange* pDX){
-    CDialogEx::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(Ctest_fingerDlg,CDialogEx)
+BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_WM_PAINT()
     ON_MESSAGE(WM_GET_RAW_IMAGE,serialResponse)
     ON_MESSAGE(WM_GET_CON_IMAGE,serialResponse)
     ON_MESSAGE(WM_STP_GET_IMAGE,serialResponse)
     ON_MESSAGE(WM_READ_REGISTER,serialResponse)
-    ON_MESSAGE(WM_WRITE_REGISTER,serialResponse)
+    ON_MESSAGE(WM_APPEND_CONTROLS,serialResponse)
     ON_MESSAGE(WM_GET_TEST_IMAGE,serialResponse)
     ON_MESSAGE(WM_GET_CON_BKI,serialResponse)
     ON_MESSAGE(WM_STP_GET_BKI,serialResponse)
     ON_WM_QUERYDRAGICON()
     ON_WM_DEVICECHANGE()
-    ON_BN_CLICKED(IDC_BTNConnect,&Ctest_fingerDlg::OnBnClickedBtnconnect)
-    ON_BN_CLICKED(IDC_BTNSaveLog,&Ctest_fingerDlg::OnBnClickedBtnsavelog)
-    ON_BN_CLICKED(IDC_BTNRawImage,&Ctest_fingerDlg::OnBnClickedBtnrawimage)
-    ON_BN_CLICKED(IDC_BTNContinueImage,&Ctest_fingerDlg::OnBnClickedBtncontinueimage)
-    ON_BN_CLICKED(IDC_BTNdevLog,&Ctest_fingerDlg::OnBnClickedBtndevlog)
-    ON_BN_CLICKED(IDC_BTNreadReg,&Ctest_fingerDlg::OnBnClickedBtnreadreg)
-    ON_BN_CLICKED(IDC_BTNwriteReg,&Ctest_fingerDlg::OnBnClickedBtnwritereg)
-    ON_BN_CLICKED(IDC_BTNSetCmos,&Ctest_fingerDlg::OnBnClickedBtnsetcmos)
-    ON_BN_CLICKED(IDC_BTNSetBaud,&Ctest_fingerDlg::OnBnClickedBtnsetbaud)
-    ON_BN_CLICKED(IDC_BTNSetPassword,&Ctest_fingerDlg::OnBnClickedBtnsetpassword)
-    ON_BN_CLICKED(IDC_BTNSetAddress,&Ctest_fingerDlg::OnBnClickedBtnsetaddress)
-    ON_BN_CLICKED(IDC_BTNOpenImage,&Ctest_fingerDlg::OnBnClickedBtnopenimage)
-    ON_BN_CLICKED(IDC_BTNContinueBackGroundImage,&Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage)
-    ON_BN_CLICKED(IDC_BTNOpenBackGroundImage,&Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage)
-    ON_BN_CLICKED(IDC_BTNTestImage,&Ctest_fingerDlg::OnBnClickedBtnbackgroundimage)
+    ON_BN_CLICKED(IDC_BTNConnect,&MainDialog::OnBnClickedBtnconnect)
+    ON_BN_CLICKED(IDC_BTNSaveLog,&MainDialog::OnBnClickedBtnsavelog)
+    ON_BN_CLICKED(IDC_BTNRawImage,&MainDialog::OnBnClickedBtnrawimage)
+    ON_BN_CLICKED(IDC_BTNContinueImage,&MainDialog::OnBnClickedBtncontinueimage)
+    ON_BN_CLICKED(IDC_BTNdevLog,&MainDialog::OnBnClickedBtndevlog)
+    ON_BN_CLICKED(IDC_BTNreadReg,&MainDialog::OnBnClickedBtnreadreg)
+    ON_BN_CLICKED(IDC_BTNwriteReg,&MainDialog::OnBnClickedBtnwritereg)
+    ON_BN_CLICKED(IDC_BTNSetCmos,&MainDialog::OnBnClickedBtnsetcmos)
+    ON_BN_CLICKED(IDC_BTNSetBaud,&MainDialog::OnBnClickedBtnsetbaud)
+    ON_BN_CLICKED(IDC_BTNSetPassword,&MainDialog::OnBnClickedBtnsetpassword)
+    ON_BN_CLICKED(IDC_BTNSetAddress,&MainDialog::OnBnClickedBtnsetaddress)
+    ON_BN_CLICKED(IDC_BTNOpenImage,&MainDialog::OnBnClickedBtnopenimage)
+    ON_BN_CLICKED(IDC_BTNContinueBackGroundImage,&MainDialog::OnBnClickedBtncontinuebackgroundimage)
+    ON_BN_CLICKED(IDC_BTNOpenBackGroundImage,&MainDialog::OnBnClickedBtnopenbackgroundimage)
+    ON_BN_CLICKED(IDC_BTNTestImage,&MainDialog::OnBnClickedBtnbackgroundimage)
+    ON_CBN_CLOSEUP(IDC_CMBLogLevel,&MainDialog::OnCbnCloseupCmbloglevel)
+    ON_BN_CLICKED(IDC_BTNAdvDbg,&MainDialog::OnBnClickedBtnadvdbg)
 END_MESSAGE_MAP()
 
+void MainDialog::OnOK(){}
 
-// Ctest_fingerDlg 消息处理程序
-
-BOOL Ctest_fingerDlg::OnInitDialog(){
+BOOL MainDialog::OnInitDialog(){
     CDialogEx::OnInitDialog();
-
-    // 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
-    //  执行此操作
-    SetIcon(m_hIcon,TRUE);// 设置大图标
-    SetIcon(m_hIcon,FALSE);// 设置小图标
-
-    // TODO: 在此添加额外的初始化代码
+    SetIcon(m_hIcon,TRUE);
+    SetIcon(m_hIcon,FALSE);
 
     ///1.全局控件赋值
     initMyControl(this);
@@ -95,24 +85,14 @@ BOOL Ctest_fingerDlg::OnInitDialog(){
     ///3.更新 各控件访问权限
     updateControlDisable(actInit);
 
-    ///4.线程句柄清零
-    serialThread=0;
-
     ///5.进度条设置
     progress->SetRange(0,100);
     progress->SetPos(0);
 
-    hwnd=m_hWnd;
-
-    ///0.测试
-
-    return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+    return TRUE;//除非将焦点设置到控件，否则返回 TRUE
 }
 
-//如果向对话框添加最小化按钮，则需要下面的代码
-//来绘制该图标。对于使用文档/视图模型的 MFC 应用程序，
-//这将由框架自动完成。
-void Ctest_fingerDlg::OnPaint(){
+void MainDialog::OnPaint(){
     if(IsIconic()){
         CPaintDC dc(this);
         SendMessage(WM_ICONERASEBKGND,reinterpret_cast<WPARAM>(dc.GetSafeHdc()),0);
@@ -128,13 +108,12 @@ void Ctest_fingerDlg::OnPaint(){
     }
 }
 
-//当用户拖动最小化窗口时系统调用此函数取得光标显示。
-HCURSOR Ctest_fingerDlg::OnQueryDragIcon(){
+HCURSOR MainDialog::OnQueryDragIcon(){
     return static_cast<HCURSOR>(m_hIcon);
 }
 
 //支持串口热拔插的设备更改监听函数
-BOOL Ctest_fingerDlg::OnDeviceChange(UINT nEventType,DWORD dwData){
+BOOL MainDialog::OnDeviceChange(UINT nEventType,DWORD dwData){
     switch(nEventType){
         case DBT_DEVICEREMOVECOMPLETE://移除设备
             updateCommunityWay();
@@ -149,7 +128,7 @@ BOOL Ctest_fingerDlg::OnDeviceChange(UINT nEventType,DWORD dwData){
 }
 
 //连接下位机按钮的点击事件
-void Ctest_fingerDlg::OnBnClickedBtnconnect(){
+void MainDialog::OnBnClickedBtnconnect(){
     //根据按钮上的文字判断当前连接状态
     if(getText(btnConnect)=="连接下位机"){
         updateControlDisable(actOpeningPort);
@@ -172,7 +151,7 @@ void Ctest_fingerDlg::OnBnClickedBtnconnect(){
 }
 
 //日志保存按钮点击事件
-void Ctest_fingerDlg::OnBnClickedBtnsavelog(){
+void MainDialog::OnBnClickedBtnsavelog(){
     //获取文件路径名
     LPCTSTR filter=_T("文本文件(*.txt)|*.txt||");
     CFileDialog dlgFileOpen(0,0,0,0,filter,0);
@@ -210,7 +189,7 @@ MyThread RegisterTimeout(ThreadFunction__(timeoutFunction)(void){
 });
 
 //原始图像的点击事件
-void Ctest_fingerDlg::OnBnClickedBtnrawimage(){
+void MainDialog::OnBnClickedBtnrawimage(){
     updateControlDisable(actGetingImage);
     comm.request(CMD_GET_RAW_IMAGE);
     progress->SetPos(30);
@@ -219,7 +198,7 @@ void Ctest_fingerDlg::OnBnClickedBtnrawimage(){
 }
 
 //串口线程消息处理函数
-LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
+LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     static bool continueImage=false;
     switch(w){
         case WM_GET_CON_IMAGE:
@@ -233,7 +212,7 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
         {
             ImageTimeout.terminate();
             if(continueImage){
-                comm.request(CMD_GET_RAW_IMAGE);//line 289 重合
+                comm.request(CMD_GET_RAW_IMAGE);
                 progress->SetPos(30);
                 MyLog.print(Log::LOGU,"请放手指");
                 ImageTimeout.start();
@@ -256,9 +235,10 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
             RegisterTimeout.terminate();
             progress->SetPos(100);
         }break;
-        case WM_WRITE_REGISTER:
+        case WM_APPEND_CONTROLS:
         {
-            progress->SetPos(100);
+            advancedDebugDialog->append(MyString::ParseInt($::conf["id"]),$::conf["AdvDbg_ImgId"]);
+            $::conf["AdvDbg_ImgId"]=MyString::IntToMyString(MyString::ParseInt($::conf["AdvDbg_ImgId"])+1);
         }break;
         case WM_GET_CON_BKI:
         {
@@ -294,7 +274,7 @@ LRESULT Ctest_fingerDlg::serialResponse(WPARAM w,LPARAM l){
 }
 
 //连续获取图像的点击事件
-void Ctest_fingerDlg::OnBnClickedBtncontinueimage(){
+void MainDialog::OnBnClickedBtncontinueimage(){
     //根据按钮上的文字判断当前连接状态
     if(getText(btnContinueImage)=="连续获取图像"){
         MyLog.print(Log::LOGU,"开始连续获取图像");
@@ -310,11 +290,11 @@ void Ctest_fingerDlg::OnBnClickedBtncontinueimage(){
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtndevlog(){
+void MainDialog::OnBnClickedBtndevlog(){
     MyLog.DevelopLog();
 }
 
-void Ctest_fingerDlg::OnBnClickedBtnreadreg(){
+void MainDialog::OnBnClickedBtnreadreg(){
     updateControlDisable(actReadingReg);
     progress->SetPos(30);
     MyLog.print(Log::LOGD,"开始读寄存器");
@@ -328,7 +308,7 @@ void Ctest_fingerDlg::OnBnClickedBtnreadreg(){
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnwritereg(){
+void MainDialog::OnBnClickedBtnwritereg(){
     updateControlDisable(actWritingReg);
     progress->SetPos(50);
     MyLog.print(Log::LOGD,"开始写寄存器");
@@ -338,14 +318,13 @@ void Ctest_fingerDlg::OnBnClickedBtnwritereg(){
     addrVal[1]=getHex(editWriteRegVal);
 
     comm.request(CMD_WRITE_NOTE_BOOK,addrVal,2);
-    SendMessage(WM_WRITE_REGISTER,WM_WRITE_REGISTER,0);
 
     progress->SetPos(100);
     updateControlDisable(actWritedReg);
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnsetcmos(){
+void MainDialog::OnBnClickedBtnsetcmos(){
     MyString a=getText(editLightTime);
     if(a.length())
         a=MyString("设置曝光时间为")+a;
@@ -364,25 +343,25 @@ void Ctest_fingerDlg::OnBnClickedBtnsetcmos(){
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnsetbaud(){
+void MainDialog::OnBnClickedBtnsetbaud(){
     MyLog.print(Log::LOGU,MyString("设置串口通信密码为")+getText(cmbBaudSet));
     progress->SetPos(100);
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnsetpassword(){
+void MainDialog::OnBnClickedBtnsetpassword(){
     MyLog.print(Log::LOGU,MyString("设置串口通信密码为")+getText(editPasswordSet));
     progress->SetPos(100);
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnsetaddress(){
+void MainDialog::OnBnClickedBtnsetaddress(){
     MyLog.print(Log::LOGU,MyString("设置串口通信地址为")+getText(editAddressSet));
     progress->SetPos(100);
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
+void MainDialog::OnBnClickedBtncontinuebackgroundimage(){
     //根据按钮上的文字判断当前连接状态
     if(getText(btnContinueBackGroundImage)=="连续获取背景"){
         MyLog.print(Log::LOGU,"开始连续获取背景");
@@ -398,7 +377,7 @@ void Ctest_fingerDlg::OnBnClickedBtncontinuebackgroundimage(){
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
+void MainDialog::OnBnClickedBtnopenimage(){
     if(access("collectedImage",0)){
         MyLog.print(Log::LOGU,"图片文件夹不存在,请先采一张图片");
     } else{
@@ -407,7 +386,7 @@ void Ctest_fingerDlg::OnBnClickedBtnopenimage(){
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage(){
+void MainDialog::OnBnClickedBtnopenbackgroundimage(){
     if(access("collectedBGI",0)){
         MyLog.print(Log::LOGU,"背景文件夹不存在,请先采一张背景");
     } else{
@@ -416,10 +395,43 @@ void Ctest_fingerDlg::OnBnClickedBtnopenbackgroundimage(){
 }
 
 
-void Ctest_fingerDlg::OnBnClickedBtnbackgroundimage(){
+void MainDialog::OnBnClickedBtnbackgroundimage(){
     updateControlDisable(actGetingImage);
     progress->SetPos(30);
     MyLog.print(Log::LOGD,"开始采集背景");
     comm.request(CMD_GET_TEST_IMAGE);
     progress->SetPos(60);
+}
+
+
+void MainDialog::OnCbnCloseupCmbloglevel(){
+    static clock_t firstTime=0,secondTime=0;
+    if(firstTime==0){
+        firstTime=clock();
+    } else{
+        if(secondTime==0){
+            secondTime=clock();
+        } else{
+            clock_t now=clock();
+            if(now-firstTime>2000){
+                firstTime=secondTime;
+                secondTime=now;
+            } else{
+                $::conf["AdvDbg"]="true";
+                btnAdvDbg->ShowWindow(SW_SHOW);
+            }
+        }
+    }
+}
+
+
+void MainDialog::OnBnClickedBtnadvdbg(){
+    if(advancedDebugDialog){
+        delete advancedDebugDialog;
+        advancedDebugDialog=0;
+    } else{
+        advancedDebugDialog=new AdvancedDebugDialog();
+        advancedDebugDialog->Create(IDD_ADVANCED_DEBUG_DIALOG,this);
+        advancedDebugDialog->ShowWindow(SW_SHOW);
+    }
 }

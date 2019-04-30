@@ -15,6 +15,7 @@ public:
     MyString(MyString& other);
     MyString(MyString&& other);
     MyString(const char* pcc);
+    MyString(std::string str);
     static MyString Format(const char* format,...);
     operator wchar_t*();
     operator const char*();
@@ -26,6 +27,9 @@ public:
     MyString& operator=(MyString other);
     int length();
     int find(MyString beFound,int startPosition);
+    static MyString IntToMyString(int i);
+    static int ParseInt(MyString s);
+    static MyString Time(const char* format="%Y_%m_%d_%H_%M_%S");
 private:
     std::string str;
     wchar_t* wstr=0;

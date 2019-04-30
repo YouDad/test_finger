@@ -17,6 +17,11 @@ MyString::MyString(const char* pcc){
     updateWstr();
 }
 
+MyString::MyString(std::string str){
+    this->str=str;
+    updateWstr();
+}
+
 MyString::MyString(char* pc){
     str=pc;
     updateWstr();
@@ -105,6 +110,22 @@ int MyString::length(){
 
 int MyString::find(MyString beFound,int startPosition){
     return str.find(beFound.str,startPosition);
+}
+
+MyString MyString::IntToMyString(int i){
+    CString x;
+    x.Format(_T("%d"),i);
+    return x;
+}
+
+int MyString::ParseInt(MyString s){
+    int ret;
+    sscanf(s,"%d",&ret);
+    return ret;
+}
+
+MyString MyString::Time(const char * format){
+    return CTime::GetCurrentTime().Format(format);
 }
 
 void MyString::updateWstr(){

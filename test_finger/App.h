@@ -15,9 +15,9 @@
 // 有关此类的实现，请参阅 test_finger.cpp
 //
 
-class Ctest_fingerApp: public CWinApp{
+class App: public CWinApp{
 public:
-    Ctest_fingerApp();
+    App();
 
     // 重写
 public:
@@ -28,4 +28,4 @@ public:
     DECLARE_MESSAGE_MAP()
 };
 
-extern Ctest_fingerApp theApp;
+extern App theApp;

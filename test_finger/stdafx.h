@@ -65,7 +65,7 @@
 #define WM_GET_CON_IMAGE	WM_USER+6
 #define WM_STP_GET_IMAGE	WM_USER+7
 #define WM_READ_REGISTER	WM_USER+8
-#define WM_WRITE_REGISTER	WM_USER+9
+#define WM_APPEND_CONTROLS	WM_USER+9
 #define WM_GET_CON_BKI		WM_USER+10
 #define WM_STP_GET_BKI		WM_USER+11
 #define WM_GET_TEST_IMAGE	WM_USER+12
@@ -76,14 +76,16 @@ typedef unsigned int   uint32_t;
 
 #include"resource.h"
 
+#include"Config.h"
 #include"Serial.h"
 #include"str4err_warn.h"
 #include"MyThread.h"
 #include"MyString.h"
 #include"MyLog.h"
 
-#include"test_finger.h"
-#include"test_fingerDlg.h"
+#include"App.h"
+#include"MainDialog.h"
+#include"AdvancedDebugDialog.h"
 
 #include"MyControl.h"
 
@@ -92,13 +94,8 @@ typedef unsigned int   uint32_t;
 #include"MyConverterHeadFile.h"
 #include"ListenerBoardcast.h"
 #include"MyListenerHeadFile.h"
-//#include"enumcd.h"
-//#include"UsbPort.h"
 #include"Comm.h"
 #include"CCommunication.h"
 
-#include"algo.h"//这个项目用的算法头文件
-//extern BYTE packet[65536];
-//extern DWORD packetCnt;
-//extern BYTE packetData[65536];
-//extern DWORD packetDataLen;
+#include"algo.h"
+#include <afxcontrolbars.h>
