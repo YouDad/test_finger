@@ -111,12 +111,12 @@ void initMyControl(MainDialog* Dlg){
     //}
 
     //常用波特率
-    MyString baud[]={"9600","115200","256000"};
-    for(int i=0;i<3;i++){
+    MyString baud[]={"9600","19200","57600","115200","230400","460800","921600"};
+    for(int i=0;i<7;i++){
         cmbBaud->InsertString(i,baud[i]);
         cmbBaudSet->InsertString(i,baud[i]);
     }
-    cmbBaud->SetCurSel(1);
+    cmbBaud->SetCurSel(3);
 
     //芯片类型
     const WCHAR* chipType[]={_T("GD32F30"),_T("ASFComm"),0};

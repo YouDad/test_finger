@@ -84,4 +84,6 @@ void Log::DevelopLog(){
     print(Log::LOGU,"V2.01<2019年4月29日12:15:13>:消除用于静电检测的竖线,修复了一些已知bug");
     print(Log::LOGU,"V2.1 <2019年4月29日16:55:54>:更新了包的确认方案,采用DataPacket来识别协议");
     print(Log::LOGU,"V2.2 <2019年4月30日14:44:30>:增加了高级调试功能");
+    print(Log::LOGU,"V2.3 <2019年5月01日20:56:32>:上线新的协议ASFComm");
+    print(Log::LOGU,"V2.31<2019年5月01日23:12:42>:调整了AdjustingImage函数接口");
 }

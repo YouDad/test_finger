@@ -66,11 +66,21 @@ __ILC(ASFComm,Log){
 }
 
 __ILC(ASFComm,AdjustingImage){
-    $::conf["id"]=MyString((char*)response.getPointer(),response.size()-32*32);
-    response.readData(response.size()-32*32);
-    BYTE bigImg[64*64];
-    imgSizeX2(response.getPointer(),32,32,bigImg);
-    saveBmp(64,64,bigImg,"collectedTempImage",$::conf["AdvDbg_ImgId"]);
+    int imgSize=MyString::ParseInt(MyString((char*)response.getPointer(),2));
+    response.readData(2);
+    $::conf["id"]=MyString((char*)response.getPointer(),response.size()-imgSize*imgSize);
+    response.readData(response.size()-imgSize*imgSize);
+    BYTE img64[64*64],img32[32*32];
+    if(imgSize==16){
+        imgSizeX2(response.getPointer(),imgSize,imgSize,img32);
+        imgSize=imgSize+imgSize;
+        imgSizeX2(img32,imgSize,imgSize,img64);
+    } else if(imgSize==32){
+        imgSizeX2(response.getPointer(),imgSize,imgSize,img64);
+    } else{
+        memcpy(img64,response.getPointer(),imgSize*imgSize);
+    }
+    saveBmp(64,64,img64,"collectedTempImage",$::conf["AdvDbg_ImgId"]);
     BYTE Histogram[256*64];
     generateHistogram(Histogram,256,64,response.getPointer(),32,32);
     saveBmp(256,64,Histogram,"collectedTempImage",MyString("Histogram")+$::conf["AdvDbg_ImgId"]);
