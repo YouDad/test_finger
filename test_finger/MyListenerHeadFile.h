@@ -1,6 +1,96 @@
 #pragma once
-#include"CmdCodeGD32F30.h"
-#include"CmdCodeLOG.h"
+
+class GET_RAW_IMAGE_Listener:public ICommListener{
+public:
+    void listen(DataPacket response);
+};
+
+class GET_TEST_IMAGE_Listener:public ICommListener{
+public:
+    void listen(DataPacket response);
+};
+
+class READ_REGISTER_Listener:public ICommListener{
+public:
+    void listen(DataPacket response);
+};
+
+class CmdCodeLOG_AdvDbg_AdjImg_Listener:public ICommListener{
+public:
+    void listen(DataPacket response);
+};
+
+class CmdCodeLOG_Info_Listener:public ICommListener{
+public:
+    void listen(DataPacket response);
+};
+
+class CmdCodeLOG_MeasureTimeStart_Listener:public ICommListener{
+public:
+    void listen(DataPacket response);
+};
+
+class CmdCodeLOG_MeasureTimeEnd_Listener:public ICommListener{
+public:
+    void listen(DataPacket response);
+};
+
+/*
+OS:前面是不用宏的定义,很占地儿,看起来很费劲
+    给一个协议添加一个监听器有如下步骤:
+    1.SCC,定义一个命令            本文件下面的枚举类型定义里
+    2.DLC,定义一个监听器          本文件枚举类型定义前
+    3.ILC,实现这个监听器          协议名的C++文件里
+    4.BCL,把命令绑到这个监听器上   监听器广播的C++文件里监听器广播构造函数
+
+    注:监听器广播是ListenerBoardcast
+*/
+
+//___SCN===Structure Class Name,快速拼凑类名的辅助宏
+#define ___SCN(Protocol,Message) \
+CmdCode##Protocol##_##Message##_Listener
+
+//__SCC===Structure Command Code,快速拼凑命令的宏
+#define __SCC(Protocol,Message) \
+CmdCode##Protocol##_##Message
+
+//__DLC===Define Listener Class,快速定义监听器类的宏
+#define __DLC(Protocol,Message) \
+class ___SCN(Protocol,Message):public ICommListener{\
+public:\
+    void listen(DataPacket response);\
+}
+
+//__BCL===Binding Command into Listener,快速把命令绑到监听器的宏
+#define __BCL(Protocol,Message) \
+attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)())
+
+//__ILC===Implement Listener Class,快速实现监听器类的宏
+#define __ILC(Protocol,Message) \
+void ___SCN(Protocol,Message)::listen(DataPacket response)
+
+
+__DLC(ASFComm,GetRawImage);
+__DLC(ASFComm,GetTestImage);
+__DLC(ASFComm,ReadRegister);
+__DLC(ASFComm,WriteRegister);
+__DLC(ASFComm,ToSleep);
+__DLC(ASFComm,ToIdle);
+__DLC(ASFComm,Log);
+__DLC(ASFComm,AdjustingImage);
+
+enum CmdCodeASFComm{
+    //上位机发送的命令
+    __SCC(ASFComm,GetRawImage)=0xBB00,
+    __SCC(ASFComm,GetTestImage),
+    __SCC(ASFComm,ReadRegister),
+    __SCC(ASFComm,WriteRegister),
+    __SCC(ASFComm,ToSleep),
+    __SCC(ASFComm,ToIdle),
+    //下位机发送的命令
+    __SCC(ASFComm,Log),
+    __SCC(ASFComm,AdjustingImage),
+};
 
 enum CmdCodeLOG{
     CmdCodeLOG_Info=0xCC00,

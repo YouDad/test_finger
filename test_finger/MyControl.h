@@ -24,7 +24,7 @@ extern CEdit* editWriteRegVal;
 extern CComboBox* cmbWay;
 extern CComboBox* cmbBaud;
 extern CComboBox* cmbBaudSet;
-extern CComboBox* cmbChipType;
+extern CComboBox* cmbProtocolType;
 extern CComboBox* cmbLogLevel;
 extern CButton* btnConnect;
 extern CButton* btnAdvDbg;

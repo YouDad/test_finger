@@ -4,7 +4,6 @@
 class Comm{
 public:
     Comm();
-    DataPacket getType();
     int getConnectId();
     bool connect(int id,int baud);
     bool disconnect();
@@ -12,7 +11,6 @@ public:
 private:
     CSerial serial;
     int id;
-    DataPacket type;
 
     HANDLE responseThread;
     HANDLE listenThread;

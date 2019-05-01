@@ -151,7 +151,7 @@ void updateControlDisable(action a){
             disable(editLightTime);
             disable(editSensitivity);
             disable(cmbBaudSet);
-            disable(cmbChipType);
+            disable(cmbProtocolType);
             disable(btnRawImage);
             disable(btnTestImage);
             disable(btnContinueImage);
@@ -178,7 +178,7 @@ void updateControlDisable(action a){
             enable(editLightTime);
             enable(editSensitivity);
             enable(cmbBaudSet);
-            enable(cmbChipType);
+            enable(cmbProtocolType);
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
@@ -208,7 +208,7 @@ void updateControlDisable(action a){
             disable(editLightTime);
             disable(editSensitivity);
             disable(cmbBaudSet);
-            disable(cmbChipType);
+            disable(cmbProtocolType);
             disable(btnRawImage);
             disable(btnTestImage);
             disable(btnSetCmos);
@@ -231,7 +231,7 @@ void updateControlDisable(action a){
             enable(editLightTime);
             enable(editSensitivity);
             enable(cmbBaudSet);
-            enable(cmbChipType);
+            enable(cmbProtocolType);
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
@@ -260,7 +260,7 @@ void updateControlDisable(action a){
             disable(editLightTime);
             disable(editSensitivity);
             disable(cmbBaudSet);
-            disable(cmbChipType);
+            disable(cmbProtocolType);
             disable(btnRawImage);
             disable(btnTestImage);
             disable(btnSetCmos);
@@ -281,7 +281,7 @@ void updateControlDisable(action a){
             enable(editLightTime);
             enable(editSensitivity);
             enable(cmbBaudSet);
-            enable(cmbChipType);
+            enable(cmbProtocolType);
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
@@ -370,7 +370,7 @@ void saveImage(MyString dir,DataPacket dataPacket){
         for(int i=0;i<h;i++){
             for(int j=0;j<w;j++){
                 if(j==47||j==99||j==151){
-                    pData[i*w+j]=pData[i*w+j+1]+pData[i*w+j-1]>>1;
+                    pData[i*w+j]=(pData[i*w+j+1]+pData[i*w+j-1])/2;
                 }
             }
         }

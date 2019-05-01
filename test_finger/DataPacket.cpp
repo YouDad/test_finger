@@ -34,7 +34,7 @@ BYTE * DataPacket::getPointer(){
     return data+read;
 }
 
-BYTE * DataPacket::getTempArray(){
+BYTE * DataPacket::getNewArray(){
     return new BYTE[len-read];
 }
 

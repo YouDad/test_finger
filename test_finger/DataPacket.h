@@ -11,7 +11,7 @@ public:
     bool isValid();
     int size();
     BYTE* getPointer();
-    BYTE* getTempArray();
+    BYTE* getNewArray();
     void readData(int readByteSize);
     bool haveData();
 private:

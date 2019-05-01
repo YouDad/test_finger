@@ -1,8 +1,7 @@
 #include "stdafx.h"
-#include "RequestConverterGD32F30.h"
 
 bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
-    return true;
+    return getText(cmbProtocolType)=="GD32F30";
 }
 
 std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * Data,uint16_t Len){
@@ -15,7 +14,7 @@ std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * D
     const int interval=sizeof DataPacketGD32F30::Sendbuf-2;
     for(int i=0;Len>interval+i*interval;i++){
         SendPack.NO=i;
-        SendPack.Sign=RequestNotEnd;
+        SendPack.Sign=DataNotEnd;
         SendPack.Length=interval;
         memset(SendPack.Sendbuf,0,sizeof SendPack.Sendbuf);
         if(Data){
@@ -27,7 +26,7 @@ std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * D
         ret.push_back(DataPacket(&SendPack,sizeof SendPack));
     }
     SendPack.NO=Len/interval;
-    SendPack.Sign=RequestEnd;
+    SendPack.Sign=DataEnd;
     if(Len>0&&Len%interval==0){
         SendPack.Length=interval;
     } else{

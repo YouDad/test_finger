@@ -1,5 +1,29 @@
-#define Function_t(ReturnType,Param1) std::function<ReturnType(Param1)>
-#define DefFunction(ReturnType,Param1) [&](Param1)->ReturnType
-#define ThreadFunction_t Function_t(void,void)
-#define VoidFunction(Param1) DefFunction(void,Param1)
+#define _Function_t(ReturnType,...) std::function<ReturnType(__VA_ARGS__)>
+#define _Function(ReturnType,...) [&](__VA_ARGS__)->ReturnType
+
+#define ThreadFunction_t _Function_t(void,void)
+#define VoidFunction(Param1) _Function(void,Param1)
 #define ThreadFunction__(name) VoidFunction
+
+//___SCN===Structure Class Name,快速拼凑类名的辅助宏
+#define ___SCN(Protocol,Message) \
+CmdCode##Protocol##_##Message##_Listener
+
+//__SCC===Structure Command Code,快速拼凑命令的宏
+#define __SCC(Protocol,Message) \
+CmdCode##Protocol##_##Message
+
+//__DLC===Define Listener Class,快速定义监听器类的宏
+#define __DLC(Protocol,Message) \
+class ___SCN(Protocol,Message):public ICommListener{\
+public:\
+    void listen(DataPacket response);\
+}
+
+//__BCL===Binding Command into Listener,快速把命令绑到监听器的宏
+#define __BCL(Protocol,Message) \
+attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)())
+
+//__ILC===Implement Listener Class,快速实现监听器类的宏
+#define __ILC(Protocol,Message) \
+void ___SCN(Protocol,Message)::listen(DataPacket response)

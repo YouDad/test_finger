@@ -54,40 +54,8 @@ BOOL MainDialog::OnInitDialog(){
     ///2.对组合框的初始化
     updateCommunityWay();
 
-    ////通讯方式
-    //const WCHAR* way[]={0};
-    //for(int i=0;way[i];i++){
-    //    cmbWay->InsertString(i,way[i]);
-    //}
-
-    //常用波特率
-    MyString baud[]={"9600","115200","256000"};
-    for(int i=0;i<3;i++){
-        cmbBaud->InsertString(i,baud[i]);
-        cmbBaudSet->InsertString(i,baud[i]);
-    }
-    cmbBaud->SetCurSel(1);
-
-    ////芯片类型
-    //const WCHAR* chipType[]={_T("默认"),_T("航芯"),0};
-    //for(int i=0;chipType[i];i++){
-    //    cmbChipType->InsertString(i,chipType[i]);
-    //}
-    //cmbChipType->SetCurSel(0);
-
-    //日志信息等级
-    MyString logLevel[]={"用户","错误","警告","调试","临时"};
-    for(int i=0;i<5;i++){
-        cmbLogLevel->InsertString(i,logLevel[i]);
-    }
-    cmbLogLevel->SetCurSel(3);
-
     ///3.更新 各控件访问权限
     updateControlDisable(actInit);
-
-    ///5.进度条设置
-    progress->SetRange(0,100);
-    progress->SetPos(0);
 
     return TRUE;//除非将焦点设置到控件，否则返回 TRUE
 }

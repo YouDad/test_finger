@@ -182,8 +182,6 @@
   <ItemGroup>
     <ClInclude Include="algo.h" />
     <ClInclude Include="AdvancedDebugDialog.h" />
-    <ClInclude Include="CmdCodeGD32F30.h" />
-    <ClInclude Include="CmdCodeLOG.h" />
     <ClInclude Include="Comm.h" />
     <ClInclude Include="DataPacket.h" />
     <ClInclude Include="ListenerBoardcast.h" />
@@ -194,12 +192,8 @@
     <ClInclude Include="MyListenerHeadFile.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyThread.h" />
-    <ClInclude Include="RequestConverterACH512.h" />
-    <ClInclude Include="RequestConverterGD32F30.h" />
     <ClInclude Include="MyLog.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="ResponseConverterGD32F30.h" />
-    <ClInclude Include="ResponseConverterLOG.h" />
     <ClInclude Include="Serial.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="str4err_warn.h" />
@@ -210,6 +204,7 @@
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
     <ClCompile Include="AdvancedDebugDialog.cpp" />
+    <ClCompile Include="ASFComm.cpp" />
     <ClCompile Include="CmdCodeGD32F30.cpp" />
     <ClCompile Include="CmdCodeLOG.cpp" />
     <ClCompile Include="Comm.cpp" />
@@ -219,9 +214,11 @@
     <ClCompile Include="ConverterBoardcast.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="MyControl.cpp" />
+    <ClCompile Include="ResponseConverterASFComm.cpp" />
     <ClCompile Include="MyLog.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="MyThread.cpp" />
+    <ClCompile Include="RequestConvertASFComm.cpp" />
     <ClCompile Include="RequestConverterACH512.cpp" />
     <ClCompile Include="RequestConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterGD32F30.cpp" />

@@ -36,8 +36,9 @@ void Log::print(LogLevel level,MyString info){
     time_t curtime;
     time(&curtime);
     MyString time(ctime(&curtime));
-    MyString content=time+" "+info+"\r\n";
+    MyString content=MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
     int len=editLog->GetWindowTextLength();
+
     //选定当前文本的末端
     editLog->SetSel(len,len);
     //在编辑框中追加文本

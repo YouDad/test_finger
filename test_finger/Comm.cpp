@@ -7,12 +7,7 @@ Comm comm;
 
 Comm::Comm(){
     id=0;
-    type=DataPacket();
     listenThread=0;
-}
-
-DataPacket Comm::getType(){
-    return type;
 }
 
 int Comm::getConnectId(){
@@ -90,7 +85,7 @@ bool Comm::disconnect(){
 }
 
 void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
-    auto converter=converterBoardcast.RequestConvert(getType());
+    auto converter=converterBoardcast.RequestConvert();
     if(converter){
         auto dataPacket=converter->convert(CmdCode,Data,Len);
         for(auto it=dataPacket.begin();it!=dataPacket.end();it++){

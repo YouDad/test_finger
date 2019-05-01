@@ -20,7 +20,7 @@ public:
 class ConverterBoardcast{
 public:
     ConverterBoardcast();
-    ICommProtocolRequestConverter* RequestConvert(DataPacket dataPacket);
+    ICommProtocolRequestConverter* RequestConvert();
     DataPacket ResponseConvert(DataPacket& data);
     int ResponseGetCmdCode(DataPacket data);
 private:
@@ -34,8 +34,6 @@ extern ConverterBoardcast converterBoardcast;
 
 enum ProtocolSign{
     Unspecified,
-    RequestNotEnd,
-    RequestEnd,
-    ResponseNotEnd,
-    ResponseEnd,
+    DataNotEnd,
+    DataEnd,
 };

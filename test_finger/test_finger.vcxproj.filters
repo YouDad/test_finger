@@ -48,17 +48,8 @@
     <ClInclude Include="str4err_warn.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RequestConverterGD32F30.h">
-      <Filter>Comm\CommProtocolConverter</Filter>
-    </ClInclude>
-    <ClInclude Include="RequestConverterACH512.h">
-      <Filter>Comm\CommProtocolConverter</Filter>
-    </ClInclude>
     <ClInclude Include="Comm.h">
       <Filter>Comm</Filter>
-    </ClInclude>
-    <ClInclude Include="ResponseConverterGD32F30.h">
-      <Filter>Comm\CommProtocolConverter</Filter>
     </ClInclude>
     <ClInclude Include="MyLog.h">
       <Filter>My</Filter>
@@ -71,9 +62,6 @@
     </ClInclude>
     <ClInclude Include="MyControl.h">
       <Filter>My</Filter>
-    </ClInclude>
-    <ClInclude Include="ResponseConverterLOG.h">
-      <Filter>Comm\CommProtocolConverter</Filter>
     </ClInclude>
     <ClInclude Include="MyConverterHeadFile.h">
       <Filter>Comm</Filter>
@@ -101,12 +89,6 @@
     </ClInclude>
     <ClInclude Include="AdvancedDebugDialog.h">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdCodeLOG.h">
-      <Filter>Comm\CommListener</Filter>
-    </ClInclude>
-    <ClInclude Include="CmdCodeGD32F30.h">
-      <Filter>Comm\CommListener</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +157,15 @@
     </ClCompile>
     <ClCompile Include="CmdCodeGD32F30.cpp">
       <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestConvertASFComm.cpp">
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="ASFComm.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseConverterASFComm.cpp">
+      <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

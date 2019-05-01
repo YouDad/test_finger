@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "CmdCodeLOG.h"
 
 void CmdCodeLOG_AdvDbg_AdjImg_Listener::listen(DataPacket response){
     $::conf["id"]=MyString((char*)response.getPointer(),response.size()-32*32);

@@ -3,6 +3,9 @@
 ConverterBoardcast converterBoardcast;
 
 ConverterBoardcast::ConverterBoardcast(){
+    attach(new RequestConverterASFComm());
+    attach(new ResponseConverterASFComm());
+
     attach(new RequestConverterACH512());
     attach(new RequestConverterGD32F30());
 
@@ -18,10 +21,10 @@ void ConverterBoardcast::attach(ICommProtocolResponseConverter * converter){
     responseVector.push_back(converter);
 }
 
-ICommProtocolRequestConverter* ConverterBoardcast::RequestConvert(DataPacket dataPacket){
+ICommProtocolRequestConverter* ConverterBoardcast::RequestConvert(){
     auto&v=requestVector;
     for(auto it=v.begin();it!=v.end();it++){
-        if((*it)->checkProtocol(dataPacket)){
+        if((*it)->checkProtocol(DataPacket())){
             return *it;
         }
     }

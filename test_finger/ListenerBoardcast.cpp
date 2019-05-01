@@ -4,13 +4,21 @@
 ListenerBoardcast listenerBoardcast;
 
 ListenerBoardcast::ListenerBoardcast(){
-    attach(CMD_GET_RAW_IMAGE,(ICommListener*)(new GET_RAW_IMAGE_Listener()));
-    attach(CMD_GET_TEST_IMAGE,(ICommListener*)(new GET_TEST_IMAGE_Listener()));
-    attach(CMD_READ_NOTE_BOOK,(ICommListener*)(new READ_REGISTER_Listener()));
-    attach(CmdCodeLOG_Info,(ICommListener*)(new CmdCodeLOG_Info_Listener()));
-    attach(CmdCodeLOG_MeasureTimeStart,(ICommListener*)(new CmdCodeLOG_MeasureTimeStart_Listener()));
-    attach(CmdCodeLOG_MeasureTimeEnd,(ICommListener*)(new CmdCodeLOG_MeasureTimeEnd_Listener()));
-    attach(CmdCodeLOG_AdvDbg_AdjImg,(ICommListener*)(new CmdCodeLOG_AdvDbg_AdjImg_Listener()));
+    attach(CMD_GET_RAW_IMAGE,new GET_RAW_IMAGE_Listener());
+    attach(CMD_GET_TEST_IMAGE,new GET_TEST_IMAGE_Listener());
+    attach(CMD_READ_NOTE_BOOK,new READ_REGISTER_Listener());
+    attach(CmdCodeLOG_Info,new CmdCodeLOG_Info_Listener());
+    attach(CmdCodeLOG_MeasureTimeStart,new CmdCodeLOG_MeasureTimeStart_Listener());
+    attach(CmdCodeLOG_MeasureTimeEnd,new CmdCodeLOG_MeasureTimeEnd_Listener());
+    attach(CmdCodeLOG_AdvDbg_AdjImg,new CmdCodeLOG_AdvDbg_AdjImg_Listener());
+    __BCL(ASFComm,GetRawImage);
+    __BCL(ASFComm,GetTestImage);
+    __BCL(ASFComm,ReadRegister);
+    __BCL(ASFComm,WriteRegister);
+    __BCL(ASFComm,ToSleep);
+    __BCL(ASFComm,ToIdle);
+    __BCL(ASFComm,Log);
+    __BCL(ASFComm,AdjustingImage);
 }
 
 void ListenerBoardcast::attach(int event,ICommListener* listener){

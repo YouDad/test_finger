@@ -1,11 +1,11 @@
 #pragma once
 #include"stdafx.h"
 
-#define Function_t(ReturnType,Param1) std::function<ReturnType(Param1)>
-#define DefFunction(ReturnType,Param1) [&](Param1)->ReturnType
+#define _Function_t(ReturnType,...) std::function<ReturnType(__VA_ARGS__)>
+#define _Function(ReturnType,...) [&](__VA_ARGS__)->ReturnType
 
-#define ThreadFunction_t Function_t(void,void)
-#define VoidFunction(Param1) DefFunction(void,Param1)
+#define ThreadFunction_t _Function_t(void,void)
+#define VoidFunction(Param1) _Function(void,Param1)
 #define ThreadFunction__(name) VoidFunction
 
 class MyThread{

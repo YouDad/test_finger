@@ -15,7 +15,7 @@ CEdit* editWriteRegVal;
 CComboBox* cmbWay;
 CComboBox* cmbBaud;
 CComboBox* cmbBaudSet;
-CComboBox* cmbChipType;
+CComboBox* cmbProtocolType;
 CComboBox* cmbLogLevel;
 CButton* btnConnect;
 CButton* btnAdvDbg;
@@ -76,7 +76,7 @@ void initMyControl(MainDialog* Dlg){
     cmbWay=(CComboBox*)Dlg->GetDlgItem(IDC_CMBWay);
     cmbBaud=(CComboBox*)Dlg->GetDlgItem(IDC_CMBBaud);
     cmbBaudSet=(CComboBox*)Dlg->GetDlgItem(IDC_CMBBaudSet);
-    cmbChipType=(CComboBox*)Dlg->GetDlgItem(IDC_CMBChipType);
+    cmbProtocolType=(CComboBox*)Dlg->GetDlgItem(IDC_CMBProtocolType);
     cmbLogLevel=(CComboBox*)Dlg->GetDlgItem(IDC_CMBLogLevel);
     btnConnect=(CButton*)Dlg->GetDlgItem(IDC_BTNConnect);
     btnAdvDbg=(CButton*)Dlg->GetDlgItem(IDC_BTNAdvDbg);
@@ -103,6 +103,38 @@ void initMyControl(MainDialog* Dlg){
         btnAdvDbg->ShowWindow(SW_SHOW);
     }
     advancedDebugDialog=0;
+
+    ////通讯方式
+    //const WCHAR* way[]={0};
+    //for(int i=0;way[i];i++){
+    //    cmbWay->InsertString(i,way[i]);
+    //}
+
+    //常用波特率
+    MyString baud[]={"9600","115200","256000"};
+    for(int i=0;i<3;i++){
+        cmbBaud->InsertString(i,baud[i]);
+        cmbBaudSet->InsertString(i,baud[i]);
+    }
+    cmbBaud->SetCurSel(1);
+
+    //芯片类型
+    const WCHAR* chipType[]={_T("GD32F30"),_T("ASFComm"),0};
+    for(int i=0;chipType[i];i++){
+        cmbProtocolType->InsertString(i,chipType[i]);
+    }
+    cmbProtocolType->SetCurSel(1);
+
+    //日志信息等级
+    MyString logLevel[]={"用户","错误","警告","调试","临时"};
+    for(int i=0;i<5;i++){
+        cmbLogLevel->InsertString(i,logLevel[i]);
+    }
+    cmbLogLevel->SetCurSel(3);
+
+    //进度条设置
+    progress->SetRange(0,100);
+    progress->SetPos(0);
 }
 
 void sendMessage(int Message){
