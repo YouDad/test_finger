@@ -60,7 +60,7 @@ __ILC(ASFComm,ToIdle){
 }
 
 __ILC(ASFComm,Log){
-    int level=MyString::ParseInt(MyString((char*)response.getPointer(),1));
+    int level=response.getPointer()[0];
     response.readData(1);
     MyLog.print((Log::LogLevel)level,(char*)response.getPointer());
 }
