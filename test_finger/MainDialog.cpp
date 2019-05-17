@@ -159,7 +159,7 @@ MyThread RegisterTimeout(ThreadFunction__(timeoutFunction)(void){
 //原始图像的点击事件
 void MainDialog::OnBnClickedBtnrawimage(){
     updateControlDisable(actGetingImage);
-    comm.request(CMD_GET_RAW_IMAGE);
+    comm.request(CmdCode_GetRawImage);
     progress->SetPos(30);
     MyLog.print(Log::LOGU,"请放手指");
     ImageTimeout.start();
@@ -180,7 +180,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
         {
             ImageTimeout.terminate();
             if(continueImage){
-                comm.request(CMD_GET_RAW_IMAGE);
+                comm.request(CmdCode_GetRawImage);
                 progress->SetPos(30);
                 MyLog.print(Log::LOGU,"请放手指");
                 ImageTimeout.start();
@@ -219,7 +219,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
         {
             ImageTimeout.terminate();
             if(continueImage){
-                comm.request(CMD_GET_TEST_IMAGE);
+                comm.request(CmdCode_GetTestImage);
                 progress->SetPos(30);
                 ImageTimeout.start();
             } else{
@@ -269,7 +269,7 @@ void MainDialog::OnBnClickedBtnreadreg(){
 
     uint8_t address=getHex(editReadRegAddr);
 
-    comm.request(CMD_READ_NOTE_BOOK,&address,1);
+    comm.request(CmdCode_ReadRegister,&address,1);
 
     progress->SetPos(60);
     RegisterTimeout.start();
@@ -285,7 +285,7 @@ void MainDialog::OnBnClickedBtnwritereg(){
     addrVal[0]=getHex(editWriteRegAddr);
     addrVal[1]=getHex(editWriteRegVal);
 
-    comm.request(CMD_WRITE_NOTE_BOOK,addrVal,2);
+    comm.request(CmdCode_WriteRegister,addrVal,2);
 
     progress->SetPos(100);
     updateControlDisable(actWritedReg);
@@ -367,7 +367,7 @@ void MainDialog::OnBnClickedBtnbackgroundimage(){
     updateControlDisable(actGetingImage);
     progress->SetPos(30);
     MyLog.print(Log::LOGD,"开始采集背景");
-    comm.request(CMD_GET_TEST_IMAGE);
+    comm.request(CmdCode_GetTestImage);
     progress->SetPos(60);
 }
 

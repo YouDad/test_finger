@@ -4,7 +4,24 @@ bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
     return getText(cmbProtocolType)=="GD32F30";
 }
 
+int ToGD32F30(int cmdCode){
+    switch(cmdCode){
+        case CmdCode_GetTestImage:
+            return CMD_GET_TEST_IMAGE;
+        case CmdCode_GetRawImage:
+            return CMD_GET_RAW_IMAGE;
+        case CmdCode_ReadRegister:
+            return CMD_READ_NOTE_BOOK;
+        case CmdCode_WriteRegister:
+            return CMD_WRITE_NOTE_BOOK;
+        default:
+            ASF_ERROR(4);
+            return cmdCode;
+    }
+}
+
 std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * Data,uint16_t Len){
+    CmdCode=ToGD32F30(CmdCode);
     std::vector<DataPacket> ret;
 
     struct DataPacketGD32F30 SendPack={};

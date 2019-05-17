@@ -6,23 +6,24 @@ bool RequestConverterASFComm::checkProtocol(DataPacket dataPacket){
     return getText(cmbProtocolType)=="ASFComm";
 }
 
-int GD32F30ToASFComm(int cmdCode){
+int ToASFComm(int cmdCode){
     switch(cmdCode){
-        case CMD_GET_TEST_IMAGE:
+        case CmdCode_GetTestImage:
             return __SCC(ASFComm,GetTestImage);
-        case CMD_GET_RAW_IMAGE:
+        case CmdCode_GetRawImage:
             return __SCC(ASFComm,GetRawImage);
-        case CMD_READ_NOTE_BOOK:
+        case CmdCode_ReadRegister:
             return __SCC(ASFComm,ReadRegister);
-        case CMD_WRITE_NOTE_BOOK:
+        case CmdCode_WriteRegister:
             return __SCC(ASFComm,WriteRegister);
         default:
+            ASF_ERROR(4);
             return cmdCode;
     }
 }
 
 std::vector<DataPacket> RequestConverterASFComm::convert(int cmdCode,uint8_t* data,uint16_t len){
-    cmdCode=GD32F30ToASFComm(cmdCode);
+    cmdCode=ToASFComm(cmdCode);
     std::vector<DataPacket> ret;
 
     Request request;

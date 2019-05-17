@@ -91,6 +91,13 @@
 "!没有这种convert"
 #endif
 
+#ifdef ASF_ERROR4
+#error macro is repeated!
+#else
+#define ASF_ERROR4 \
+"~转化失败"
+#endif
+
 #ifdef ASF_ERROR__
 #error macro is repeated!
 #else

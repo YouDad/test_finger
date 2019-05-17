@@ -1,5 +1,13 @@
 #pragma once
 
+//软件内部命令标识符
+enum CmdCode{
+    CmdCode_GetRawImage,
+    CmdCode_GetTestImage,
+    CmdCode_ReadRegister,
+    CmdCode_WriteRegister,
+};
+
 class GET_RAW_IMAGE_Listener:public ICommListener{
 public:
     void listen(DataPacket response);
@@ -35,6 +43,8 @@ public:
     void listen(DataPacket response);
 };
 
+#pragma region SCC_DLC_BCL_ILC宏定义
+
 /*
 OS:前面是不用宏的定义,很占地儿,看起来很费劲
     给一个协议添加一个监听器有如下步骤:
@@ -69,6 +79,7 @@ attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)())
 #define __ILC(Protocol,Message) \
 void ___SCN(Protocol,Message)::listen(DataPacket response)
 
+#pragma endregion
 
 __DLC(ASFComm,GetRawImage);
 __DLC(ASFComm,GetTestImage);
