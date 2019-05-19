@@ -28,6 +28,8 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(Syno,StoreChar);
     __BCL(Syno,Search);
     __BCL(Syno,ReadIndexTable);
+    __BCL(Syno,Match);
+    __BCL(Syno,LoadChar);
 }
 
 void ListenerBoardcast::attach(int event,ICommListener* listener){

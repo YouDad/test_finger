@@ -32,6 +32,10 @@ int ToSyno(int cmdCode){
             return __SCC(Syno,Search);
         case SII(ReadIndexTable):
             return __SCC(Syno,ReadIndexTable);
+        case SII(Match):
+            return __SCC(Syno,Match);
+        case SII(LoadChar):
+            return __SCC(Syno,LoadChar);
         default:
             ASF_ERROR(6);
             throw 0;

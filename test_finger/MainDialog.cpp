@@ -510,7 +510,70 @@ void MainDialog::OnBnClickedBtnenroll(){
 
 
 void MainDialog::OnBnClickedBtnmatch(){
-    uint8_t FingerId=MyString::ParseInt(getText(editFingerId));
+    Flow.clear();
+    Flow.push_back(FlowFunction(0)(int& result){
+        uint8_t data[]={02,00,MyString::ParseInt(getText(editFingerId))};
+        comm.request(SII(LoadChar),data,sizeof data);
+        FlowID++;
+        MyLog.user("读出指纹模板中...");
+        return false;
+    });
+    Flow.push_back(FlowFunction(1)(int& result){
+        if(result==0x00){
+            comm.request(SII(GetRawImage));
+            FlowID++;
+            return false;
+        } else{
+            FlowID=5;
+            return true;
+        }
+    });
+    Flow.push_back(FlowFunction(2)(int& result){
+        if(result==0x00){
+            MyLog.user("取指纹图成功");
+            uint8_t data[]={02};
+            comm.request(SII(GenChar),data,sizeof data);
+            FlowID++;
+            return false;
+        } else{
+            result=0x00;
+            FlowID--;
+            return true;
+        }
+    });
+    Flow.push_back(FlowFunction(3)(int& result){
+        if(result==0x00){
+            MyLog.user("指纹生成特征成功");
+            comm.request(SII(Match));
+            FlowID++;
+            return false;
+        } else{
+            MyLog.user("指纹生成特征失败");
+            result=0x00;
+            FlowID--;//回退两步
+            FlowID--;//回退两步
+            return true;
+        }
+    });
+    Flow.push_back(FlowFunction(4)(int& result){
+        if(result==0x00){
+            MyLog.user("指纹匹配成功");
+            FlowID++;
+            return true;
+        } else{
+            MyLog.user("指纹不匹配");
+            FlowID++;
+            return true;
+        }
+    });
+    Flow.push_back(FlowFunction(5)(int& result){
+        MyLog.user("比对结束");
+        FlowID=0;
+        Flow.clear();
+        return false;
+    });
+    int tmp=0;
+    ExecFlow(tmp);
 }
 
 

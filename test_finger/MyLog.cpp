@@ -28,23 +28,28 @@ void Log::appendLog(const char* text){
 }
 
 void Log::print(LogLevel level,MyString info){
+    static MyString last="",lastEdit="";
     if(level>=LOG_HIGHEST){
-        print(Log::LOGW,"%s at %s(%d)FuncName:<%s>",ASF_WARNING1,__FILE__,__LINE__,__FUNCTION__);
+        ASF_WARNING(1);
+        level=LOGD;
     }
-    if(level>cmbLogLevel->GetCurSel())return;
 
     time_t curtime;
     time(&curtime);
     MyString time(ctime(&curtime));
     MyString content=MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
     int len=editLog->GetWindowTextLength();
-
-    //选定当前文本的末端
-    editLog->SetSel(len,len);
-    //在编辑框中追加文本
-    editLog->ReplaceSel(content);
-    //在文件中追加文本
-    appendLog(content);
+    if(last==info){
+        setText(editLog,lastEdit+content);
+        editLog->SetSel(len,len);
+        appendLog(content);
+    } else{
+        editLog->SetSel(len,len);
+        editLog->ReplaceSel(content);
+        appendLog(content);
+        lastEdit=getText(editLog);
+    }
+    last=info;
 }
 
 void Log::print(LogLevel level,const char* format,...){
