@@ -98,9 +98,23 @@
 "~转化失败"
 #endif
 
-#ifdef ASF_ERROR__
+#ifdef ASF_ERROR5
 #error macro is repeated!
 #else
-#define ASF_ERROR__ \
+#define ASF_ERROR5 \
+"~命令包出错"
+#endif
+
+#ifdef ASF_ERROR6
+#error macro is repeated!
+#else
+#define ASF_ERROR6 \
+"~当前协议不支持该操作"
+#endif
+
+#ifdef ASF_ERROR_
+#error macro is repeated!
+#else
+#define ASF_ERROR_ \
 ""
 #endif

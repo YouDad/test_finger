@@ -27,3 +27,13 @@ attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)())
 //__ILC===Implement Listener Class,快速实现监听器类的宏
 #define __ILC(Protocol,Message) \
 void ___SCN(Protocol,Message)::listen(DataPacket response)
+
+//SII===Software Inner Instruction,软件内部指令
+#define SII(Name) \
+SII_##Name##_ForNotOverLapped
+
+//返回true代表可以继续执行下一个流程,false就是执行之后中断
+#define FlowFunction_t _Function_t(bool,int)
+#define __FlowFunction(arg) _Function(bool,arg)
+//返回true代表可以继续执行下一个流程,false就是执行之后中断,id指明该流程的ID
+#define FlowFunction(id) __FlowFunction

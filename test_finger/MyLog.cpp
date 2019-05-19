@@ -71,6 +71,48 @@ void Log::debug(const char * format,...){
     print(LOGD,tmp);
 }
 
+void Log::error(MyString info){
+    print(LOGE,info);
+}
+
+void Log::error(const char * format,...){
+    static char tmp[512];
+    va_list ap;
+    va_start(ap,format);
+    vsprintf(tmp,format,ap);
+    va_end(ap);
+
+    print(LOGE,tmp);
+}
+
+void Log::warn(MyString info){
+    print(LOGW,info);
+}
+
+void Log::warn(const char * format,...){
+    static char tmp[512];
+    va_list ap;
+    va_start(ap,format);
+    vsprintf(tmp,format,ap);
+    va_end(ap);
+
+    print(LOGW,tmp);
+}
+
+void Log::user(MyString info){
+    print(LOGU,info);
+}
+
+void Log::user(const char * format,...){
+    static char tmp[512];
+    va_list ap;
+    va_start(ap,format);
+    vsprintf(tmp,format,ap);
+    va_end(ap);
+
+    print(LOGU,tmp);
+}
+
 void Log::DevelopLog(){
     print(Log::LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
     print(Log::LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");

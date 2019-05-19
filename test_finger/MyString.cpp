@@ -104,6 +104,10 @@ MyString & MyString::operator=(MyString other){
     return *this;
 }
 
+MyString & MyString::operator+=(MyString other){
+    return *this=*this+other;
+}
+
 int MyString::length(){
     return str.length();
 }

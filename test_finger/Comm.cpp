@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 HANDLE dataQueueMutex=CreateMutex(0,0,0);
+HANDLE lastCmdCodeMutex=CreateMutex(0,0,0);
 std::queue<DataPacket> dataQueue;
 BYTE buffer[1<<18];
 Comm comm;
@@ -85,6 +86,7 @@ bool Comm::disconnect(){
 }
 
 void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
+    //Sleep(500);
     auto converter=converterBoardcast.RequestConvert();
     if(converter){
         auto dataPacket=converter->convert(CmdCode,Data,Len);
@@ -92,6 +94,16 @@ void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
             serial.Write(it->getPointer(),it->size());
             it->Destruction();
         }
+        /*if(getText(cmbProtocolType)=="Syno"){
+            DWORD cnt;
+            LONG result;
+            result=serial.Read(buffer,1<<18,&cnt);
+            if(result==ERROR_SUCCESS){
+                WaitForSingleObject(dataQueueMutex,INFINITE);
+                dataQueue.push(DataPacket(buffer,cnt));
+                ReleaseMutex(dataQueueMutex);
+            }
+        }*/
     } else{
         ASF_ERROR(3);
     }

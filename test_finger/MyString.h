@@ -25,6 +25,7 @@ public:
     bool operator==(const char* other);
     MyString operator+(MyString other);
     MyString& operator=(MyString other);
+    MyString& operator+=(MyString other);
     int length();
     int find(MyString beFound,int startPosition);
     static MyString IntToMyString(int i);

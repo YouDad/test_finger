@@ -56,6 +56,7 @@
 #include<functional>
 #include<iterator>
 #include<algorithm>
+#include<exception>
 #include<vector>
 #include<queue>
 #include<map>
@@ -80,6 +81,7 @@ typedef unsigned int   uint32_t;
 #include"Serial.h"
 #include"str4err_warn.h"
 #include"MyThread.h"
+#include"MyFlow.h"
 #include"MyString.h"
 #include"MyLog.h"
 

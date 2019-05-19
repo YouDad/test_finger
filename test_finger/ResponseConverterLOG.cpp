@@ -12,7 +12,7 @@ bool ResponseConverterLOG::checkProtocol(DataPacket dataPacket){
 DataPacket ResponseConverterLOG::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
     int totalLength=0;
-    BYTE* tmpArray=data.getNewArray();
+    BYTE* tmpArray=new BYTE[data.readSize()];
     auto pData=(Response*)data.getPointer();
     while(checkProtocol(data)){
         memcpy(tmpArray+totalLength,pData->Data,pData->Len);

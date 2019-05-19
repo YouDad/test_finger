@@ -189,6 +189,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="MyControl.h" />
     <ClInclude Include="MyConverterHeadFile.h" />
+    <ClInclude Include="MyFlow.h" />
     <ClInclude Include="MyListenerHeadFile.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyThread.h" />
@@ -214,15 +215,18 @@
     <ClCompile Include="ConverterBoardcast.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="MyControl.cpp" />
+    <ClCompile Include="MyFlow.cpp" />
+    <ClCompile Include="RequestConverterASFComm.cpp" />
+    <ClCompile Include="RequestConverterSyno.cpp" />
     <ClCompile Include="ResponseConverterASFComm.cpp" />
     <ClCompile Include="MyLog.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="MyThread.cpp" />
-    <ClCompile Include="RequestConvertASFComm.cpp" />
     <ClCompile Include="RequestConverterACH512.cpp" />
     <ClCompile Include="RequestConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterLOG.cpp" />
+    <ClCompile Include="ResponseConverterSyno.cpp" />
     <ClCompile Include="Serial.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -232,6 +236,7 @@
     </ClCompile>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="MainDialog.cpp" />
+    <ClCompile Include="Syno.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

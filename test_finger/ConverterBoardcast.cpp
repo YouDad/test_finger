@@ -3,6 +3,9 @@
 ConverterBoardcast converterBoardcast;
 
 ConverterBoardcast::ConverterBoardcast(){
+    attach(new RequestConverterSyno());
+    attach(new ResponseConverterSyno());
+
     attach(new RequestConverterASFComm());
     attach(new ResponseConverterASFComm());
 

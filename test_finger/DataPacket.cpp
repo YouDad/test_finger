@@ -3,6 +3,7 @@
 
 DataPacket::DataPacket(const void * d,int l){
     data=new BYTE[l+1];
+    memset(data,0,l+1);
     len=l;
     read=0;
     memcpy(data,d,l);
@@ -30,12 +31,12 @@ int DataPacket::size(){
     return len;
 }
 
-BYTE * DataPacket::getPointer(){
-    return data+read;
+int DataPacket::readSize(){
+    return len-read;
 }
 
-BYTE * DataPacket::getNewArray(){
-    return new BYTE[len-read];
+BYTE * DataPacket::getPointer(){
+    return data+read;
 }
 
 void DataPacket::readData(int readByteSize){

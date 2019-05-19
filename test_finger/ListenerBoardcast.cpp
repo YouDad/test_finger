@@ -19,6 +19,15 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(ASFComm,ToIdle);
     __BCL(ASFComm,Log);
     __BCL(ASFComm,AdjustingImage);
+
+    __BCL(Syno,GetImage);
+    __BCL(Syno,UpImage);
+    __BCL(Syno,GetEnrollImage);
+    __BCL(Syno,GenChar);
+    __BCL(Syno,RegModel);
+    __BCL(Syno,StoreChar);
+    __BCL(Syno,Search);
+    __BCL(Syno,ReadIndexTable);
 }
 
 void ListenerBoardcast::attach(int event,ICommListener* listener){

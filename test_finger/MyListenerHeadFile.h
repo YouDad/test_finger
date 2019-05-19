@@ -1,13 +1,5 @@
 #pragma once
 
-//软件内部命令标识符
-enum CmdCode{
-    CmdCode_GetRawImage,
-    CmdCode_GetTestImage,
-    CmdCode_ReadRegister,
-    CmdCode_WriteRegister,
-};
-
 class GET_RAW_IMAGE_Listener:public ICommListener{
 public:
     void listen(DataPacket response);
@@ -43,7 +35,7 @@ public:
     void listen(DataPacket response);
 };
 
-#pragma region SCC_DLC_BCL_ILC宏定义
+#pragma region SCC_DLC_ILC_BCL宏定义
 
 /*
 OS:前面是不用宏的定义,很占地儿,看起来很费劲
@@ -52,6 +44,10 @@ OS:前面是不用宏的定义,很占地儿,看起来很费劲
     2.DLC,定义一个监听器          本文件枚举类型定义前
     3.ILC,实现这个监听器          协议名的C++文件里
     4.BCL,把命令绑到这个监听器上   监听器广播的C++文件里监听器广播构造函数
+
+    可能还需要设置对应命令转化函数,有如下步骤:
+    1.在此文件顶部添加软件内部指令
+    2.在对应协议Converter的C++文件里的转化函数增加一个case块
 
     注:监听器广播是ListenerBoardcast
 */
@@ -79,7 +75,28 @@ attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)())
 #define __ILC(Protocol,Message) \
 void ___SCN(Protocol,Message)::listen(DataPacket response)
 
+//SII===Software Inner Instruction,软件内部指令
+#define SII(Name) \
+SII_##Name##_软件内部指令
+
 #pragma endregion
+
+//软件内部命令标识符
+enum CmdCode{
+    SII(GetRawImage),
+    SII(GetTestImage),
+    SII(ReadRegister),
+    SII(WriteRegister),
+    SII(UpImage),
+    SII(GenChar),
+    SII(GetEnrollImage),
+    SII(RegModel),
+    SII(StoreChar),
+    SII(Search),
+    SII(ReadIndexTable),
+};
+
+#pragma region ASFComm协议区
 
 __DLC(ASFComm,GetRawImage);
 __DLC(ASFComm,GetTestImage);
@@ -102,6 +119,108 @@ enum CmdCodeASFComm{
     __SCC(ASFComm,Log),
     __SCC(ASFComm,AdjustingImage),
 };
+
+#pragma endregion
+
+#pragma region Syno协议区
+
+__DLC(Syno,GetImage);
+__DLC(Syno,UpImage);
+__DLC(Syno,GenChar);
+__DLC(Syno,GetEnrollImage);
+__DLC(Syno,RegModel);
+__DLC(Syno,StoreChar);
+__DLC(Syno,Search);
+__DLC(Syno,ReadIndexTable);
+
+/*
+写命令前,先查文档,给枚举赋值,就代表实现了对应监听器
+指令集简化版:
+    No	|InstructionName	|EnumVal|功能
+    ====|===================|=======|=============================================
+    1	|GetImage			|01H	|从传感器上读入图像存于图像缓冲区
+    2	|GenChar			|02H	|根据原始图像生成指纹特征存于特征文件缓冲区
+    3	|Match				|03H	|精确比对特征文件缓冲区中的特征文件
+    4	|Search				|04H	|以特征文件缓冲区中的特征文件搜索整个或部分指纹库
+    5	|RegModel			|05H	|将特征文件合并生成模板存于特征文件缓冲区
+    6	|StoreChar			|06H	|将特征缓冲区中的文件储存到flash指纹库中
+    7	|LoadChar			|07H	|从flash指纹库中读取一个模板到特征缓冲区
+    8	|UpChar				|08H	|将特征缓冲区中的文件上传给上位机
+    9	|DownChar			|09H	|从上位机下载一个特征文件到特征缓冲区
+    10	|UpImage			|0aH	|上传原始图像
+    11	|DownImage			|0bH	|下载原始图像
+    12	|DeletChar			|0cH	|删除flash指纹库中的一个特征文件
+    13	|Empty				|0dH	|清空flash指纹库
+    14	|WriteReg			|0eH	|写SOC系统寄存器
+    15	|ReadSysPara		|0FH	|读系统基本参数
+    16	|SetPwd				|12H	|设置设备握手口令
+    17	|VfyPwd				|13H	|验证设备握手口令
+    18	|GetRandomCode		|14H	|采样随机数
+    19	|SetChipAddr		|15H	|设置芯片地址
+    20	|ReadINFpage		|16H	|读取FLASH Information Page内容
+    21	|Port_Control		|17H	|通讯端口（UART/USB）开关控制
+    22	|WriteNotepad		|18H	|写记事本
+    23	|ReadNotepad		|19H	|读记事本
+    24	|BurnCode			|1aH	|烧写片内FLASH
+    25	|HighSpeedSearch	|1bH	|高速搜索FLASH
+    26	|GenBinImage		|1cH	|生成二值化指纹图像
+    27	|ValidTempleteNum	|1dH	|读有效模板个数
+    28	|ReadIndexTable		|1fH	|读索引表
+    29	|GetEnrollImage		|29H	|注册用获取图像
+    30	|Cancel				|30H	|取消指令
+    31	|AutoEnroll			|31H	|自动注册
+    32	|AutoIdentify		|32H	|自动验证
+    33	|Sleep				|33H	|休眠指令
+    34	|GetChipSN			|34H	|获取芯片唯一序列号
+    35	|HandShake			|35H	|握手指令
+    36	|CheckSensor		|36H	|校验传感器
+    37	|ControlLED			|40H	|控制LED
+*/
+enum CmdCodeSyno{
+    __SCC(Syno,GetImage)=0x01,
+    __SCC(Syno,GenChar)=0x02,
+    __SCC(Syno,Match),
+    __SCC(Syno,Search)=0x04,
+    __SCC(Syno,RegModel)=0x05,
+    __SCC(Syno,StoreChar)=0x06,
+    __SCC(Syno,LoadChar),
+    __SCC(Syno,UpChar),
+    __SCC(Syno,DownChar),
+    __SCC(Syno,UpImage)=0x0a,
+    __SCC(Syno,DownImage),
+    __SCC(Syno,DeleteChar),
+    __SCC(Syno,Empty),
+    __SCC(Syno,WriteReg),
+    __SCC(Syno,ReadSysPara),
+    __SCC(Syno,SetPwd),
+    __SCC(Syno,VfyPwd),
+    __SCC(Syno,GetRandomCode),
+    __SCC(Syno,SetChipAddr),
+    __SCC(Syno,ReadINFpage),
+    __SCC(Syno,Port_Control),
+    __SCC(Syno,WriteNotepad),
+    __SCC(Syno,ReadNotepad),
+    __SCC(Syno,BurnCode),
+    __SCC(Syno,HighSpeedSearch),
+    __SCC(Syno,GenBinImage),
+    __SCC(Syno,ValidTemplateNum),
+    __SCC(Syno,ReadIndexTable)=0x1f,
+    __SCC(Syno,GetEnrollImage)=0x29,
+    __SCC(Syno,Cancel),
+    __SCC(Syno,AutoEnrollImage),
+    __SCC(Syno,AutoIdentify),
+    __SCC(Syno,GetChipSN),
+    __SCC(Syno,HandShake),
+    __SCC(Syno,CalibrateSensor),
+    __SCC(Syno,生成模组唯一序列号),
+    __SCC(Syno,获取模组唯一序列号),
+    __SCC(Syno,获取指纹算法库版本号),
+    __SCC(Syno,获取固件库版本号),
+    __SCC(Syno,ControlLED),
+    __SCC(Syno,控制三色LED),
+};
+
+#pragma endregion
 
 enum CmdCodeLOG{
     CmdCodeLOG_Info=0xCC00,

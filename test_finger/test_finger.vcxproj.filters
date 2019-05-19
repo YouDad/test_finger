@@ -90,6 +90,9 @@
     <ClInclude Include="AdvancedDebugDialog.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="MyFlow.h">
+      <Filter>My</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -158,14 +161,26 @@
     <ClCompile Include="CmdCodeGD32F30.cpp">
       <Filter>Comm\CommListener</Filter>
     </ClCompile>
-    <ClCompile Include="RequestConvertASFComm.cpp">
-      <Filter>Comm\CommProtocolConverter</Filter>
-    </ClCompile>
     <ClCompile Include="ASFComm.cpp">
       <Filter>Comm\CommListener</Filter>
     </ClCompile>
     <ClCompile Include="ResponseConverterASFComm.cpp">
       <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestConverterASFComm.cpp">
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestConverterSyno.cpp">
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseConverterSyno.cpp">
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="Syno.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFlow.cpp">
+      <Filter>My</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

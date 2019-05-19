@@ -1,4 +1,5 @@
 #include "stdafx.h"
+typedef struct DataPacketGD32F30 Request;
 
 bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
     return getText(cmbProtocolType)=="GD32F30";
@@ -6,56 +7,60 @@ bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
 
 int ToGD32F30(int cmdCode){
     switch(cmdCode){
-        case CmdCode_GetTestImage:
+        case SII(GetTestImage):
             return CMD_GET_TEST_IMAGE;
-        case CmdCode_GetRawImage:
+        case SII(GetRawImage):
             return CMD_GET_RAW_IMAGE;
-        case CmdCode_ReadRegister:
+        case SII(ReadRegister):
             return CMD_READ_NOTE_BOOK;
-        case CmdCode_WriteRegister:
+        case SII(WriteRegister):
             return CMD_WRITE_NOTE_BOOK;
         default:
-            ASF_ERROR(4);
-            return cmdCode;
+            ASF_ERROR(6);
+            throw 0;
     }
 }
 
 std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * Data,uint16_t Len){
-    CmdCode=ToGD32F30(CmdCode);
     std::vector<DataPacket> ret;
+    try{
+        CmdCode=ToGD32F30(CmdCode);
+    } catch(...){
+        return ret;
+    }
 
-    struct DataPacketGD32F30 SendPack={};
-    SendPack.Head=0x02EF;
-    SendPack.CMD=CmdCode;
+    Request request={};
+    request.Head=0x02EF;
+    request.CMD=CmdCode;
 
-    const int interval=sizeof DataPacketGD32F30::Sendbuf-2;
+    const int interval=sizeof request.Sendbuf-2;
     for(int i=0;Len>interval+i*interval;i++){
-        SendPack.NO=i;
-        SendPack.Sign=DataNotEnd;
-        SendPack.Length=interval;
-        memset(SendPack.Sendbuf,0,sizeof SendPack.Sendbuf);
+        request.NO=i;
+        request.Sign=DataNotEnd;
+        request.Length=interval;
+        memset(request.Sendbuf,0,sizeof request.Sendbuf);
         if(Data){
-            memcpy(SendPack.Sendbuf,Data+SendPack.NO*interval,interval);
+            memcpy(request.Sendbuf,Data+request.NO*interval,interval);
         }
-        UINT16 crcValue=GetCRC16(&SendPack,sizeof DataPacketGD32F30-interval+SendPack.Length);
-        SendPack.Sendbuf[SendPack.Length]=crcValue&0xFF;
-        SendPack.Sendbuf[SendPack.Length+1]=(crcValue>>8)&0xFF;
-        ret.push_back(DataPacket(&SendPack,sizeof SendPack));
+        UINT16 crcValue=GetCRC16(&request,sizeof Request-interval+request.Length);
+        request.Sendbuf[request.Length]=crcValue&0xFF;
+        request.Sendbuf[request.Length+1]=(crcValue>>8)&0xFF;
+        ret.push_back(DataPacket(&request,sizeof request));
     }
-    SendPack.NO=Len/interval;
-    SendPack.Sign=DataEnd;
+    request.NO=Len/interval;
+    request.Sign=DataEnd;
     if(Len>0&&Len%interval==0){
-        SendPack.Length=interval;
+        request.Length=interval;
     } else{
-        SendPack.Length=Len%interval;
+        request.Length=Len%interval;
     }
-    memset(SendPack.Sendbuf,0,sizeof SendPack.Sendbuf);
+    memset(request.Sendbuf,0,sizeof request.Sendbuf);
     if(Data){
-        memcpy(SendPack.Sendbuf,Data+SendPack.NO*interval,interval);
+        memcpy(request.Sendbuf,Data+request.NO*interval,interval);
     }
-    UINT16 crcValue=GetCRC16(&SendPack,sizeof DataPacketGD32F30-interval+SendPack.Length);
-    SendPack.Sendbuf[SendPack.Length]=crcValue&0xFF;
-    SendPack.Sendbuf[SendPack.Length+1]=(crcValue>>8)&0xFF;
-    ret.push_back(DataPacket(&SendPack,sizeof SendPack-interval+SendPack.Length));
+    UINT16 crcValue=GetCRC16(&request,sizeof Request-interval+request.Length);
+    request.Sendbuf[request.Length]=crcValue&0xFF;
+    request.Sendbuf[request.Length+1]=(crcValue>>8)&0xFF;
+    ret.push_back(DataPacket(&request,sizeof request-interval+request.Length));
     return ret;
 }

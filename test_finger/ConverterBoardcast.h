@@ -37,3 +37,10 @@ enum ProtocolSign{
     DataNotEnd,
     DataEnd,
 };
+
+enum SynoSign{
+    Command=1,
+    NotEndData=2,
+    ACK=7,
+    EndData=8,
+};

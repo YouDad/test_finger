@@ -8,23 +8,27 @@ bool RequestConverterASFComm::checkProtocol(DataPacket dataPacket){
 
 int ToASFComm(int cmdCode){
     switch(cmdCode){
-        case CmdCode_GetTestImage:
+        case SII(GetTestImage):
             return __SCC(ASFComm,GetTestImage);
-        case CmdCode_GetRawImage:
+        case SII(GetRawImage):
             return __SCC(ASFComm,GetRawImage);
-        case CmdCode_ReadRegister:
+        case SII(ReadRegister):
             return __SCC(ASFComm,ReadRegister);
-        case CmdCode_WriteRegister:
+        case SII(WriteRegister):
             return __SCC(ASFComm,WriteRegister);
         default:
-            ASF_ERROR(4);
-            return cmdCode;
+            ASF_ERROR(6);
+            throw 0;
     }
 }
 
 std::vector<DataPacket> RequestConverterASFComm::convert(int cmdCode,uint8_t* data,uint16_t len){
-    cmdCode=ToASFComm(cmdCode);
     std::vector<DataPacket> ret;
+    try{
+        cmdCode=ToASFComm(cmdCode);
+    } catch(...){
+        return ret;
+    }
 
     Request request;
 

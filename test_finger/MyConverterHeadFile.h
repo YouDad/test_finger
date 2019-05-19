@@ -1,6 +1,9 @@
 #pragma once
 #include"stdafx.h"
 
+extern HANDLE lastCmdCodeMutex;
+extern std::queue<int> lastCmdCode;
+
 #pragma pack(1)
 struct DataPacketASFComm{
     char head[3];//ASF
@@ -97,5 +100,56 @@ struct DataPacketLOG{
 class ResponseConverterLOG:public ICommProtocolResponseConverter{
     virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual DataPacket convert(DataPacket& data) override;
+    virtual int getCmdCode(DataPacket data) override;
+};
+
+#pragma pack(1)
+struct DataPacketSyno{
+    char head[2];//0xEF01
+    unsigned int address;//缺省0xFFFFFFFF
+    unsigned char sign;
+    unsigned short len;
+    unsigned char data[140];//命令包中:data[0]是cmd
+    unsigned short sum;
+    //小端转化成大端
+    void convert(){
+        sum+=2;
+        rev(&sum,2);
+        memcpy(data+len,&sum,2);
+        len+=2;
+        rev(&len,2);
+        rev(&address,4);
+    }
+    //大端转化成小端
+    void reconvert(){
+        rev(&address,4);
+        rev(&len,2);
+        len-=2;
+        memcpy(&sum,data+len-(sign==SynoSign::ACK),2);
+        rev(&sum,2);
+    }
+private:
+    void rev(void* field,int size){
+        unsigned char tmp[160];
+        unsigned char* p;
+        p=(unsigned char*)field;
+        memcpy(tmp,p,size);
+        for(int i=0;i<size;i++){
+            p[i]=tmp[size-1-i];
+        }
+    }
+};
+#pragma pack(4)
+
+class RequestConverterSyno:public ICommProtocolRequestConverter{
+public:
+    virtual bool checkProtocol(DataPacket dataPacket) override;
+    virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
+};
+
+class ResponseConverterSyno:public ICommProtocolResponseConverter{
+public:
+    virtual bool checkProtocol(DataPacket dataPacket) override;
+    virtual DataPacket convert(DataPacket & data) override;
     virtual int getCmdCode(DataPacket data) override;
 };

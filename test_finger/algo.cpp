@@ -146,20 +146,11 @@ void updateControlDisable(action a){
 
             disable(editAddress);
             disable(editPassword);
-            disable(editAddressSet);
-            disable(editPasswordSet);
-            disable(editLightTime);
-            disable(editSensitivity);
-            disable(cmbBaudSet);
             disable(cmbProtocolType);
             disable(btnRawImage);
             disable(btnTestImage);
             disable(btnContinueImage);
             disable(btnContinueBackGroundImage);
-            disable(btnSetCmos);
-            disable(btnSetBaud);
-            disable(btnSetPassword);
-            disable(btnSetAddress);
             disable(btnReadReg);
             disable(btnWriteReg);
             break;
@@ -173,20 +164,11 @@ void updateControlDisable(action a){
             enable(btnConnect);
             enable(editAddress);
             enable(editPassword);
-            enable(editAddressSet);
-            enable(editPasswordSet);
-            enable(editLightTime);
-            enable(editSensitivity);
-            enable(cmbBaudSet);
             enable(cmbProtocolType);
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
             enable(btnContinueBackGroundImage);
-            enable(btnSetCmos);
-            enable(btnSetBaud);
-            enable(btnSetPassword);
-            enable(btnSetAddress);
             enable(btnReadReg);
             enable(btnWriteReg);
 
@@ -203,18 +185,9 @@ void updateControlDisable(action a){
             disable(btnConnect);
             disable(editAddress);
             disable(editPassword);
-            disable(editAddressSet);
-            disable(editPasswordSet);
-            disable(editLightTime);
-            disable(editSensitivity);
-            disable(cmbBaudSet);
             disable(cmbProtocolType);
             disable(btnRawImage);
             disable(btnTestImage);
-            disable(btnSetCmos);
-            disable(btnSetBaud);
-            disable(btnSetPassword);
-            disable(btnSetAddress);
             disable(btnContinueImage);
             disable(btnContinueBackGroundImage);
             disable(btnReadReg);
@@ -226,20 +199,11 @@ void updateControlDisable(action a){
             enable(btnConnect);
             enable(editAddress);
             enable(editPassword);
-            enable(editAddressSet);
-            enable(editPasswordSet);
-            enable(editLightTime);
-            enable(editSensitivity);
-            enable(cmbBaudSet);
             enable(cmbProtocolType);
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
             enable(btnContinueBackGroundImage);
-            enable(btnSetCmos);
-            enable(btnSetBaud);
-            enable(btnSetPassword);
-            enable(btnSetAddress);
             enable(btnReadReg);
             enable(btnWriteReg);
             break;
@@ -255,18 +219,9 @@ void updateControlDisable(action a){
 
             disable(editAddress);
             disable(editPassword);
-            disable(editAddressSet);
-            disable(editPasswordSet);
-            disable(editLightTime);
-            disable(editSensitivity);
-            disable(cmbBaudSet);
             disable(cmbProtocolType);
             disable(btnRawImage);
             disable(btnTestImage);
-            disable(btnSetCmos);
-            disable(btnSetBaud);
-            disable(btnSetPassword);
-            disable(btnSetAddress);
             disable(btnReadReg);
             disable(btnWriteReg);
             disable(btnConnect);
@@ -276,20 +231,11 @@ void updateControlDisable(action a){
             enable(btnConnect);
             enable(editAddress);
             enable(editPassword);
-            enable(editAddressSet);
-            enable(editPasswordSet);
-            enable(editLightTime);
-            enable(editSensitivity);
-            enable(cmbBaudSet);
             enable(cmbProtocolType);
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
             enable(btnContinueBackGroundImage);
-            enable(btnSetCmos);
-            enable(btnSetBaud);
-            enable(btnSetPassword);
-            enable(btnSetAddress);
             enable(btnReadReg);
             enable(btnWriteReg);
             break;
@@ -360,35 +306,70 @@ void saveImage(MyString dir,DataPacket dataPacket){
     MyString fileName=MyString::Time();
     MyString dirFileName=dir+"/"+fileName+".bmp";
 
-    int w,h;
-    if(dataPacket.size()==160*160){
-        MyLog.print(Log::LOGU,"接收到160x160的图像");
-        w=h=160;
-
-        BYTE* pData=dataPacket.getPointer();
-        //消除用于静电检测的竖线
-        for(int i=0;i<h;i++){
-            for(int j=0;j<w;j++){
-                if(j==47||j==99||j==151){
-                    pData[i*w+j]=(pData[i*w+j+1]+pData[i*w+j-1])/2;
+    int w,h,dataSize=dataPacket.readSize();
+    switch(dataSize){
+        case 160*160/2:{
+            MyLog.print(Log::LOGU,"接收到160x160的图像");
+            w=h=160;
+            //把图像从4bit转化为8bit
+            BYTE* pData=dataPacket.getPointer();
+            BYTE* x2=new BYTE[160*160+5];
+            for(int i=0;i<160;i++){
+                for(int j=0;j<80;j++){
+                    x2[i*160+j*2]=pData[i*80+j]&0xF0;
+                    x2[i*160+j*2+1]=(pData[i*80+j]&0x0F)<<4;
                 }
             }
-        }
-        reverse(pData,w*h);
-        for(int i=0;i<h;i++){
-            reverse(pData+i*w,w);
-        }
+            pData=x2;
+            //消除用于静电检测的竖线
+            for(int i=0;i<h;i++){
+                for(int j=0;j<w;j++){
+                    if(j==47||j==99||j==151){
+                        pData[i*w+j]=(pData[i*w+j+1]+pData[i*w+j-1])/2;
+                    }
+                }
+            }
+            reverse(pData,w*h);
+            for(int i=0;i<h;i++){
+                reverse(pData+i*w,w);
+            }
 
-        saveBmp(w,h,pData,dir,fileName);
-        loadImage(image,dirFileName);
-    } else if(dataPacket.size()==192*192){
-        MyLog.print(Log::LOGU,"接收到192x192的图像");
-        w=h=192;
-        saveBmp(w,h,dataPacket.getPointer(),dir,fileName);
-        loadImage(image,dirFileName);
-    } else{
-        MyLog.print(Log::LOGU,"既不是160x160也不是192x192,没法渲染图像");
+            saveBmp(w,h,pData,dir,fileName);
+            loadImage(image,dirFileName);
+            delete[] pData;
+        }break;
+        case 160*160:{
+            MyLog.print(Log::LOGU,"接收到160x160的图像");
+            w=h=160;
+
+            BYTE* pData=dataPacket.getPointer();
+            //消除用于静电检测的竖线
+            for(int i=0;i<h;i++){
+                for(int j=0;j<w;j++){
+                    if(j==47||j==99||j==151){
+                        pData[i*w+j]=(pData[i*w+j+1]+pData[i*w+j-1])/2;
+                    }
+                }
+            }
+            reverse(pData,w*h);
+            for(int i=0;i<h;i++){
+                reverse(pData+i*w,w);
+            }
+
+            saveBmp(w,h,pData,dir,fileName);
+            loadImage(image,dirFileName);
+        }break;
+        case 192*192:{
+            MyLog.print(Log::LOGU,"接收到192x192的图像");
+            w=h=192;
+            saveBmp(w,h,dataPacket.getPointer(),dir,fileName);
+            loadImage(image,dirFileName);
+        }break;
+        default:{
+            MyLog.print(Log::LOGU,"既不是160x160也不是192x192,没法渲染图像");
+        }break;
     }
+    dataPacket.readData(dataPacket.size());
 }
 
 void generateHistogram(BYTE* Histogram,int hw,int hh,BYTE* pData,int w,int h){
