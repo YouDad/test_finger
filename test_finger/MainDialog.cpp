@@ -50,6 +50,7 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_BN_CLICKED(IDC_BTNMatch,&MainDialog::OnBnClickedBtnmatch)
     ON_BN_CLICKED(IDC_BTNDeviceInfo,&MainDialog::OnBnClickedBtndeviceinfo)
     ON_BN_CLICKED(IDC_BTNViewEnrollIds,&MainDialog::OnBnClickedBtnviewenrollids)
+    ON_BN_CLICKED(IDC_BTNDeleteTemplate,&MainDialog::OnBnClickedBtndeletetemplate)
 END_MESSAGE_MAP()
 
 void MainDialog::OnOK(){}
@@ -585,4 +586,10 @@ void MainDialog::OnBnClickedBtndeviceinfo(){
 void MainDialog::OnBnClickedBtnviewenrollids(){
     uint8_t ReadIndexTable[]={0};
     comm.request(SII(ReadIndexTable),ReadIndexTable,1);
+}
+
+
+void MainDialog::OnBnClickedBtndeletetemplate(){
+    // TODO: 在此添加控件通知处理程序代码
+    //TODO 删除按钮
 }
