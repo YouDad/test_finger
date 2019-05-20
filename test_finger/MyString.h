@@ -17,6 +17,7 @@ public:
     MyString(const char* pcc);
     MyString(std::string str);
     static MyString Format(const char* format,...);
+    void Parse(const char* format,...);
     operator wchar_t*();
     operator const char*();
     operator const wchar_t*();

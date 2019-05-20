@@ -47,20 +47,20 @@
 #endif
 #endif
 
-
-#include<afxpriv.h>
-#include<Dbt.h>
-#include<assert.h>
-#include<io.h>
-
-#include<functional>
-#include<iterator>
-#include<algorithm>
-#include<exception>
-#include<vector>
-#include<queue>
-#include<map>
-
+//C
+#include <afxpriv.h>
+#include <Dbt.h>
+#include <assert.h>
+#include <io.h>
+//C++
+#include <functional>
+#include <iterator>
+#include <algorithm>
+#include <exception>
+#include <vector>
+#include <queue>
+#include <map>
+//Net
 
 #define WM_GET_RAW_IMAGE	WM_USER+5
 #define WM_GET_CON_IMAGE	WM_USER+6
@@ -75,30 +75,34 @@ typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
 
-#include"resource.h"
+#include "resource.h"
 
-#include"Config.h"
-#include"Serial.h"
-#include"str4err_warn.h"
-#include"MyThread.h"
-#include"MyFlow.h"
-#include"MyString.h"
-#include"MyLog.h"
+#include "MyConfig.h"
+#include "str4err_warn.h"
+#include "MyThread.h"
+#include "MyFlow.h"
+#include "MyString.h"
+#include "MyLog.h"
+#include "MyNet.h"
 
-#include"App.h"
-#include"MainDialog.h"
-#include"AdvancedDebugDialog.h"
+#include "Serial.h"
 
-#include"MyControl.h"
-#include"ControlAvailability.h"
+#include "App.h"
+#include "MainDialog.h"
+#include "AdvancedDebugDialog.h"
+#include "SettingDialog.h"
 
-#include"DataPacket.h"
-#include"ConverterBoardcast.h"
-#include"MyConverterHeadFile.h"
-#include"ListenerBoardcast.h"
-#include"MyListenerHeadFile.h"
-#include"Comm.h"
-#include"CCommunication.h"
+#include "MyControl.h"
+#include "ControlAvailability.h"
 
-#include"algo.h"
+#include "DataPacket.h"
+#include "ConverterBoardcast.h"
+#include "MyConverterHeadFile.h"
+#include "ListenerBoardcast.h"
+#include "MyListenerHeadFile.h"
+#include "Comm.h"
+#include "CCommunication.h"
+
+#include "algo.h"
+#include <afxcontrolbars.h>
 #include <afxcontrolbars.h>

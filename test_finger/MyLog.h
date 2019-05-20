@@ -1,7 +1,7 @@
 #pragma once
 #include"stdafx.h"
 
-class Log{
+class MyLog{
 public:
     enum LogLevel{
         LOGU,//用户级信息,给用户显示的信息
@@ -11,24 +11,24 @@ public:
         LOGT,//临时级信息
         LOG_HIGHEST//固有项,不要删
     };
-    void print(LogLevel level,MyString info);
-    void print(LogLevel level,const char* format,...);
-    void debug(MyString info);
-    void debug(const char* format,...);
-    void error(MyString info);
-    void error(const char* format,...);
-    void warn(MyString info);
-    void warn(const char* format,...);
-    void user(MyString info);
-    void user(const char* format,...);
-    void DevelopLog();
-    void ClearLog();
+    static void print(LogLevel level,MyString info);
+    static void print(LogLevel level,const char* format,...);
+    static void debug(MyString info);
+    static void debug(const char* format,...);
+    static void error(MyString info);
+    static void error(const char* format,...);
+    static void warn(MyString info);
+    static void warn(const char* format,...);
+    static void user(MyString info);
+    static void user(const char* format,...);
+    static void DevelopLog();
+    static void ClearLog();
 private:
-    const char* LOG_FILE="backup.txt";
-    bool isExistLog();
-    void clearLog();
-    void createLog();
-    void appendLog(const char * text);
+    static const char* LOG_FILE;
+    static bool isExistLog();
+    static void clearLog();
+    static void createLog();
+    static void appendLog(const char * text);
 };
 
-extern Log MyLog;
+extern int Version;

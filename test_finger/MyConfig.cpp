@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "Config.h"
 
-char $::Config::buffer[1<<16];
-char $::Config::key[1<<6];
-char $::Config::val[1<<6];
-$::Config $::conf;
+char MyConfig::buffer[1<<16];
+char MyConfig::key[1<<6];
+char MyConfig::val[1<<6];
+MyConfig conf;
 
-void $::Config::defaultConfig(){
+void MyConfig::defaultConfig(){
     m["AdvDbg"]="false";
     m["AdvDbg_ImgId"]="0";
+    m["AutoCheck"]="true";
     return;
 }
 
-$::Config::Config(){
+MyConfig::MyConfig(){
     FILE* fp=fopen(FILENAME,"r");
     if(fp==NULL){
         defaultConfig();
@@ -30,7 +30,7 @@ $::Config::Config(){
     }
 }
 
-$::Config::~Config(){
+MyConfig::~MyConfig(){
     FILE* fp=fopen(FILENAME,"w");
     for(auto it=m.begin();it!=m.end();it++){
         for(auto jt=it->first.c_str();*jt;jt++){
@@ -45,6 +45,6 @@ $::Config::~Config(){
     fclose(fp);
 }
 
-std::string& $::Config::operator[](std::string s){
+std::string& MyConfig::operator[](std::string s){
     return m[s];
 }

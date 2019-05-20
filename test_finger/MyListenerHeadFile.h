@@ -107,7 +107,7 @@ __DLC(ASFComm,ReadRegister);
 __DLC(ASFComm,WriteRegister);
 __DLC(ASFComm,ToSleep);
 __DLC(ASFComm,ToIdle);
-__DLC(ASFComm,Log);
+__DLC(ASFComm,MyLog);
 __DLC(ASFComm,AdjustingImage);
 
 enum CmdCodeASFComm{
@@ -119,7 +119,7 @@ enum CmdCodeASFComm{
     __SCC(ASFComm,ToSleep),
     __SCC(ASFComm,ToIdle),
     //下位机发送的命令
-    __SCC(ASFComm,Log),
+    __SCC(ASFComm,MyLog),
     __SCC(ASFComm,AdjustingImage),
 };
 

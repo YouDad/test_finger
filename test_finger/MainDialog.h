@@ -38,4 +38,5 @@ public:
     afx_msg void OnBnClickedBtndeletetemplate();
     afx_msg void OnBnClickedBtncancel();
     afx_msg void OnBnClickedBtnclearlog();
+    afx_msg void OnBnClickedBtnsetting();
 };

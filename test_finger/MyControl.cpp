@@ -91,7 +91,7 @@ void initMyControl(MainDialog* Dlg){
     editLog->SetLimitText(-1);
     hwnd=Dlg->m_hWnd;
 
-    if($::conf["AdvDbg"]=="true"){
+    if(conf["AdvDbg"]=="true"){
         btnAdvDbg->ShowWindow(SW_SHOW);
     }
     advancedDebugDialog=0;

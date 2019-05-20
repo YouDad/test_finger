@@ -59,7 +59,7 @@ bool Comm::connect(int id,int baud){
     if(retCode==ERROR_SUCCESS){
         serial.Purge();
     }
-    MyLog.user("连接COM%d%s",id,retCode==ERROR_SUCCESS?"成功":"失败");
+    MyLog::user("连接COM%d%s",id,retCode==ERROR_SUCCESS?"成功":"失败");
     if(retCode==ERROR_SUCCESS){
         responseThread=CreateThread(0,0,ResponseThread,0,0,0);
         startListen();
@@ -75,7 +75,7 @@ bool Comm::disconnect(){
     terminateListen();
 
     int ret=serial.Close();
-    MyLog.user("断开连接成功");
+    MyLog::user("断开连接成功");
     if(ret==ERROR_SUCCESS){
         id=0;
         return true;

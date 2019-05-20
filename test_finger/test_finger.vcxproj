@@ -187,16 +187,18 @@
     <ClInclude Include="DataPacket.h" />
     <ClInclude Include="ListenerBoardcast.h" />
     <ClInclude Include="ConverterBoardcast.h" />
-    <ClInclude Include="Config.h" />
+    <ClInclude Include="MyConfig.h" />
     <ClInclude Include="MyControl.h" />
     <ClInclude Include="MyConverterHeadFile.h" />
     <ClInclude Include="MyFlow.h" />
     <ClInclude Include="MyListenerHeadFile.h" />
+    <ClInclude Include="MyNet.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyThread.h" />
     <ClInclude Include="MyLog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serial.h" />
+    <ClInclude Include="SettingDialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="str4err_warn.h" />
     <ClInclude Include="targetver.h" />
@@ -210,13 +212,14 @@
     <ClCompile Include="CmdCodeGD32F30.cpp" />
     <ClCompile Include="CmdCodeLOG.cpp" />
     <ClCompile Include="Comm.cpp" />
-    <ClCompile Include="Config.cpp" />
+    <ClCompile Include="MyConfig.cpp" />
     <ClCompile Include="DataPacket.cpp" />
     <ClCompile Include="ListenerBoardcast.cpp" />
     <ClCompile Include="ConverterBoardcast.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyFlow.cpp" />
+    <ClCompile Include="MyNet.cpp" />
     <ClCompile Include="RequestConverterASFComm.cpp" />
     <ClCompile Include="RequestConverterSyno.cpp" />
     <ClCompile Include="ResponseConverterASFComm.cpp" />
@@ -229,6 +232,7 @@
     <ClCompile Include="ResponseConverterLOG.cpp" />
     <ClCompile Include="ResponseConverterSyno.cpp" />
     <ClCompile Include="Serial.cpp" />
+    <ClCompile Include="SettingDialog.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -14,7 +14,7 @@
 #else
 #ifndef NDEBUG
 #define ASF_WARNING(ID) \
-	MyLog.print(Log::LOGW,"%s at %s(%d)FuncName:<%s>",ASF_WARNING##ID,__FILE__,__LINE__,__FUNCTION__)
+	MyLog::warn("%s at %s(%d)FuncName:<%s>",ASF_WARNING##ID,__FILE__,__LINE__,__FUNCTION__)
 #else
 #define ASF_WARNING(ID)
 #endif
@@ -25,7 +25,7 @@
 #error macro is repeated!
 #else
 #define ASF_WARNING1 \
-"~好像调用了过于高级的MyLog.print"
+"~好像调用了过于高级的MyLog::print"
 #endif
 
 #ifdef ASF_WARNING2
@@ -67,7 +67,7 @@
 #error macro is repeated!
 #else
 #define ASF_ERROR(ID) \
-	MyLog.print(Log::LOGE,"%s at %s(%d)FuncName:<%s>",ASF_ERROR##ID,__FILE__,__LINE__,__FUNCTION__)
+	MyLog::error("%s at %s(%d)FuncName:<%s>",ASF_ERROR##ID,__FILE__,__LINE__,__FUNCTION__)
 #endif
 
 #ifdef ASF_ERROR1

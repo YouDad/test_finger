@@ -78,9 +78,6 @@
     <ClInclude Include="DataPacket.h">
       <Filter>Comm</Filter>
     </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>My</Filter>
-    </ClInclude>
     <ClInclude Include="App.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -95,6 +92,15 @@
     </ClInclude>
     <ClInclude Include="ControlAvailability.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MyNet.h">
+      <Filter>My</Filter>
+    </ClInclude>
+    <ClInclude Include="MyConfig.h">
+      <Filter>My</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingDialog.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,9 +152,6 @@
     <ClCompile Include="DataPacket.cpp">
       <Filter>Comm</Filter>
     </ClCompile>
-    <ClCompile Include="Config.cpp">
-      <Filter>My</Filter>
-    </ClCompile>
     <ClCompile Include="App.cpp">
       <Filter>UI</Filter>
     </ClCompile>
@@ -184,6 +187,15 @@
     </ClCompile>
     <ClCompile Include="MyFlow.cpp">
       <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="MyNet.cpp">
+      <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="MyConfig.cpp">
+      <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingDialog.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

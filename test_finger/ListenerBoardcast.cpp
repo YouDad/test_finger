@@ -17,7 +17,7 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(ASFComm,WriteRegister);
     __BCL(ASFComm,ToSleep);
     __BCL(ASFComm,ToIdle);
-    __BCL(ASFComm,Log);
+    __BCL(ASFComm,MyLog);
     __BCL(ASFComm,AdjustingImage);
 
     __BCL(Syno,GetImage);

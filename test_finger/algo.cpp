@@ -35,10 +35,10 @@ void updateCommunityWay(){
     //UI:组合框 更新
     cmbWay->ResetContent();
     if(idle->size()==0){
-        MyLog.print(Log::LOGU,"未发现空闲的串口");
+        MyLog::user("未发现空闲的串口");
         return;
     } else{
-        MyLog.print(Log::LOGU,"发现%d个串口",idle->size());
+        MyLog::user("发现%d个串口",idle->size());
         for(int i=0;i<idle->size();i++){
             CString name;
             name.Format(_T("COM%d"),(*idle)[i]);
@@ -74,7 +74,7 @@ void autoConnect(){
                     }
                 }
             } else{
-                MyLog.error("发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle和lastIdle的差集元素个数不是一个,详细信息:");
+                MyLog::error("发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle和lastIdle的差集元素个数不是一个,详细信息:");
                 {
                     MyString error="diff:";
                     for(std::vector<int>::iterator it=diff.begin();it!=diff.end();it++){
@@ -82,12 +82,12 @@ void autoConnect(){
                         sprintf(number," %d",*it);
                         error+=number;
                     }
-                    MyLog.error(error);
+                    MyLog::error(error);
                 }
             }
         } else{
             //其他异常情况
-            MyLog.error("发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle并不比lastIdle多,详细信息:");
+            MyLog::error("发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle并不比lastIdle多,详细信息:");
             {
                 MyString error="idle:";
                 for(std::vector<int>::iterator it=idle->begin();it!=idle->end();it++){
@@ -95,7 +95,7 @@ void autoConnect(){
                     sprintf(number," %d",*it);
                     error+=number;
                 }
-                MyLog.error(error);
+                MyLog::error(error);
             }
             {
                 MyString error="lastIdle:";
@@ -104,7 +104,7 @@ void autoConnect(){
                     sprintf(number," %d",*it);
                     error+=number;
                 }
-                MyLog.error(error);
+                MyLog::error(error);
             }
         }
     }
@@ -310,7 +310,7 @@ void saveImage(MyString dir,DataPacket dataPacket){
     switch(dataSize){
         case 160*160/2:
         {
-            MyLog.print(Log::LOGU,"接收到160x160的图像");
+            MyLog::user("接收到160x160的图像");
             w=h=160;
             //把图像从4bit转化为8bit
             BYTE* pData=dataPacket.getPointer();
@@ -341,7 +341,7 @@ void saveImage(MyString dir,DataPacket dataPacket){
         }break;
         case 160*160:
         {
-            MyLog.print(Log::LOGU,"接收到160x160的图像");
+            MyLog::user("接收到160x160的图像");
             w=h=160;
 
             BYTE* pData=dataPacket.getPointer();
@@ -363,14 +363,14 @@ void saveImage(MyString dir,DataPacket dataPacket){
         }break;
         case 192*192:
         {
-            MyLog.print(Log::LOGU,"接收到192x192的图像");
+            MyLog::user("接收到192x192的图像");
             w=h=192;
             saveBmp(w,h,dataPacket.getPointer(),dir,fileName);
             loadImage(image,dirFileName);
         }break;
         default:
         {
-            MyLog.print(Log::LOGU,"既不是160x160也不是192x192,没法渲染图像");
+            MyLog::user("既不是160x160也不是192x192,没法渲染图像");
         }break;
     }
     dataPacket.readData(dataPacket.size());

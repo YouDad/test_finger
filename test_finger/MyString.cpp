@@ -67,6 +67,13 @@ MyString MyString::Format(const char * format,...){
     return MyString(tmp);
 }
 
+void MyString::Parse(const char * format,...){
+    va_list ap;
+    va_start(ap,format);
+    vsscanf(str.c_str(),format,ap);
+    va_end(ap);
+}
+
 MyString::operator wchar_t*(){
     return wstr;
 }
