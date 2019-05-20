@@ -35,8 +35,8 @@ extern CButton* btnEnroll;
 extern CButton* btnMatch;
 extern CButton* btnDeviceInfo;
 extern CButton* btnViewEnrollIds;
-extern CButton* chkTimeoutContinue;
-extern CStatic* textDevice;
+extern CButton* btnCancel;
+extern CButton* btnClearLog;
 extern CStatic* image;
 extern CProgressCtrl* progress;
 

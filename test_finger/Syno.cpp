@@ -175,6 +175,7 @@ __ILC(Syno,ReadIndexTable){
             ASF_ERROR(5);
             return;
     }
+    ExecFlow(front);
 }
 
 __ILC(Syno,Match){

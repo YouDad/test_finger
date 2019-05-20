@@ -59,7 +59,7 @@ bool Comm::connect(int id,int baud){
     if(retCode==ERROR_SUCCESS){
         serial.Purge();
     }
-    MyLog.print(Log::LOGU,"连接COM%d%s",id,retCode==ERROR_SUCCESS?"成功":"失败");
+    MyLog.user("连接COM%d%s",id,retCode==ERROR_SUCCESS?"成功":"失败");
     if(retCode==ERROR_SUCCESS){
         responseThread=CreateThread(0,0,ResponseThread,0,0,0);
         startListen();
@@ -75,7 +75,7 @@ bool Comm::disconnect(){
     terminateListen();
 
     int ret=serial.Close();
-    MyLog.print(Log::LOGU,"断开连接成功");
+    MyLog.user("断开连接成功");
     if(ret==ERROR_SUCCESS){
         id=0;
         return true;
@@ -86,27 +86,34 @@ bool Comm::disconnect(){
 }
 
 void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
-    //Sleep(500);
-    auto converter=converterBoardcast.RequestConvert();
-    if(converter){
-        auto dataPacket=converter->convert(CmdCode,Data,Len);
-        for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
-            serial.Write(it->getPointer(),it->size());
-            it->Destruction();
-        }
-        /*if(getText(cmbProtocolType)=="Syno"){
-            DWORD cnt;
-            LONG result;
-            result=serial.Read(buffer,1<<18,&cnt);
-            if(result==ERROR_SUCCESS){
-                WaitForSingleObject(dataQueueMutex,INFINITE);
-                dataQueue.push(DataPacket(buffer,cnt));
-                ReleaseMutex(dataQueueMutex);
-            }
-        }*/
-    } else{
-        ASF_ERROR(3);
+    static MyThread* Comm_request=nullptr;
+    static uint8_t* data=nullptr;
+    static uint16_t len;
+    static int cmdCode;
+    if(Comm_request){
+        Comm_request->terminate();
+        delete Comm_request;
     }
+    if(data){
+        delete[] data;
+    }
+    cmdCode=CmdCode;
+    len=Len;
+    data=new uint8_t[len];
+    memcpy(data,Data,len);
+    Comm_request=new MyThread(ThreadFunction__(request)(void){
+        auto converter=converterBoardcast.RequestConvert();
+        if(converter){
+            auto dataPacket=converter->convert(cmdCode,data,len);
+            for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
+                serial.Write(it->getPointer(),it->size());
+                it->Destruction();
+            }
+        } else{
+            ASF_ERROR(3);
+        }
+    });
+    Comm_request->start();
 }
 
 DWORD WINAPI ListenThread(LPVOID params){

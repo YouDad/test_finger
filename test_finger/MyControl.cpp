@@ -26,8 +26,8 @@ CButton* btnEnroll;
 CButton* btnMatch;
 CButton* btnDeviceInfo;
 CButton* btnViewEnrollIds;
-CButton* chkTimeoutContinue;
-CStatic* textDevice;
+CButton* btnCancel;
+CButton* btnClearLog;
 CStatic* image;
 CProgressCtrl* progress;
 
@@ -83,8 +83,8 @@ void initMyControl(MainDialog* Dlg){
     btnMatch=(CButton*)Dlg->GetDlgItem(IDC_BTNMatch);
     btnDeviceInfo=(CButton*)Dlg->GetDlgItem(IDC_BTNDeviceInfo);
     btnViewEnrollIds=(CButton*)Dlg->GetDlgItem(IDC_BTNViewEnrollIds);
-    chkTimeoutContinue=(CButton*)Dlg->GetDlgItem(IDC_CHKTimeoutContinue);
-    textDevice=(CStatic*)Dlg->GetDlgItem(IDC_TEXTDevice);
+    btnCancel=(CButton*)Dlg->GetDlgItem(IDC_BTNCancel);
+    btnClearLog=(CButton*)Dlg->GetDlgItem(IDC_BTNClearLog);
     image=(CStatic*)Dlg->GetDlgItem(IDC_IMAGE);
     progress=(CProgressCtrl*)Dlg->GetDlgItem(IDC_PROGRESS);
 

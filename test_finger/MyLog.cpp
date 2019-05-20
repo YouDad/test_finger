@@ -1,6 +1,5 @@
 #pragma once
 #include"stdafx.h"
-#include "MyLog.h"
 
 Log MyLog;
 bool Log::isExistLog(){
@@ -134,4 +133,10 @@ void Log::DevelopLog(){
     print(Log::LOGU,"V2.3 <2019年5月01日20:56:32>:上线新的协议ASFComm");
     print(Log::LOGU,"V2.31<2019年5月01日23:12:42>:调整了AdjustingImage函数接口");
     print(Log::LOGU,"V2.4 <2019年5月20日01:19:35>:增加了Syno的协议,有注册/比对功能");
+}
+
+void Log::ClearLog(){
+    clearLog();
+    createLog();
+    setText(editLog,"");
 }

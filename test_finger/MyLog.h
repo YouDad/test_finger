@@ -22,6 +22,7 @@ public:
     void user(MyString info);
     void user(const char* format,...);
     void DevelopLog();
+    void ClearLog();
 private:
     const char* LOG_FILE="backup.txt";
     bool isExistLog();

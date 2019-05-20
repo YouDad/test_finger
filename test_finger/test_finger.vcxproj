@@ -183,6 +183,7 @@
     <ClInclude Include="algo.h" />
     <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="Comm.h" />
+    <ClInclude Include="ControlAvailability.h" />
     <ClInclude Include="DataPacket.h" />
     <ClInclude Include="ListenerBoardcast.h" />
     <ClInclude Include="ConverterBoardcast.h" />

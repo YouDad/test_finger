@@ -36,4 +36,6 @@ public:
     afx_msg void OnBnClickedBtndeviceinfo();
     afx_msg void OnBnClickedBtnviewenrollids();
     afx_msg void OnBnClickedBtndeletetemplate();
+    afx_msg void OnBnClickedBtncancel();
+    afx_msg void OnBnClickedBtnclearlog();
 };

@@ -34,17 +34,13 @@ DataPacket ResponseConverterSyno::convert(DataPacket& data){
 
 int ResponseConverterSyno::getCmdCode(DataPacket data){
     int ret;
-    while(1){
-        WaitForSingleObject(lastCmdCodeMutex,INFINITE);
-        if(lastCmdCode.size()==1){
-            ret=lastCmdCode.front();
-            lastCmdCode.pop();
-            ReleaseMutex(lastCmdCodeMutex);
-            break;
-        } else{
-            ReleaseMutex(lastCmdCodeMutex);
-            continue;
-        }
+    WaitForSingleObject(lastCmdCodeMutex,INFINITE);
+    if(lastCmdCode.size()==1){
+        ret=lastCmdCode.front();
+        lastCmdCode.pop();
+    } else{
+        ret=-1;
     }
+    ReleaseMutex(lastCmdCodeMutex);
     return ret;
 }

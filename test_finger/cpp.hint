@@ -37,3 +37,5 @@ SII_##Name##_ForNotOverLapped
 #define __FlowFunction(arg) _Function(bool,arg)
 //返回true代表可以继续执行下一个流程,false就是执行之后中断,id指明该流程的ID
 #define FlowFunction(id) __FlowFunction
+
+#define foreach(it,container) for(auto it=container.begin();it!=container.end();it++)

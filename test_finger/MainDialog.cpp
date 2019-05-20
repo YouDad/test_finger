@@ -43,14 +43,13 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_BN_CLICKED(IDC_BTN5,&MainDialog::OnBnClickedBtn)
     ON_BN_CLICKED(IDC_BTN6,&MainDialog::OnBnClickedBtn)
     ON_BN_CLICKED(IDC_BTN7,&MainDialog::OnBnClickedBtn)
-    ON_BN_CLICKED(IDC_BTN8,&MainDialog::OnBnClickedBtn)
-    ON_BN_CLICKED(IDC_BTN9,&MainDialog::OnBnClickedBtn)
-    ON_BN_CLICKED(IDC_BTN10,&MainDialog::OnBnClickedBtn)
     ON_BN_CLICKED(IDC_BTNEnroll,&MainDialog::OnBnClickedBtnenroll)
     ON_BN_CLICKED(IDC_BTNMatch,&MainDialog::OnBnClickedBtnmatch)
     ON_BN_CLICKED(IDC_BTNDeviceInfo,&MainDialog::OnBnClickedBtndeviceinfo)
     ON_BN_CLICKED(IDC_BTNViewEnrollIds,&MainDialog::OnBnClickedBtnviewenrollids)
     ON_BN_CLICKED(IDC_BTNDeleteTemplate,&MainDialog::OnBnClickedBtndeletetemplate)
+    ON_BN_CLICKED(IDC_BTNCancel,&MainDialog::OnBnClickedBtncancel)
+    ON_BN_CLICKED(IDC_BTNClearLog,&MainDialog::OnBnClickedBtnclearlog)
 END_MESSAGE_MAP()
 
 void MainDialog::OnOK(){}
@@ -67,7 +66,8 @@ BOOL MainDialog::OnInitDialog(){
     updateCommunityWay();
 
     ///3.更新 各控件访问权限
-    updateControlDisable(actInit);
+    CtrlValidity::InitCtrl();
+    CtrlValidity::Init();
 
     return TRUE;//除非将焦点设置到控件，否则返回 TRUE
 }
@@ -111,7 +111,7 @@ BOOL MainDialog::OnDeviceChange(UINT nEventType,DWORD dwData){
 void MainDialog::OnBnClickedBtnconnect(){
     //根据按钮上的文字判断当前连接状态
     if(getText(btnConnect)=="连接下位机"){
-        updateControlDisable(actOpeningPort);
+        CtrlValidity::Connecting();
 
         int com,baud=getInt(cmbBaud);//读取波特率
         sscanf(getText(cmbWay),"COM%d",&com);//读取通信方式
@@ -119,13 +119,13 @@ void MainDialog::OnBnClickedBtnconnect(){
         bool ret=comm.connect(com,baud);
         if(ret){
             setText(btnConnect,"断开连接");
-            updateControlDisable(actOpenedPort);
+            CtrlValidity::AfterConnect();
         } else{
-            updateControlDisable(actClosedPort);
+            CtrlValidity::BeforeConnect();
         }
     } else{
         comm.disconnect();
-        updateControlDisable(actClosedPort);
+        CtrlValidity::BeforeConnect();
         setText(btnConnect,"连接下位机");
     }
 }
@@ -156,7 +156,7 @@ MyThread ImageTimeout(ThreadFunction__(timeoutFunction)(void){
     WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
     if(!timeoutThread_continueImage){
         MyLog.print(Log::LOGU,"采图超时");
-        updateControlDisable(actGotImage);
+        CtrlValidity::Work();
     }
     ReleaseMutex(timeoutThread_continueImage_Mutex);
 });
@@ -165,12 +165,12 @@ MyThread ImageTimeout(ThreadFunction__(timeoutFunction)(void){
 MyThread RegisterTimeout(ThreadFunction__(timeoutFunction)(void){
     Sleep(1*1000);
     MyLog.print(Log::LOGU,"读寄存器超时");
-    updateControlDisable(actReadedReg);
+    CtrlValidity::Work();
 });
 
 //原始图像的点击事件
 void MainDialog::OnBnClickedBtnrawimage(){
-    updateControlDisable(actGetingImage);
+    CtrlValidity::Working();
     comm.request(SII(GetRawImage));
     progress->SetPos(30);
     MyLog.print(Log::LOGU,"请放手指");
@@ -197,7 +197,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
                 MyLog.print(Log::LOGU,"请放手指");
                 ImageTimeout.start();
             } else{
-                updateControlDisable(actGotImage);
+                CtrlValidity::Work();
             }
         }break;
         case WM_STP_GET_IMAGE:
@@ -206,7 +206,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
             WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
             timeoutThread_continueImage=false;
             ReleaseMutex(timeoutThread_continueImage_Mutex);
-            updateControlDisable(actGotImage);
+            CtrlValidity::Work();
             ImageTimeout.terminate();
             progress->SetPos(0);
         }break;
@@ -235,7 +235,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
                 progress->SetPos(30);
                 ImageTimeout.start();
             } else{
-                updateControlDisable(actGotImage);
+                CtrlValidity::Work();
             }
         }break;
         case WM_STP_GET_BKI:
@@ -244,7 +244,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
             WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
             timeoutThread_continueImage=false;
             ReleaseMutex(timeoutThread_continueImage_Mutex);
-            updateControlDisable(actGotImage);
+            CtrlValidity::Work();
             ImageTimeout.terminate();
             progress->SetPos(0);
         }break;
@@ -258,12 +258,12 @@ void MainDialog::OnBnClickedBtncontinueimage(){
     //根据按钮上的文字判断当前连接状态
     if(getText(btnContinueImage)=="连续获取图像"){
         MyLog.print(Log::LOGU,"开始连续获取图像");
-        updateControlDisable(actGetConImage);
+        CtrlValidity::Working(CtrlValidity::vec{btnContinueImage});
         setText(btnContinueImage,"停止获取图像");
         SendMessage(WM_GET_CON_IMAGE,WM_GET_CON_IMAGE,0);
     } else{
         MyLog.print(Log::LOGU,"停止连续获取图像");
-        updateControlDisable(actStpGetImage);
+        CtrlValidity::Work();
         setText(btnContinueImage,"连续获取图像");
         SendMessage(WM_STP_GET_IMAGE,WM_STP_GET_IMAGE,0);
     }
@@ -275,7 +275,7 @@ void MainDialog::OnBnClickedBtndevlog(){
 }
 
 void MainDialog::OnBnClickedBtnreadreg(){
-    updateControlDisable(actReadingReg);
+    CtrlValidity::Working();
     progress->SetPos(30);
     MyLog.print(Log::LOGD,"开始读寄存器");
 
@@ -289,7 +289,7 @@ void MainDialog::OnBnClickedBtnreadreg(){
 
 
 void MainDialog::OnBnClickedBtnwritereg(){
-    updateControlDisable(actWritingReg);
+    CtrlValidity::Working();
     progress->SetPos(50);
     MyLog.print(Log::LOGD,"开始写寄存器");
 
@@ -300,7 +300,7 @@ void MainDialog::OnBnClickedBtnwritereg(){
     comm.request(SII(WriteRegister),addrVal,2);
 
     progress->SetPos(100);
-    updateControlDisable(actWritedReg);
+    CtrlValidity::Work();
 }
 
 
@@ -308,12 +308,12 @@ void MainDialog::OnBnClickedBtncontinuebackgroundimage(){
     //根据按钮上的文字判断当前连接状态
     if(getText(btnContinueBackGroundImage)=="连续获取背景"){
         MyLog.print(Log::LOGU,"开始连续获取背景");
-        updateControlDisable(actGetConBKI);
+        CtrlValidity::Working(CtrlValidity::vec{btnContinueBackGroundImage});
         setText(btnContinueBackGroundImage,"停止获取背景");
         SendMessage(WM_GET_CON_BKI,WM_GET_CON_BKI,0);
     } else{
         MyLog.print(Log::LOGU,"停止连续获取背景");
-        updateControlDisable(actStpGetBKI);
+        CtrlValidity::Work();
         setText(btnContinueBackGroundImage,"连续获取背景");
         SendMessage(WM_STP_GET_BKI,WM_STP_GET_BKI,0);
     }
@@ -339,7 +339,7 @@ void MainDialog::OnBnClickedBtnopenbackgroundimage(){
 
 
 void MainDialog::OnBnClickedBtnbackgroundimage(){
-    updateControlDisable(actGetingImage);
+    CtrlValidity::Working();
     progress->SetPos(30);
     MyLog.print(Log::LOGD,"开始采集背景");
     comm.request(SII(GetTestImage));
@@ -386,12 +386,17 @@ void MainDialog::OnBnClickedBtn(){
 
 
 void MainDialog::OnBnClickedBtnenroll(){
+    if(getText(editFingerId)==""){
+        MyLog.user("编号不能为空");
+        return;
+    }
     static uint8_t FingerID=MyString::ParseInt(getText(editFingerId));
     static uint8_t BufferID;
     BufferID=1;
     static const int EnrollCount=3;
     Flow.clear();
     Flow.push_back(FlowFunction(0)(int& result){
+        CtrlValidity::Working();
         comm.request(SII(GetEnrollImage));//获取图像
         FlowID++;
         return false;
@@ -496,9 +501,11 @@ void MainDialog::OnBnClickedBtnenroll(){
         BufferID=1;
         MyLog.print(Log::LOGU,"注册成功");
         Flow.clear();
+        CtrlValidity::Work();
         return false;
     });
     Flow.push_back(FlowFunction(12)(int& result){//注册失败
+        CtrlValidity::Work();
         FlowID=0;
         BufferID=1;
         MyLog.print(Log::LOGU,"注册失败");
@@ -511,9 +518,15 @@ void MainDialog::OnBnClickedBtnenroll(){
 
 
 void MainDialog::OnBnClickedBtnmatch(){
+    if(getText(editFingerId)==""){
+        MyLog.user("编号不能为空");
+        return;
+    }
+    static uint8_t FingerID=MyString::ParseInt(getText(editFingerId));
     Flow.clear();
     Flow.push_back(FlowFunction(0)(int& result){
-        uint8_t data[]={02,00,MyString::ParseInt(getText(editFingerId))};
+        CtrlValidity::Working();
+        uint8_t data[]={02,00,FingerID};
         comm.request(SII(LoadChar),data,sizeof data);
         FlowID++;
         MyLog.user("读出指纹模板中...");
@@ -568,6 +581,7 @@ void MainDialog::OnBnClickedBtnmatch(){
         }
     });
     Flow.push_back(FlowFunction(5)(int& result){
+        CtrlValidity::Work();
         MyLog.user("比对结束");
         FlowID=0;
         Flow.clear();
@@ -579,17 +593,46 @@ void MainDialog::OnBnClickedBtnmatch(){
 
 
 void MainDialog::OnBnClickedBtndeviceinfo(){
-    // TODO: 在此添加控件通知处理程序代码
+    //TODO 设备信息
 }
 
 
 void MainDialog::OnBnClickedBtnviewenrollids(){
-    uint8_t ReadIndexTable[]={0};
-    comm.request(SII(ReadIndexTable),ReadIndexTable,1);
+    Flow.clear();
+    Flow.push_back(FlowFunction(0)(int& result){
+        CtrlValidity::Working();
+        uint8_t ReadIndexTable[]={0};
+        comm.request(SII(ReadIndexTable),ReadIndexTable,1);
+        FlowID++;
+        return false;
+    });
+    Flow.push_back(FlowFunction(1)(int& result){
+        CtrlValidity::Work();
+        FlowID=0;
+        Flow.clear();
+        return false;
+    });
+    int tmp=0;
+    ExecFlow(tmp);
 }
 
 
 void MainDialog::OnBnClickedBtndeletetemplate(){
-    // TODO: 在此添加控件通知处理程序代码
     //TODO 删除按钮
+}
+
+
+void MainDialog::OnBnClickedBtncancel(){
+    int tmp=Flow.size()-1;
+    ExecFlow(tmp);
+    MyLog.user("取消了操作");
+    CtrlValidity::Work();
+    if(lastCmdCode.size()){
+        lastCmdCode.pop();
+    }
+}
+
+
+void MainDialog::OnBnClickedBtnclearlog(){
+    MyLog.ClearLog();
 }

@@ -44,7 +44,7 @@ __ILC(ASFComm,ReadRegister){
         MyLog.print(Log::LOGU,"接收数据成功");
     }
     sendMessage(WM_READ_REGISTER);
-    updateControlDisable(actReadedReg);
+    CtrlValidity::Work();
 }
 
 __ILC(ASFComm,WriteRegister){

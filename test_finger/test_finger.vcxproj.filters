@@ -93,6 +93,9 @@
     <ClInclude Include="MyFlow.h">
       <Filter>My</Filter>
     </ClInclude>
+    <ClInclude Include="ControlAvailability.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

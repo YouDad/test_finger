@@ -90,6 +90,7 @@ typedef unsigned int   uint32_t;
 #include"AdvancedDebugDialog.h"
 
 #include"MyControl.h"
+#include"ControlAvailability.h"
 
 #include"DataPacket.h"
 #include"ConverterBoardcast.h"

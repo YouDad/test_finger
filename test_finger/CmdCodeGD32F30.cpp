@@ -8,7 +8,7 @@ void READ_REGISTER_Listener::listen(DataPacket response){
         MyLog.print(Log::LOGU,"接收数据成功");
     }
     sendMessage(WM_READ_REGISTER);
-    updateControlDisable(actReadedReg);
+    CtrlValidity::Work();
 }
 
 void GET_TEST_IMAGE_Listener::listen(DataPacket response){
