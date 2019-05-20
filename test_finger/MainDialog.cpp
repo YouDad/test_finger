@@ -170,6 +170,38 @@ MyThread RegisterTimeout(ThreadFunction__(timeoutFunction)(void){
 
 //原始图像的点击事件
 void MainDialog::OnBnClickedBtnrawimage(){
+    if(getText(cmbProtocolType)=="Syno"){
+        MyLog.user("开始获取图像");
+        Flow.clear();
+        Flow.push_back(FlowFunction(0)(int& result){
+            CtrlValidity::Working();
+            comm.request(SII(GetRawImage));
+            progress->SetPos(100*++FlowID/Flow.size());
+            return false;
+        });
+        Flow.push_back(FlowFunction(1)(int& result){
+            if(result==0x00){
+                CtrlValidity::Working();
+                comm.request(SII(UpImage));
+                progress->SetPos(100*++FlowID/Flow.size());
+                return false;
+            } else{
+                FlowID--;
+                return true;
+            }
+        });
+        Flow.push_back(FlowFunction(2)(int& result){
+            progress->SetPos(100*++FlowID/Flow.size());
+            FlowID=0;
+            Flow.clear();
+            MyLog.user("获取图像完毕");
+            CtrlValidity::Work();
+            return false;
+        });
+        int tmp=0;
+        ExecFlow(tmp);
+        return;
+    }
     CtrlValidity::Working();
     comm.request(SII(GetRawImage));
     progress->SetPos(30);
@@ -255,14 +287,51 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
 
 //连续获取图像的点击事件
 void MainDialog::OnBnClickedBtncontinueimage(){
+    if(getText(cmbProtocolType)=="Syno"){
+        MyLog.user("开始连续获取图像");
+        Flow.clear();
+        Flow.push_back(FlowFunction(0)(int& result){
+            CtrlValidity::Working();
+            comm.request(SII(GetRawImage));
+            progress->SetPos(100*++FlowID/Flow.size());
+            return false;
+        });
+        Flow.push_back(FlowFunction(1)(int& result){
+            if(result==0x00){
+                CtrlValidity::Working();
+                comm.request(SII(UpImage));
+                progress->SetPos(100*++FlowID/Flow.size());
+                return false;
+            } else{
+                FlowID--;
+                return true;
+            }
+        });
+        Flow.push_back(FlowFunction(2)(int& result){
+            progress->SetPos(100*++FlowID/Flow.size());
+            FlowID=0;
+            return true;
+        });
+        Flow.push_back(FlowFunction(3)(int& result){
+            progress->SetPos(100*++FlowID/Flow.size());
+            FlowID=0;
+            Flow.clear();
+            MyLog.user("停止连续获取图像");
+            CtrlValidity::Work();
+            return false;
+        });
+        int tmp=0;
+        ExecFlow(tmp);
+        return;
+    }
     //根据按钮上的文字判断当前连接状态
     if(getText(btnContinueImage)=="连续获取图像"){
-        MyLog.print(Log::LOGU,"开始连续获取图像");
+        MyLog.user("开始连续获取图像");
         CtrlValidity::Working(CtrlValidity::vec{btnContinueImage});
         setText(btnContinueImage,"停止获取图像");
         SendMessage(WM_GET_CON_IMAGE,WM_GET_CON_IMAGE,0);
     } else{
-        MyLog.print(Log::LOGU,"停止连续获取图像");
+        MyLog.user("停止连续获取图像");
         CtrlValidity::Work();
         setText(btnContinueImage,"连续获取图像");
         SendMessage(WM_STP_GET_IMAGE,WM_STP_GET_IMAGE,0);
@@ -275,20 +344,38 @@ void MainDialog::OnBnClickedBtndevlog(){
 }
 
 void MainDialog::OnBnClickedBtnreadreg(){
-    CtrlValidity::Working();
-    progress->SetPos(30);
-    MyLog.print(Log::LOGD,"开始读寄存器");
-
-    uint8_t address=getHex(editReadRegAddr);
-
-    comm.request(SII(ReadRegister),&address,1);
-
-    progress->SetPos(60);
-    RegisterTimeout.start();
+    if(getText(cmbProtocolType)=="Syno"){
+        progress->SetPos(0);
+        MyLog.user("不支持的操作");
+        return;
+    }
+    Flow.clear();
+    Flow.push_back(FlowFunction(0)(int& result){
+        CtrlValidity::Working();
+        MyLog.print(Log::LOGD,"开始读寄存器");
+        uint8_t address=getHex(editReadRegAddr);
+        comm.request(SII(ReadRegister),&address,1);
+        progress->SetPos(100*++FlowID/Flow.size());
+        return false;
+    });
+    Flow.push_back(FlowFunction(1)(int& result){
+        CtrlValidity::Work();
+        progress->SetPos(100*++FlowID/Flow.size());
+        FlowID=0;
+        Flow.clear();
+        return false;
+    });
+    int tmp=0;
+    ExecFlow(tmp);
 }
 
 
 void MainDialog::OnBnClickedBtnwritereg(){
+    if(getText(cmbProtocolType)=="Syno"){
+        progress->SetPos(0);
+        MyLog.user("不支持的操作");
+        return;
+    }
     CtrlValidity::Working();
     progress->SetPos(50);
     MyLog.print(Log::LOGD,"开始写寄存器");
@@ -305,6 +392,11 @@ void MainDialog::OnBnClickedBtnwritereg(){
 
 
 void MainDialog::OnBnClickedBtncontinuebackgroundimage(){
+    if(getText(cmbProtocolType)=="Syno"){
+        progress->SetPos(0);
+        MyLog.user("不支持的操作");
+        return;
+    }
     //根据按钮上的文字判断当前连接状态
     if(getText(btnContinueBackGroundImage)=="连续获取背景"){
         MyLog.print(Log::LOGU,"开始连续获取背景");
@@ -339,6 +431,11 @@ void MainDialog::OnBnClickedBtnopenbackgroundimage(){
 
 
 void MainDialog::OnBnClickedBtnbackgroundimage(){
+    if(getText(cmbProtocolType)=="Syno"){
+        progress->SetPos(0);
+        MyLog.user("不支持的操作");
+        return;
+    }
     CtrlValidity::Working();
     progress->SetPos(30);
     MyLog.print(Log::LOGD,"开始采集背景");
@@ -398,14 +495,14 @@ void MainDialog::OnBnClickedBtnenroll(){
     Flow.push_back(FlowFunction(0)(int& result){
         CtrlValidity::Working();
         comm.request(SII(GetEnrollImage));//获取图像
-        FlowID++;
+        progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
     Flow.push_back(FlowFunction(1)(int& result){
         if(result==0x00){//取到图像
             MyLog.debug("取到指纹图像(%d/%d)",BufferID,EnrollCount);
             comm.request(SII(UpImage));//上传图像
-            FlowID++;
+            progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{//没取到图像
             FlowID--;
@@ -415,11 +512,12 @@ void MainDialog::OnBnClickedBtnenroll(){
     Flow.push_back(FlowFunction(2)(int& result){
         if(result==0x00){//上传图像成功
             comm.request(SII(GenChar),&BufferID,1);//生成特征
-            FlowID++;
+            progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{//上传图像失败
             MyLog.debug("上传图像失败");
-            FlowID=12;
+            FlowID=11;
+            MyLog.user("注册失败");
             return true;
         }
     });
@@ -430,7 +528,7 @@ void MainDialog::OnBnClickedBtnenroll(){
 
             uint8_t x[]={BufferID,0,0,0,0x87};
             comm.request(SII(Search),x,sizeof x);//搜索指纹
-            FlowID++;
+            progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{//生成特征失败
             FlowID=0;
@@ -441,11 +539,12 @@ void MainDialog::OnBnClickedBtnenroll(){
         if(result==0x09){//没搜到指纹
             MyLog.debug("等待手指移开");
             comm.request(SII(GetRawImage));//等待把手指移开
-            FlowID++;
+            progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{//搜到指纹
             MyLog.debug("已有指纹");
-            FlowID=12;
+            FlowID=11;
+            MyLog.user("注册失败");
             return true;
         }
     });
@@ -469,7 +568,7 @@ void MainDialog::OnBnClickedBtnenroll(){
     });
     Flow.push_back(FlowFunction(7)(int& result){
         comm.request(SII(RegModel));//合并特征
-        FlowID++;
+        progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
     Flow.push_back(FlowFunction(8)(int& result){
@@ -477,14 +576,15 @@ void MainDialog::OnBnClickedBtnenroll(){
             FlowID++;
             MyLog.debug("合并特征成功");
         } else{//合并失败
-            FlowID=12;
+            FlowID=11;
+            MyLog.user("注册失败");
         }
         return true;
     });
     Flow.push_back(FlowFunction(9)(int& result){
         uint8_t data[]={1,0,FingerID};
         comm.request(SII(StoreChar),data,sizeof data);//存储模板
-        FlowID++;
+        progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
     Flow.push_back(FlowFunction(10)(int& result){
@@ -492,24 +592,18 @@ void MainDialog::OnBnClickedBtnenroll(){
             FlowID++;
             MyLog.debug("存储模板成功");
         } else{//存储失败
-            FlowID=12;
+            FlowID=11;
+            MyLog.user("注册失败");
         }
         return true;
     });
-    Flow.push_back(FlowFunction(11)(int& result){//注册成功
+    Flow.push_back(FlowFunction(11)(int& result){//注册结束
+        progress->SetPos(100*++FlowID/Flow.size());
         FlowID=0;
         BufferID=1;
-        MyLog.print(Log::LOGU,"注册成功");
+        MyLog.user("注册结束");
         Flow.clear();
         CtrlValidity::Work();
-        return false;
-    });
-    Flow.push_back(FlowFunction(12)(int& result){//注册失败
-        CtrlValidity::Work();
-        FlowID=0;
-        BufferID=1;
-        MyLog.print(Log::LOGU,"注册失败");
-        Flow.clear();
         return false;
     });
     int tmp=0;
@@ -535,7 +629,7 @@ void MainDialog::OnBnClickedBtnmatch(){
     Flow.push_back(FlowFunction(1)(int& result){
         if(result==0x00){
             comm.request(SII(GetRawImage));
-            FlowID++;
+            progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{
             FlowID=5;
@@ -547,7 +641,7 @@ void MainDialog::OnBnClickedBtnmatch(){
             MyLog.user("取指纹图成功");
             uint8_t data[]={02};
             comm.request(SII(GenChar),data,sizeof data);
-            FlowID++;
+            progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{
             result=0x00;
@@ -559,7 +653,7 @@ void MainDialog::OnBnClickedBtnmatch(){
         if(result==0x00){
             MyLog.user("指纹生成特征成功");
             comm.request(SII(Match));
-            FlowID++;
+            progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{
             MyLog.user("指纹生成特征失败");
@@ -581,6 +675,7 @@ void MainDialog::OnBnClickedBtnmatch(){
         }
     });
     Flow.push_back(FlowFunction(5)(int& result){
+        progress->SetPos(100*++FlowID/Flow.size());
         CtrlValidity::Work();
         MyLog.user("比对结束");
         FlowID=0;
@@ -601,12 +696,13 @@ void MainDialog::OnBnClickedBtnviewenrollids(){
     Flow.clear();
     Flow.push_back(FlowFunction(0)(int& result){
         CtrlValidity::Working();
-        uint8_t ReadIndexTable[]={0};
-        comm.request(SII(ReadIndexTable),ReadIndexTable,1);
-        FlowID++;
+        uint8_t data[]={0};
+        comm.request(SII(ReadIndexTable),data,sizeof data);
+        progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
     Flow.push_back(FlowFunction(1)(int& result){
+        progress->SetPos(100*++FlowID/Flow.size());
         CtrlValidity::Work();
         FlowID=0;
         Flow.clear();
@@ -618,12 +714,38 @@ void MainDialog::OnBnClickedBtnviewenrollids(){
 
 
 void MainDialog::OnBnClickedBtndeletetemplate(){
-    //TODO 删除按钮
+    if(getText(editFingerId)==""){
+        MyLog.user("编号不能为空");
+        return;
+    }
+    static uint8_t FingerID=MyString::ParseInt(getText(editFingerId));
+    Flow.clear();
+    Flow.push_back(FlowFunction(0)(int& result){
+        CtrlValidity::Working();
+        uint8_t data[]={0,FingerID,0,1};
+        comm.request(SII(DeleteChar),data,sizeof data);
+        progress->SetPos(100*++FlowID/Flow.size());
+        return false;
+    });
+    Flow.push_back(FlowFunction(1)(int& result){
+        if(result==0x00){
+            MyLog.user("删除指纹%d成功",FingerID);
+        }
+        progress->SetPos(100*++FlowID/Flow.size());
+        CtrlValidity::Work();
+        FlowID=0;
+        Flow.clear();
+        return false;
+    });
+    int tmp=0;
+    ExecFlow(tmp);
 }
 
 
 void MainDialog::OnBnClickedBtncancel(){
+    progress->SetPos(0);
     int tmp=Flow.size()-1;
+    FlowID=tmp;
     ExecFlow(tmp);
     MyLog.user("取消了操作");
     CtrlValidity::Work();

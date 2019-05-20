@@ -212,3 +212,18 @@ __ILC(Syno,LoadChar){
     }
     ExecFlow(front);
 }
+
+__ILC(Syno,DeleteChar){
+    int front=response.getPointer()[0];
+    switch(front){
+        case 0x00://成功
+            break;
+        case 0x01://收包有错
+            ASF_ERROR(5);
+            return;
+        case 0x10://删除模板失败
+            MyLog.user("删除模板失败");
+            break;
+    }
+    ExecFlow(front);
+}

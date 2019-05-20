@@ -96,6 +96,7 @@ enum CmdCode{
     SII(ReadIndexTable),
     SII(Match),
     SII(LoadChar),
+    SII(DeleteChar),
 };
 
 #pragma region ASFComm协议区
@@ -136,6 +137,7 @@ __DLC(Syno,Search);
 __DLC(Syno,ReadIndexTable);
 __DLC(Syno,Match);
 __DLC(Syno,LoadChar);
+__DLC(Syno,DeleteChar);
 
 /*
 写命令前,先查文档,给枚举赋值,就代表实现了对应监听器
@@ -192,7 +194,7 @@ enum CmdCodeSyno{
     __SCC(Syno,DownChar),
     __SCC(Syno,UpImage)=0x0a,
     __SCC(Syno,DownImage),
-    __SCC(Syno,DeleteChar),
+    __SCC(Syno,DeleteChar)=0x0c,
     __SCC(Syno,Empty),
     __SCC(Syno,WriteReg),
     __SCC(Syno,ReadSysPara),

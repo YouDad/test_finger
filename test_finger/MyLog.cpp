@@ -27,7 +27,7 @@ void Log::appendLog(const char* text){
 }
 
 void Log::print(LogLevel level,MyString info){
-    static MyString last="",lastEdit="";
+    static MyString last="",lastEdit="",lastContent="";
     if(level>=LOG_HIGHEST){
         ASF_WARNING(1);
         level=LOGD;
@@ -38,16 +38,19 @@ void Log::print(LogLevel level,MyString info){
     MyString time(ctime(&curtime));
     MyString content=MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
     int len=editLog->GetWindowTextLength();
-    if(last==info){
-        setText(editLog,lastEdit+content);
-        editLog->SetSel(len,len);
-        appendLog(content);
-    } else{
-        editLog->SetSel(len,len);
-        editLog->ReplaceSel(content);
-        appendLog(content);
-        lastEdit=getText(editLog);
+    if(!(lastContent==content)){
+        if(last==info){
+            setText(editLog,lastEdit+content);
+            editLog->SetSel(len,len);
+            appendLog(content);
+        } else{
+            lastEdit=getText(editLog);
+            editLog->SetSel(len,len);
+            editLog->ReplaceSel(content);
+            appendLog(content);
+        }
     }
+    lastContent=content;
     last=info;
 }
 

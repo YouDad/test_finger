@@ -36,6 +36,8 @@ int ToSyno(int cmdCode){
             return __SCC(Syno,Match);
         case SII(LoadChar):
             return __SCC(Syno,LoadChar);
+        case SII(DeleteChar):
+            return __SCC(Syno,DeleteChar);
         default:
             ASF_ERROR(6);
             throw 0;

@@ -30,6 +30,7 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(Syno,ReadIndexTable);
     __BCL(Syno,Match);
     __BCL(Syno,LoadChar);
+    __BCL(Syno,DeleteChar);
 }
 
 void ListenerBoardcast::attach(int event,ICommListener* listener){
