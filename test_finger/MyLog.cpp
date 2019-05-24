@@ -2,7 +2,6 @@
 #include"stdafx.h"
 
 const char* MyLog::LOG_FILE="backup.txt";
-int Version=250;
 
 bool MyLog::isExistLog(){
     FILE* fp=fopen(LOG_FILE,"r");
@@ -122,6 +121,7 @@ void MyLog::user(const char * format,...){
     print(LOGU,tmp);
 }
 
+int Version=250;
 void MyLog::DevelopLog(){
     print(MyLog::LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
     print(MyLog::LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");

@@ -40,17 +40,20 @@ MyString description(int size){
 }
 
 void NetDownload(CProgressCtrl* process,CStatic* detail){
-    if(2==MessageBoxA(0,"下载文件时不能操作该程序,要是网断了等待超时会弹出一个错误对话框,即便如此也要下载么?",
+    if(2==MessageBoxA(0,"下载文件时不能操作该程序,即便如此也要下载么?",
                       "询问",MB_ICONEXCLAMATION|MB_OKCANCEL|MB_SYSTEMMODAL)){
         return;
     }
     CInternetSession session;
     int NetVersion=NetGetVersion();
-    if(Version>=NetVersion){
+    if(Version>NetVersion){
         if(2==MessageBoxA(0,"当前版本比远程版本高,即便如此也要下载么?",
                           "浪费流量警告",MB_ICONEXCLAMATION|MB_OKCANCEL|MB_SYSTEMMODAL)){
             return;
         }
+    } else if(Version==NetVersion){
+        MessageBoxA(0,"当前版本和远程版本一样","不能下载",MB_ICONERROR|MB_OK|MB_SYSTEMMODAL);
+        return;
     }
     int BigVersion,SmlVersion;
     BigVersion=NetVersion/100;
