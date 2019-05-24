@@ -51,6 +51,8 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_BN_CLICKED(IDC_BTNCancel,&MainDialog::OnBnClickedBtncancel)
     ON_BN_CLICKED(IDC_BTNClearLog,&MainDialog::OnBnClickedBtnclearlog)
     ON_BN_CLICKED(IDC_BTNSetting,&MainDialog::OnBnClickedBtnsetting)
+    ON_CBN_SELCHANGE(IDC_CMBBaud,&MainDialog::OnCbnSelchangeCmbbaud)
+    ON_CBN_SELCHANGE(IDC_CMBProtocolType,&MainDialog::OnCbnSelchangeCmbprotocoltype)
 END_MESSAGE_MAP()
 
 void MainDialog::OnOK(){}
@@ -217,8 +219,7 @@ void MainDialog::OnBnClickedBtnrawimage(){
             CtrlValidity::Work();
             return false;
         });
-        int tmp=0;
-        ExecFlow(tmp);
+        ExecStart();
         return;
     }
     CtrlValidity::Working();
@@ -339,8 +340,7 @@ void MainDialog::OnBnClickedBtncontinueimage(){
             CtrlValidity::Work();
             return false;
         });
-        int tmp=0;
-        ExecFlow(tmp);
+        ExecStart();
         return;
     }
     //根据按钮上的文字判断当前连接状态
@@ -384,8 +384,7 @@ void MainDialog::OnBnClickedBtnreadreg(){
         Flow.clear();
         return false;
     });
-    int tmp=0;
-    ExecFlow(tmp);
+    ExecStart();
 }
 
 
@@ -625,8 +624,7 @@ void MainDialog::OnBnClickedBtnenroll(){
         CtrlValidity::Work();
         return false;
     });
-    int tmp=0;
-    ExecFlow(tmp);
+    ExecStart();
 }
 
 
@@ -701,8 +699,7 @@ void MainDialog::OnBnClickedBtnmatch(){
         Flow.clear();
         return false;
     });
-    int tmp=0;
-    ExecFlow(tmp);
+    ExecStart();
 }
 
 
@@ -727,8 +724,7 @@ void MainDialog::OnBnClickedBtnviewenrollids(){
         Flow.clear();
         return false;
     });
-    int tmp=0;
-    ExecFlow(tmp);
+    ExecStart();
 }
 
 
@@ -756,16 +752,13 @@ void MainDialog::OnBnClickedBtndeletetemplate(){
         Flow.clear();
         return false;
     });
-    int tmp=0;
-    ExecFlow(tmp);
+    ExecStart();
 }
 
 
 void MainDialog::OnBnClickedBtncancel(){
     progress->SetPos(0);
-    int tmp=Flow.size()-1;
-    FlowID=tmp;
-    ExecFlow(tmp);
+    ExecEnd();
     MyLog::user("取消了操作");
     CtrlValidity::Work();
     if(lastCmdCode.size()){
@@ -787,4 +780,14 @@ void MainDialog::OnBnClickedBtnsetting(){
     dialog=new SettingDialog();
     dialog->Create(IDD_SETTING_DIALOG,this);
     dialog->ShowWindow(SW_SHOW);
+}
+
+
+void MainDialog::OnCbnSelchangeCmbbaud(){
+    conf["Baud"]=MyString::Format("%d",cmbBaud->GetCurSel());
+}
+
+
+void MainDialog::OnCbnSelchangeCmbprotocoltype(){
+    conf["ProtocolType"]=MyString::Format("%d",cmbBaud->GetCurSel());
 }

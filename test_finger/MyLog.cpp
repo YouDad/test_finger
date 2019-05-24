@@ -139,6 +139,7 @@ void MyLog::DevelopLog(){
     print(MyLog::LOGU,"V2.31<2019年5月01日23:12:42>:调整了AdjustingImage函数接口");
     print(MyLog::LOGU,"V2.4 <2019年5月20日01:19:35>:增加了Syno的协议,有注册/比对功能");
     print(MyLog::LOGU,"V2.5 <2019年5月20日22:37:36>:增加了Syno的删除/(连续)取图功能,增加更新功能");
+    print(MyLog::LOGU,"V2.51<2019年5月24日12:49:24>:修复GD32协议读寄存器bug,记忆波特率和协议");
 }
 
 void MyLog::ClearLog(){

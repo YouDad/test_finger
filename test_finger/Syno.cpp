@@ -15,7 +15,7 @@ __ILC(Syno,GetImage){
             MyLog::user("录入不成功或面积不足");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,UpImage){
@@ -43,7 +43,7 @@ __ILC(Syno,UpImage){
             MyLog::user("不能发送后续数据包");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,GenChar){
@@ -70,7 +70,7 @@ __ILC(Syno,GenChar){
             MyLog::user("当前指纹模板与之前的模板之间有关联");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,GetEnrollImage){
@@ -88,7 +88,7 @@ __ILC(Syno,GetEnrollImage){
             MyLog::user("录入不成功或面积不足");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,RegModel){
@@ -103,7 +103,7 @@ __ILC(Syno,RegModel){
             MyLog::user("合并失败");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,StoreChar){
@@ -121,7 +121,7 @@ __ILC(Syno,StoreChar){
             MyLog::user("写FLASH出错");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,Search){
@@ -139,7 +139,7 @@ __ILC(Syno,Search){
             MyLog::user("手指没有移动");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,ReadIndexTable){
@@ -175,7 +175,7 @@ __ILC(Syno,ReadIndexTable){
             ASF_ERROR(5);
             return;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,Match){
@@ -192,7 +192,7 @@ __ILC(Syno,Match){
             MyLog::user("指纹不匹配");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,LoadChar){
@@ -210,7 +210,7 @@ __ILC(Syno,LoadChar){
             MyLog::user("读出有错或模板无效");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }
 
 __ILC(Syno,DeleteChar){
@@ -225,5 +225,5 @@ __ILC(Syno,DeleteChar){
             MyLog::user("删除模板失败");
             break;
     }
-    ExecFlow(front);
+    ExecFlowRef(front);
 }

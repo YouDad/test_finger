@@ -9,6 +9,7 @@ void READ_REGISTER_Listener::listen(DataPacket response){
     }
     sendMessage(WM_READ_REGISTER);
     CtrlValidity::Work();
+    ExecFlowVal();
 }
 
 void GET_TEST_IMAGE_Listener::listen(DataPacket response){
@@ -27,6 +28,7 @@ void GET_TEST_IMAGE_Listener::listen(DataPacket response){
         MyLog::debug("加载图片完成");
         MyLog::user("接收背景数据成功");
     }
+    ExecFlowVal();
 }
 
 void GET_RAW_IMAGE_Listener::listen(DataPacket response){
@@ -45,4 +47,5 @@ void GET_RAW_IMAGE_Listener::listen(DataPacket response){
         MyLog::debug("加载图片完成");
         MyLog::user("接收数据成功");
     }
+    ExecFlowVal();
 }

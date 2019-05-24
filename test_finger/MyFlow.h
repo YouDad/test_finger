@@ -11,4 +11,7 @@ extern int FlowID;
 //当前流程的排列
 extern std::vector<FlowFunction_t> Flow;
 
-void ExecFlow(int& result);
+void ExecFlowRef(int& result);
+void ExecFlowVal(int result=0);
+void ExecStart(int result=0);
+void ExecEnd(int result=0);

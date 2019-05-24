@@ -39,4 +39,6 @@ public:
     afx_msg void OnBnClickedBtncancel();
     afx_msg void OnBnClickedBtnclearlog();
     afx_msg void OnBnClickedBtnsetting();
+    afx_msg void OnCbnSelchangeCmbbaud();
+    afx_msg void OnCbnSelchangeCmbprotocoltype();
 };

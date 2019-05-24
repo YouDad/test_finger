@@ -101,14 +101,14 @@ void initMyControl(MainDialog* Dlg){
     for(int i=0;i<7;i++){
         cmbBaud->InsertString(i,baud[i]);
     }
-    cmbBaud->SetCurSel(2);
+    cmbBaud->SetCurSel(MyString::ParseInt(conf["Baud"]));
 
     //芯片类型
     MyString chipType[]={"GD32F30","ASFComm","Syno"};
     for(int i=0;i<3;i++){
         cmbProtocolType->InsertString(i,chipType[i]);
     }
-    cmbProtocolType->SetCurSel(2);
+    cmbProtocolType->SetCurSel(MyString::ParseInt(conf["ProtocolType"]));
 
     //日志信息等级
     MyString logLevel[]={"用户","错误","警告","调试","临时"};
