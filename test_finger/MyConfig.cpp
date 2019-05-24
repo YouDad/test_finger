@@ -6,19 +6,19 @@ char MyConfig::val[1<<6];
 MyConfig conf;
 
 void MyConfig::defaultConfig(){
-    if(m.count("AdvDbg")){
+    if(!m.count("AdvDbg")){
         m["AdvDbg"]="false";
     }
-    if(m.count("AdvDbg_ImgId")){
+    if(!m.count("AdvDbg_ImgId")){
         m["AdvDbg_ImgId"]="0";
     }
-    if(m.count("AutoCheck")){
+    if(!m.count("AutoCheck")){
         m["AutoCheck"]="true";
     }
-    if(m.count("Baud")){
+    if(!m.count("Baud")){
         m["Baud"]="2";
     }
-    if(m.count("ProtocolType")){
+    if(!m.count("ProtocolType")){
         m["ProtocolType"]="2";
     }
     return;
