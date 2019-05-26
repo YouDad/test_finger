@@ -97,6 +97,7 @@ enum CmdCode{
     SII(Match),
     SII(LoadChar),
     SII(DeleteChar),
+    SII(DeviceInfo),
 };
 
 #pragma region ASFComm–≠“È«¯
@@ -235,6 +236,8 @@ enum CmdCodeLOG{
     CmdCodeLOG_AdvDbg_AdjImg,
 };
 
+__DLC(GD32F30,DeviceInfo);
+
 enum CmdCodeGD32F30{
     CMD_GET_TEST_IMAGE=0x031F,
     CMD_DEVICE_RESET=0x0320,
@@ -273,6 +276,7 @@ enum CmdCodeGD32F30{
     CMD_Sleep_MODE=0X0401,
     CMD_SleepToIdle=0x0402,
     CMD_AdjustImage=0x0403,
+    __SCC(GD32F30,DeviceInfo)=0x0404,
 };
 
 enum CmdCodeACH512{

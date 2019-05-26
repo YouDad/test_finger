@@ -704,7 +704,21 @@ void MainDialog::OnBnClickedBtnmatch(){
 
 
 void MainDialog::OnBnClickedBtndeviceinfo(){
-    //TODO 设备信息
+    Flow.clear();
+    Flow.push_back(FlowFunction(0)(int& result){
+        CtrlValidity::Working();
+        comm.request(SII(DeviceInfo));
+        progress->SetPos(100*++FlowID/Flow.size());
+        return false;
+    });
+    Flow.push_back(FlowFunction(1)(int& result){
+        progress->SetPos(100*++FlowID/Flow.size());
+        CtrlValidity::Work();
+        FlowID=0;
+        Flow.clear();
+        return false;
+    });
+    ExecStart();
 }
 
 

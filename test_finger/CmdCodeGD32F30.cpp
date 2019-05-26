@@ -49,3 +49,13 @@ void GET_RAW_IMAGE_Listener::listen(DataPacket response){
     }
     ExecFlowVal();
 }
+
+__ILC(GD32F30,DeviceInfo){
+    MyLog::debug("DeviceInfo监听器收到数据包:");
+    MyString str;
+    uint8_t* ptr=response.getPointer();
+    for(int i=0;i<response.size();i++){
+        str+=MyString::Format("%02X ",ptr[i]);
+    }
+    MyLog::debug(str);
+}

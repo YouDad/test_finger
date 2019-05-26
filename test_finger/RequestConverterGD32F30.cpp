@@ -15,6 +15,8 @@ int ToGD32F30(int cmdCode){
             return CMD_READ_NOTE_BOOK;
         case SII(WriteRegister):
             return CMD_WRITE_NOTE_BOOK;
+        case SII(DeviceInfo):
+            return __SCC(GD32F30,DeviceInfo);
         default:
             ASF_ERROR(6);
             throw 0;
