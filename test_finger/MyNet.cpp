@@ -2,59 +2,53 @@
 
 #include <afxinet.h>
 
-int NetGetVersion(){
-    CInternetSession session;
-    CHttpFile* pfile=(CHttpFile*)session.OpenURL(L"http://39.107.64.93/?Version=0");
+MyString HostIP="39.107.64.93";
 
-    MyString content;
+#define NetFunction_t _Function_t(void,uint8_t* data,int size)
+#define NetFunction _Function(void,uint8_t*data,int size)
+typedef std::map<std::string,std::string> DataMap;
+
+void NetPost(MyString host,MyString ctrl,DataMap data,NetFunction_t func){
+    CInternetSession session;
     DWORD dwStatusCode;
+    INTERNET_PORT nPort=80;
+    CHttpConnection* pserver=session.GetHttpConnection(host,nPort);
+    CHttpFile* pfile=pserver->OpenRequest(CHttpConnection::HTTP_VERB_POST,ctrl);
+    CString strHeaders=_T("Content-Type: application/x-www-form-urlencoded");
+    std::string dataStr;
+    for(auto it=data.begin();it!=data.end();it++){
+        dataStr+=it->first+"="+it->second+"&";
+    }
+    if(dataStr.length()){
+        dataStr.pop_back();
+    }
+    pfile->SendRequest(strHeaders,(LPVOID)dataStr.c_str(),dataStr.length());
     pfile->QueryInfoStatusCode(dwStatusCode);
     if(dwStatusCode==HTTP_STATUS_OK){
-        CString data;
-        while(pfile->ReadString(data)){
-            content+=(char*)data.GetBuffer();
+        uint8_t data[1024];
+        int size=0;
+        while((size=pfile->Read(data,1024))>0){
+            func(data,size);
         }
     }
     pfile->Close();
     delete pfile;
-    session.Close();
+    pserver->Close();
+    delete pserver;
+}
 
-    int BigVersion,SmlVersion;
-    content.Parse("%d.%d",&BigVersion,&SmlVersion);
+int NetGetVersion(){
+    int BigVersion=0,SmlVersion=0;
+    NetPost(HostIP,"test_finger_version",DataMap(),[&](uint8_t* data,int size){
+        MyString((char*)data,size).Parse("%d.%d",&BigVersion,&SmlVersion);
+    });
     if(SmlVersion<10){
         SmlVersion*=10;
     }
     return BigVersion*100+SmlVersion;
 }
 
-MyString description(int size){
-    if(size>1024LL*1024*1024*8/7){
-        return MyString::Format("%.2lfGB",1.0*size/1024/1024/1024);
-    } else if(size>1024LL*1024*8/7){
-        return MyString::Format("%.2lfMB",1.0*size/1024/1024);
-    } else if(size>1024LL*8/7){
-        return MyString::Format("%.2lfKB",1.0*size/1024);
-    } else{
-        return MyString::Format("%dB",size);
-    }
-}
-
-void NetDownload(CProgressCtrl* process,CStatic* detail){
-    if(2==MessageBoxA(0,"下载文件时不能操作该程序,即便如此也要下载么?",
-                      "询问",MB_ICONEXCLAMATION|MB_OKCANCEL|MB_SYSTEMMODAL)){
-        return;
-    }
-    CInternetSession session;
-    int NetVersion=NetGetVersion();
-    if(Version>NetVersion){
-        if(2==MessageBoxA(0,"当前版本比远程版本高,即便如此也要下载么?",
-                          "浪费流量警告",MB_ICONEXCLAMATION|MB_OKCANCEL|MB_SYSTEMMODAL)){
-            return;
-        }
-    } else if(Version==NetVersion){
-        MessageBoxA(0,"当前版本和远程版本一样","不能下载",MB_ICONERROR|MB_OK|MB_SYSTEMMODAL);
-        return;
-    }
+void NetDownload(int NetVersion,_Function_t(void,uint8_t* data,int size,int total) func){
     int BigVersion,SmlVersion;
     BigVersion=NetVersion/100;
     SmlVersion=NetVersion%100;
@@ -62,43 +56,67 @@ void NetDownload(CProgressCtrl* process,CStatic* detail){
         SmlVersion/=10;
     }
     int fileSize;
-    CHttpFile* pfile=(CHttpFile*)session.OpenURL(MyString::Format(
-        "http://39.107.64.93/?Version=%d.%d&VersionSize",BigVersion,SmlVersion));
-    MyString size;
-    DWORD dwStatusCode;
-    pfile->QueryInfoStatusCode(dwStatusCode);
-    if(dwStatusCode==HTTP_STATUS_OK){
-        CString data;
-        while(fileSize=pfile->ReadString(data)){
-            size+=(char*)data.GetBuffer();
-        }
-        size.Parse("%d",&fileSize);
-    }
-    pfile->Close();
-    delete pfile;
+    DataMap data;
+    data["Version"]=(const char*)MyString::Format("%d.%d",BigVersion,SmlVersion);
+    NetPost(HostIP,"test_finger_size",data,[&](uint8_t* data,int size)->void{
+        MyString((char*)data,size).Parse("%d",&fileSize);
+    });
 
-    pfile=(CHttpFile*)session.OpenURL(MyString::Format(
-        "http://39.107.64.93/?Version=%d.%d",BigVersion,SmlVersion));
-    FILE* fp=fopen(MyString::Format("test_fingerV%d.%d.release.exe",BigVersion,SmlVersion),"wb");
-    pfile->QueryInfoStatusCode(dwStatusCode);
-    int now=0;
-    if(dwStatusCode==HTTP_STATUS_OK){
-        uint8_t data[1024];
-        int cnt=0;
-        while((cnt=pfile->Read(data,1024))>0){
-            fwrite(data,1,cnt,fp);
-            now+=cnt;
-            process->SetPos(100*now/fileSize);
-            MyString nowStr=description(now);
-            MyString fileSizeStr=description(fileSize);
-            setText(detail,MyString::Format("%s/%s",(const char*)nowStr,(const char*)fileSizeStr));
+    NetPost(HostIP,"test_finger_get",data,[&](uint8_t* data,int size)->void{
+        func(data,size,fileSize);
+    });
+}
+
+std::string UnicodeToANSI(const std::wstring & wstr){
+    std::string ret;
+    std::mbstate_t state={};
+    const wchar_t *src=wstr.data();
+    size_t len=std::wcsrtombs(nullptr,&src,0,&state);
+    if(static_cast<size_t>(-1)!=len){
+        std::unique_ptr< char[] > buff(new char[len+1]);
+        len=std::wcsrtombs(buff.get(),&src,len,&state);
+        if(static_cast<size_t>(-1)!=len){
+            ret.assign(buff.get(),len);
         }
     }
-    MessageBoxA(0,"下载完毕!","OK",MB_OK);
-    pfile->Close();
-    delete pfile;
-    session.Close();
-    fclose(fp);
+    return ret;
+}
+
+MyString NetVersionInfo(int NetVersion){
+    NetVersion=252;
+    int BigVersion,SmlVersion;
+    BigVersion=NetVersion/100;
+    SmlVersion=NetVersion%100;
+    if(SmlVersion%10==0){
+        SmlVersion/=10;
+    }
+    DataMap data;
+    data["Version"]=(const char*)MyString::Format("%d.%d",BigVersion,SmlVersion);
+
+    MyString ret;
+    NetPost(HostIP,"test_finger_info",data,[&](uint8_t* data,int size){
+        ret+=MyString((char*)data,size);
+    });
+    const char* p=ret;//遍历字符串用
+    char tmp_str[7]={};//解码unicode时用到
+    WCHAR* tmp=new WCHAR[ret.length()+1];
+    int tmp_i;
+    for(tmp_i=0;*p;tmp_i++){
+        if(p[0]=='\\'&&p[1]=='u'){
+            memcpy(tmp_str,p,6);
+            sscanf(tmp_str,"\\u%x",tmp+tmp_i);
+            p+=6;
+        } else if(p[0]=='\\'&&p[1]=='n'){
+            tmp[tmp_i]='\n';
+            p+=2;
+        } else{
+            tmp[tmp_i]=p[0];
+            p++;
+        }
+    }
+    //--和+1为了去掉一定存在的双引号
+    tmp[--tmp_i]=0;
+    return MyString(tmp+1);
 }
 
 bool isConnectedNet(){

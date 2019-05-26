@@ -121,7 +121,7 @@ void MyLog::user(const char * format,...){
     print(LOGU,tmp);
 }
 
-int Version=251;
+int Version=252;
 void MyLog::DevelopLog(){
     print(MyLog::LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
     print(MyLog::LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
@@ -140,6 +140,7 @@ void MyLog::DevelopLog(){
     print(MyLog::LOGU,"V2.4 <2019年5月20日01:19:35>:增加了Syno的协议,有注册/比对功能");
     print(MyLog::LOGU,"V2.5 <2019年5月20日22:37:36>:增加了Syno的删除/(连续)取图功能,增加更新功能");
     print(MyLog::LOGU,"V2.51<2019年5月24日12:49:24>:修复GD32协议读寄存器bug,记忆波特率和协议");
+    print(MyLog::LOGU,"V2.52<2019年5月26日21:36:00>:增加GD32协议下的DeviceInfo命令,多一个设备信息的按钮,增强更新功能");
 }
 
 void MyLog::ClearLog(){
