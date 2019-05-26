@@ -3,7 +3,7 @@
 HANDLE dataQueueMutex=CreateMutex(0,0,0);
 HANDLE lastCmdCodeMutex=CreateMutex(0,0,0);
 std::queue<DataPacket> dataQueue;
-BYTE buffer[1<<18];
+uint8_t buffer[1<<18];
 Comm comm;
 
 Comm::Comm(){

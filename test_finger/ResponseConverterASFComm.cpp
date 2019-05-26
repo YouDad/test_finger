@@ -11,7 +11,7 @@ bool ResponseConverterASFComm::checkProtocol(DataPacket dataPacket){
 
 DataPacket ResponseConverterASFComm::convert(DataPacket& data){
     Response* response=(Response*)data.getPointer();
-    BYTE* arr=new BYTE[data.readSize()];
+    uint8_t* arr=new uint8_t[data.readSize()];
     const int header=sizeof(Response)-sizeof(response->data);
     int len=0;
     while(checkProtocol(data)){

@@ -70,7 +70,7 @@ __ILC(ASFComm,AdjustingImage){
     response.readData(2);
     conf["id"]=MyString((char*)response.getPointer(),response.size()-imgSize*imgSize);
     response.readData(response.size()-imgSize*imgSize);
-    BYTE img64[64*64],img32[32*32];
+    uint8_t img64[64*64],img32[32*32];
     if(imgSize==16){
         imgSizeX2(response.getPointer(),imgSize,imgSize,img32);
         imgSize=imgSize+imgSize;
@@ -81,7 +81,7 @@ __ILC(ASFComm,AdjustingImage){
         memcpy(img64,response.getPointer(),imgSize*imgSize);
     }
     saveBmp(64,64,img64,"collectedTempImage",conf["AdvDbg_ImgId"]);
-    BYTE Histogram[256*64];
+    uint8_t Histogram[256*64];
     generateHistogram(Histogram,256,64,response.getPointer(),32,32);
     saveBmp(256,64,Histogram,"collectedTempImage",MyString("Histogram")+conf["AdvDbg_ImgId"]);
     sendMessage(WM_APPEND_CONTROLS);

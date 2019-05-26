@@ -2,7 +2,7 @@
 #include"DataPacket.h"
 
 DataPacket::DataPacket(const void * d,int l){
-    data=new BYTE[l+1];
+    data=new uint8_t[l+1];
     memset(data,0,l+1);
     len=l;
     read=0;
@@ -35,7 +35,7 @@ int DataPacket::readSize(){
     return len-read;
 }
 
-BYTE * DataPacket::getPointer(){
+uint8_t * DataPacket::getPointer(){
     return data+read;
 }
 

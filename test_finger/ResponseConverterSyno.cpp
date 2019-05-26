@@ -12,7 +12,7 @@ bool ResponseConverterSyno::checkProtocol(DataPacket dataPacket){
 DataPacket ResponseConverterSyno::convert(DataPacket& data){
     Response response;
     memcpy(&response,data.getPointer(),sizeof(response));
-    BYTE* arr=new BYTE[data.readSize()];
+    uint8_t* arr=new uint8_t[data.readSize()];
     const int header=sizeof(Response)-sizeof(response.data)-sizeof(response.sum);
     int len=0;
     while(checkProtocol(data)){

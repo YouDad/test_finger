@@ -5,14 +5,14 @@ bool ResponseConverterGD32F30::checkProtocol(DataPacket dataPacket){
     if(!dataPacket.haveData()){
         return false;
     }
-    BYTE*p=dataPacket.getPointer();
+    uint8_t*p=dataPacket.getPointer();
     return p[0]==0xEF&&p[1]==0x02;
 }
 
 DataPacket ResponseConverterGD32F30::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
     int tmpLength=0;
-    BYTE* tmpArray=new BYTE[data.readSize()];
+    uint8_t* tmpArray=new uint8_t[data.readSize()];
     Response* pData=(Response*)data.getPointer();
     while(checkProtocol(data)){
         memcpy(tmpArray+tmpLength,pData->Sendbuf,pData->Length);

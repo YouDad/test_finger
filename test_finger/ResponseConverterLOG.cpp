@@ -5,14 +5,14 @@ bool ResponseConverterLOG::checkProtocol(DataPacket dataPacket){
     if(!dataPacket.haveData()){
         return false;
     }
-    BYTE* p=dataPacket.getPointer();
+    uint8_t* p=dataPacket.getPointer();
     return p[0]=='L'&&p[1]=='O'&&p[2]=='G';
 }
 
 DataPacket ResponseConverterLOG::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
     int totalLength=0;
-    BYTE* tmpArray=new BYTE[data.readSize()];
+    uint8_t* tmpArray=new uint8_t[data.readSize()];
     auto pData=(Response*)data.getPointer();
     while(checkProtocol(data)){
         memcpy(tmpArray+totalLength,pData->Data,pData->Len);

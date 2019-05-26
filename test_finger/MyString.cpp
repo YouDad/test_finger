@@ -28,7 +28,7 @@ MyString::MyString(char* pc){
 }
 
 MyString::MyString(char * pc,int len){
-    BYTE b=pc[len];
+    uint8_t b=pc[len];
     pc[len]=0;
     str=pc;
     updateWstr();

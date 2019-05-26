@@ -252,15 +252,15 @@ void loadImage(CStatic* image,MyString filePath){
     }
 }
 
-void reverse(BYTE* p,int len){
+void reverse(uint8_t* p,int len){
     for(int i=0;i<len-1-i;i++){
-        BYTE t=p[len-1-i];
+        uint8_t t=p[len-1-i];
         p[len-1-i]=p[i];
         p[i]=t;
     }
 }
 
-bool saveBmp(int w,int h,BYTE* pData,MyString dirname,MyString filename){
+bool saveBmp(int w,int h,uint8_t* pData,MyString dirname,MyString filename){
     BITMAPINFOHEADER bmpInfo;
     bmpInfo.biSize=sizeof bmpInfo;
     bmpInfo.biWidth=w;
@@ -313,8 +313,8 @@ void saveImage(MyString dir,DataPacket dataPacket){
             MyLog::user("接收到160x160的图像");
             w=h=160;
             //把图像从4bit转化为8bit
-            BYTE* pData=dataPacket.getPointer();
-            BYTE* x2=new BYTE[160*160+5];
+            uint8_t* pData=dataPacket.getPointer();
+            uint8_t* x2=new uint8_t[160*160+5];
             for(int i=0;i<160;i++){
                 for(int j=0;j<80;j++){
                     x2[i*160+j*2]=pData[i*80+j]&0xF0;
@@ -344,7 +344,7 @@ void saveImage(MyString dir,DataPacket dataPacket){
             MyLog::user("接收到160x160的图像");
             w=h=160;
 
-            BYTE* pData=dataPacket.getPointer();
+            uint8_t* pData=dataPacket.getPointer();
             //消除用于静电检测的竖线
             for(int i=0;i<h;i++){
                 for(int j=0;j<w;j++){
@@ -376,7 +376,7 @@ void saveImage(MyString dir,DataPacket dataPacket){
     dataPacket.readData(dataPacket.size());
 }
 
-void generateHistogram(BYTE* Histogram,int hw,int hh,BYTE* pData,int w,int h){
+void generateHistogram(uint8_t* Histogram,int hw,int hh,uint8_t* pData,int w,int h){
     auto func=[&](int position,int height)->void{
         for(int i=0;i<hh;i++){
             if(i==height){
@@ -411,7 +411,7 @@ void generateHistogram(BYTE* Histogram,int hw,int hh,BYTE* pData,int w,int h){
     delete[] count;
 }
 
-void imgSizeX2(BYTE * src,int w,int h,BYTE * dest){
+void imgSizeX2(uint8_t * src,int w,int h,uint8_t * dest){
     int dw=w+w,dh=h+h;
     for(int i=0;i<dh;i++){
         for(int j=0;j<dw;j++){
