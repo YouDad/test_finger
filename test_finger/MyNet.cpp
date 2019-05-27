@@ -83,7 +83,6 @@ std::string UnicodeToANSI(const std::wstring & wstr){
 }
 
 MyString NetVersionInfo(int NetVersion){
-    NetVersion=252;
     int BigVersion,SmlVersion;
     BigVersion=NetVersion/100;
     SmlVersion=NetVersion%100;
