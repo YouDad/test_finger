@@ -10,3 +10,4 @@ backup.txt
 *.rar
 /test_finger/collectedTempImage
 /test_finger/config
+/test_finger/backup_log.txt

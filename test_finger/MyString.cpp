@@ -98,6 +98,14 @@ bool MyString::operator==(const char * other){
     return *this==MyString(other);
 }
 
+bool MyString::operator!=(MyString other){
+    return !operator==(other);
+}
+
+bool MyString::operator!=(const char * other){
+    return !operator==(other);
+}
+
 MyString MyString::operator+(MyString other){
     MyString ret(*this);
     ret.str+=other.str;

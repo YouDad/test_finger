@@ -24,6 +24,8 @@ public:
     operator CString();
     bool operator==(MyString other);
     bool operator==(const char* other);
+    bool operator!=(MyString other);
+    bool operator!=(const char* other);
     MyString operator+(MyString other);
     MyString& operator=(MyString other);
     MyString& operator+=(MyString other);

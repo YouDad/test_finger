@@ -11,6 +11,7 @@ void initMyControl(MainDialog* Dlg);
 void sendMessage(int Message);
 
 extern CEdit* editLog;
+extern CEdit* editNow;
 extern CEdit* editAddress;
 extern CEdit* editPassword;
 extern CEdit* editReadRegAddr;

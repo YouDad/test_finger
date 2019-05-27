@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 CEdit* editLog;
+CEdit* editNow;
 CEdit* editAddress;
 CEdit* editPassword;
 CEdit* editReadRegAddr;
@@ -59,6 +60,7 @@ int getHex(CWnd * pWnd){
 
 void initMyControl(MainDialog* Dlg){
     editLog=(CEdit*)Dlg->GetDlgItem(IDC_EDITLog);
+    editNow=(CEdit*)Dlg->GetDlgItem(IDC_EDITNow);
     editAddress=(CEdit*)Dlg->GetDlgItem(IDC_EDITAddress);
     editPassword=(CEdit*)Dlg->GetDlgItem(IDC_EDITPassword);
     editReadRegAddr=(CEdit*)Dlg->GetDlgItem(IDC_EDITreadRegAddr);
@@ -89,6 +91,7 @@ void initMyControl(MainDialog* Dlg){
     progress=(CProgressCtrl*)Dlg->GetDlgItem(IDC_PROGRESS);
 
     editLog->SetLimitText(-1);
+    setText(editNow,MyString::Format("自动更新是否开启:%s\r\n",conf["AutoCheck"].c_str()));
     hwnd=Dlg->m_hWnd;
 
     if(conf["AdvDbg"]=="true"){

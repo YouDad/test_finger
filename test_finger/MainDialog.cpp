@@ -714,6 +714,7 @@ void MainDialog::OnBnClickedBtndeviceinfo(){
     Flow.push_back(FlowFunction(1)(int& result){
         progress->SetPos(100*++FlowID/Flow.size());
         CtrlValidity::Work();
+        MyLog::user("获取设备信息结束");
         FlowID=0;
         Flow.clear();
         return false;
@@ -803,5 +804,5 @@ void MainDialog::OnCbnSelchangeCmbbaud(){
 
 
 void MainDialog::OnCbnSelchangeCmbprotocoltype(){
-    conf["ProtocolType"]=MyString::Format("%d",cmbBaud->GetCurSel());
+    conf["ProtocolType"]=MyString::Format("%d",cmbProtocolType->GetCurSel());
 }

@@ -272,11 +272,11 @@ enum CmdCodeGD32F30{
     CMD_READ_CHAR_DIRECT=0x0343,
     CMD_GET_FIRSTVALID_ADD=0x0344,
     CMD_CHIP_ERASE=0x0380,
-    CMD_FINGER_DETECT=0X0400,
-    CMD_Sleep_MODE=0X0401,
-    CMD_SleepToIdle=0x0402,
-    CMD_AdjustImage=0x0403,
-    __SCC(GD32F30,DeviceInfo)=0x0404,
+    //CMD_FINGER_DETECT=0X0400,
+    //CMD_Sleep_MODE=0X0401,
+    //CMD_SleepToIdle=0x0402,
+    //CMD_AdjustImage=0x0403,
+    __SCC(GD32F30,DeviceInfo)=0x0381,
 };
 
 enum CmdCodeACH512{

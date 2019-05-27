@@ -1,7 +1,7 @@
 #pragma once
 #include"stdafx.h"
 
-const char* MyLog::LOG_FILE="backup.txt";
+const char* MyLog::LOG_FILE="backup_log.txt";
 
 bool MyLog::isExistLog(){
     FILE* fp=fopen(LOG_FILE,"r");
@@ -28,31 +28,36 @@ void MyLog::appendLog(const char* text){
 }
 
 void MyLog::print(LogLevel level,MyString info){
-    static MyString last="",lastEdit="",lastContent="";
+    //日志等级异常
     if(level>=LOG_HIGHEST){
         ASF_WARNING(1);
         level=LOGD;
     }
-
-    time_t curtime;
-    time(&curtime);
-    MyString time(ctime(&curtime));
-    MyString content=MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
-    int len=editLog->GetWindowTextLength();
-    if(!(lastContent==content)){
-        if(last==info){
-            setText(editLog,lastEdit+content);
-            editLog->SetSel(len,len);
-            appendLog(content);
-        } else{
-            lastEdit=getText(editLog);
-            editLog->SetSel(len,len);
-            editLog->ReplaceSel(content);
-            appendLog(content);
-        }
+    //增加等级提示
+    const char* pLevel;
+    switch(level){
+        case LOGU:pLevel=" U ";break;
+        case LOGE:pLevel=" E ";break;
+        case LOGW:pLevel=" W ";break;
+        case LOGD:pLevel=" D ";break;
+        case LOGT:pLevel=" T ";break;
+        default:pLevel=" Unknown ";break;
     }
-    lastContent=content;
-    last=info;
+    //构造包装过后的信息
+    MyString content=MyString::Time("%Y-%m-%d %H:%M:%S")+pLevel+info+"\r\n";
+    //更新逻辑
+    static MyString last_info="";
+    if(info!=last_info){
+        int len=editLog->GetWindowTextLength();
+        MyString old_content=getText(editNow);
+        editLog->SetSel(len,len,0);
+        editLog->ReplaceSel(old_content);
+        appendLog(old_content);
+    }
+    if(getText(editNow)!=content){
+        setText(editNow,content);
+    }
+    last_info=info;
 }
 
 void MyLog::print(LogLevel level,const char* format,...){
@@ -121,7 +126,7 @@ void MyLog::user(const char * format,...){
     print(LOGU,tmp);
 }
 
-int Version=252;
+int Version=260;
 void MyLog::DevelopLog(){
     //print(MyLog::LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
     print(MyLog::LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
@@ -141,6 +146,7 @@ void MyLog::DevelopLog(){
     print(MyLog::LOGU,"V2.5 <2019年5月20日22:37:36>:增加了Syno的删除/(连续)取图功能,增加更新功能");
     print(MyLog::LOGU,"V2.51<2019年5月24日12:49:24>:修复GD32协议读寄存器bug,记忆波特率和协议");
     print(MyLog::LOGU,"V2.52<2019年5月26日21:36:00>:增加GD32协议下的DeviceInfo命令,多一个设备信息的按钮,增强更新功能");
+    print(MyLog::LOGU,"V2.6 <2019年5月27日22:49:28>:优化日志框性能,适配设备信息命令");
 }
 
 void MyLog::ClearLog(){

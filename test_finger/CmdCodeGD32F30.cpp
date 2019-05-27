@@ -51,11 +51,31 @@ void GET_RAW_IMAGE_Listener::listen(DataPacket response){
 }
 
 __ILC(GD32F30,DeviceInfo){
-    MyLog::debug("DeviceInfo监听器收到数据包:");
-    MyString str;
+    /*
+    [02] 44 30 30 2E 30 30 2E 30 31 00 [4D 61 79 20 32 37 20 32 30 31 39] 00 31 38 3A 33 30 3A 34 34 00
+    PC Application log dialog display:
+      Finger Chip Version: 03           (if 0xFF then directly display "Unknown Type")
+      Firmware Version: D00.00.01       (un-available for parter/customer)
+      Build Time: May 27 2019 15:48:56  (un-available for parter/customer)
+    */
+    char ChipVersion;
+    char* FirmwareVersion;
+    char* BuildDate;
+    char* BuildTime;
     uint8_t* ptr=response.getPointer();
-    for(int i=0;i<response.size();i++){
-        str+=MyString::Format("%02X ",ptr[i]);
+    ChipVersion=*ptr;
+    FirmwareVersion=(char*)++ptr;
+    while(*ptr)ptr++;
+    BuildDate=(char*)++ptr;
+    while(*ptr)ptr++;
+    BuildTime=(char*)++ptr;
+    if(ChipVersion==0xFF){
+        MyLog::user("Finger Chip Version: Unknown Type");
+    } else{
+        MyLog::user("Finger Chip Version: %x",ChipVersion);
     }
-    MyLog::debug(str);
+    MyLog::user("Firmware Version: %s",FirmwareVersion);
+    MyLog::user("Build Time: %s %s",BuildDate,BuildTime);
+    
+    ExecFlowVal();
 }
