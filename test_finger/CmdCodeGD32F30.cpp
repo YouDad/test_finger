@@ -69,7 +69,7 @@ __ILC(GD32F30,DeviceInfo){
     BuildDate=(char*)++ptr;
     while(*ptr)ptr++;
     BuildTime=(char*)++ptr;
-    if(ChipVersion==0xFF){
+    if(ChipVersion==-1){
         MyLog::user("Finger Chip Version: Unknown Type");
     } else{
         MyLog::user("Finger Chip Version: %x",ChipVersion);

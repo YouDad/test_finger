@@ -137,16 +137,17 @@ void MyLog::DevelopLog(){
     //print(MyLog::LOGU,"V1.5 <2019年4月10日17:15:45>:完成连续取背景功能");
     //print(MyLog::LOGU,"V1.6 <2019年4月22日22:42:59>:适配了航芯的取原始图像功能,修复了时间和编辑框鬼畜bug");
     print(MyLog::LOGU,"V2.0 <2019年4月28日17:17:46>:升级了串口架构,支持主动和被动模式并存");
-    print(MyLog::LOGU,"V2.01<2019年4月29日12:15:13>:消除用于静电检测的竖线,修复了一些已知bug");
+    //print(MyLog::LOGU,"V2.01<2019年4月29日12:15:13>:消除用于静电检测的竖线,修复了一些已知bug");
     print(MyLog::LOGU,"V2.1 <2019年4月29日16:55:54>:更新了包的确认方案,采用DataPacket来识别协议");
     print(MyLog::LOGU,"V2.2 <2019年4月30日14:44:30>:增加了高级调试功能");
     print(MyLog::LOGU,"V2.3 <2019年5月01日20:56:32>:上线新的协议ASFComm");
-    print(MyLog::LOGU,"V2.31<2019年5月01日23:12:42>:调整了AdjustingImage函数接口");
+    //print(MyLog::LOGU,"V2.31<2019年5月01日23:12:42>:调整了AdjustingImage函数接口");
     print(MyLog::LOGU,"V2.4 <2019年5月20日01:19:35>:增加了Syno的协议,有注册/比对功能");
     print(MyLog::LOGU,"V2.5 <2019年5月20日22:37:36>:增加了Syno的删除/(连续)取图功能,增加更新功能");
-    print(MyLog::LOGU,"V2.51<2019年5月24日12:49:24>:修复GD32协议读寄存器bug,记忆波特率和协议");
-    print(MyLog::LOGU,"V2.52<2019年5月26日21:36:00>:增加GD32协议下的DeviceInfo命令,多一个设备信息的按钮,增强更新功能");
+    //print(MyLog::LOGU,"V2.51<2019年5月24日12:49:24>:修复GD32协议读寄存器bug,记忆波特率和协议");
+    //print(MyLog::LOGU,"V2.52<2019年5月26日21:36:00>:增加GD32协议下的DeviceInfo命令,多一个设备信息的按钮,增强更新功能");
     print(MyLog::LOGU,"V2.6 <2019年5月27日22:49:28>:优化日志框性能,适配设备信息命令");
+    print(MyLog::LOGU,"V2.61<2019年5月29日16:29:31>:修复设备信息命令ChipVersion bug");
 }
 
 void MyLog::ClearLog(){
