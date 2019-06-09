@@ -1,10 +1,10 @@
 #pragma once
 #include <Windows.h>
 
-class locker{
+class MyLocker{
 public:
     //共享资源计数
-    locker(int now=1,int sum=1);
+    MyLocker(int now=1,int sum=1);
     //P原语
     void lock();
     //V原语

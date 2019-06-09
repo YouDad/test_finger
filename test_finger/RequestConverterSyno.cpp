@@ -56,17 +56,8 @@ std::vector<DataPacket> RequestConverterSyno::convert(int cmdCode,uint8_t* data,
     std::vector<DataPacket> ret;
     try{
         cmdCode=ToSyno(cmdCode);
-        while(1){
-            WaitForSingleObject(lastCmdCodeMutex,INFINITE);
-            if(lastCmdCode.size()==0){
-                lastCmdCode.push(cmdCode);
-                ReleaseMutex(lastCmdCodeMutex);
-                break;
-            } else{
-                ReleaseMutex(lastCmdCodeMutex);
-                continue;
-            }
-        }
+        lastCmdCode.push(cmdCode);
+        vaildLastCmdCode.unlock();
     } catch(...){
         return ret;
     }

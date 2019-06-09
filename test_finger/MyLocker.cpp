@@ -1,20 +1,20 @@
 #include "stdafx.h"
 
-locker::locker(int now,int sum){
+MyLocker::MyLocker(int now,int sum){
     mutex=CreateSemaphore(0,now,sum,0);
     this->now=now;
 }
 
-void locker::lock(){
+void MyLocker::lock(){
     WaitForSingleObject(mutex,-1);
     now--;
 }
 
-void locker::unlock(){
+void MyLocker::unlock(){
     ReleaseSemaphore(mutex,1,0);
     now++;
 }
 
-bool locker::islock(){
+bool MyLocker::islock(){
     return now==0;
 }

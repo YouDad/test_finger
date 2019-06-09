@@ -173,17 +173,17 @@ void MainDialog::OnBnClickedBtnsavelog(){
     }
 }
 
-HANDLE timeoutThread_continueImage_Mutex=CreateMutex(0,0,0);
+MyLocker timeoutThread_continueImage_Mutex;
 bool timeoutThread_continueImage;
 
 MyThread ImageTimeout([&](){
     Sleep(10*1000);
-    WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+    timeoutThread_continueImage_Mutex.lock();
     if(!timeoutThread_continueImage){
         MyLog::user("²ÉÍ¼³¬Ê±");
         CtrlValidity::Work();
     }
-    ReleaseMutex(timeoutThread_continueImage_Mutex);
+    timeoutThread_continueImage_Mutex.unlock();
 });
 
 
@@ -240,9 +240,9 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     case WM_GET_CON_IMAGE:
     {
         continueImage=true;
-        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage_Mutex.lock();
         timeoutThread_continueImage=true;
-        ReleaseMutex(timeoutThread_continueImage_Mutex);
+        timeoutThread_continueImage_Mutex.unlock();
     }
     case WM_GET_RAW_IMAGE:
     {
@@ -259,9 +259,9 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     case WM_STP_GET_IMAGE:
     {
         continueImage=false;
-        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage_Mutex.lock();
         timeoutThread_continueImage=false;
-        ReleaseMutex(timeoutThread_continueImage_Mutex);
+        timeoutThread_continueImage_Mutex.unlock();
         CtrlValidity::Work();
         ImageTimeout.terminate();
         progress->SetPos(0);
@@ -279,9 +279,9 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     case WM_GET_CON_BKI:
     {
         continueImage=true;
-        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage_Mutex.lock();
         timeoutThread_continueImage=true;
-        ReleaseMutex(timeoutThread_continueImage_Mutex);
+        timeoutThread_continueImage_Mutex.unlock();
     }
     case WM_GET_TEST_IMAGE:
     {
@@ -297,9 +297,9 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     case WM_STP_GET_BKI:
     {
         continueImage=false;
-        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage_Mutex.lock();
         timeoutThread_continueImage=false;
-        ReleaseMutex(timeoutThread_continueImage_Mutex);
+        timeoutThread_continueImage_Mutex.unlock();
         CtrlValidity::Work();
         ImageTimeout.terminate();
         progress->SetPos(0);

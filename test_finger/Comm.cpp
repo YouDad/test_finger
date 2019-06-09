@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
-HANDLE dataQueueMutex=CreateMutex(0,0,0);
-HANDLE lastCmdCodeMutex=CreateMutex(0,0,0);
+MyLocker dataQueueMutex;
+//指示lastCmdCode的CmdCode的数量
+MyLocker vaildLastCmdCode(0,10);
 std::queue<DataPacket> dataQueue;
 uint8_t buffer[1<<18];
 Comm comm;
@@ -21,12 +22,11 @@ int Comm::getConnectId(){
 DWORD WINAPI ResponseThread(LPVOID params){
     DataPacket dataPacket;
     while(1){
-        WaitForSingleObject(dataQueueMutex,INFINITE);
+        dataQueueMutex.lock();
         if(dataQueue.size()){
             dataPacket=dataQueue.front();
             dataQueue.pop();
         }
-        ReleaseMutex(dataQueueMutex);
         while(dataPacket.isValid()){
             int cmdCode=converterBoardcast.ResponseGetCmdCode(dataPacket);
             //没有协议可以转化剩下的数据了,数据废了
@@ -146,9 +146,8 @@ DWORD WINAPI ListenSerialThread(LPVOID params){
         LONG result;
         result=serial->Read(buffer,1<<18,&cnt);
         if(result==ERROR_SUCCESS){
-            WaitForSingleObject(dataQueueMutex,INFINITE);
             dataQueue.push(DataPacket(buffer,cnt));
-            ReleaseMutex(dataQueueMutex);
+            dataQueueMutex.unlock();
         }
     }
     return 0;
@@ -158,9 +157,8 @@ DWORD WINAPI ListenUSBThread(LPVOID params){
     while(-1!=*(int*)params){
         ULONG cnt;
         if(USB_Receive(buffer,1<<18,cnt)){
-            WaitForSingleObject(dataQueueMutex,INFINITE);
             dataQueue.push(DataPacket(buffer,cnt));
-            ReleaseMutex(dataQueueMutex);
+            dataQueueMutex.unlock();
         }
     }
     return 0;

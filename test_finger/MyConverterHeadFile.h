@@ -1,7 +1,7 @@
 #pragma once
 #include"stdafx.h"
 
-extern HANDLE lastCmdCodeMutex;
+extern MyLocker vaildLastCmdCode;
 extern std::queue<int> lastCmdCode;
 
 #pragma pack(1)
