@@ -43,6 +43,9 @@ MyConfig::MyConfig(){
 
 MyConfig::~MyConfig(){
     FILE* fp=fopen(FILENAME,"w");
+    if(!fp){
+        return;
+    }
     for(auto it=m.begin();it!=m.end();it++){
         for(auto jt=it->first.c_str();*jt;jt++){
             fputc(-*jt,fp);
