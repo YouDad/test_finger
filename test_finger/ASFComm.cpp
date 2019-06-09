@@ -44,7 +44,7 @@ __ILC(ASFComm,ReadRegister){
         MyLog::user("接收数据成功");
     }
     sendMainDialogMessage(WM_READ_REGISTER);
-    CtrlValidity::Work();
+    MainDialogCtrlValidity::Work();
 }
 
 __ILC(ASFComm,WriteRegister){

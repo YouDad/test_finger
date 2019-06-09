@@ -91,7 +91,7 @@
 #include "SettingDialog.h"
 
 #include "MainControl.h"
-#include "CtrlValidity.h"
+#include "MainDialogCtrlValidity.h"
 
 #include "DataPacket.h"
 #include "ConverterBoardcast.h"

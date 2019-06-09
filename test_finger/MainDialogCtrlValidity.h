@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-class CtrlValidity{
+class MainDialogCtrlValidity{
 public:
     typedef std::vector<CWnd*> vec;
     static void InitCtrl();

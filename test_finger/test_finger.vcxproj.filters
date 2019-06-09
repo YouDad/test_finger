@@ -27,6 +27,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="UI\MainDialog">
+      <UniqueIdentifier>{8c7b28ab-d513-45a5-b0eb-8e9110915980}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -68,9 +71,6 @@
     <ClInclude Include="App.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="MainDialog.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="AdvancedDebugDialog.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -101,17 +101,20 @@
     <ClInclude Include="MyDefine.h">
       <Filter>My</Filter>
     </ClInclude>
-    <ClInclude Include="MainControl.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="MyControl.h">
       <Filter>My</Filter>
     </ClInclude>
-    <ClInclude Include="CtrlValidity.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="MyImage.h">
       <Filter>My</Filter>
+    </ClInclude>
+    <ClInclude Include="MainControl.h">
+      <Filter>UI\MainDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDialog.h">
+      <Filter>UI\MainDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDialogCtrlValidity.h">
+      <Filter>UI\MainDialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +152,6 @@
       <Filter>Comm</Filter>
     </ClCompile>
     <ClCompile Include="App.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="MainDialog.cpp">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="AdvancedDebugDialog.cpp">
@@ -214,20 +214,41 @@
     <ClCompile Include="MyLocker.cpp">
       <Filter>My</Filter>
     </ClCompile>
-    <ClCompile Include="MainControl.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="MyControl.cpp">
       <Filter>My</Filter>
-    </ClCompile>
-    <ClCompile Include="CtrlValidity.cpp">
-      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="MyImage.cpp">
       <Filter>My</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="MainControl.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialogCtrlValidity.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog_Communication.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog_ImageManager.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog_Protocol.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog_EnrollMatch.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog_RWRegister.cpp">
+      <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDialog_Other.cpp">
+      <Filter>UI\MainDialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

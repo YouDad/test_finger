@@ -101,6 +101,30 @@ void initMainControl(MainDialog* Dlg){
     //进度条设置
     progress->SetRange(0,100);
     progress->SetPos(0);
+
+    //设置标题
+    int BigVersion=Version/100;
+    int SmlVersion=Version%100;
+    if(SmlVersion%10==0){
+        SmlVersion/=10;
+    }
+    setText(Dlg,getText(Dlg)+MyString::Format(" Ver%d.%d",BigVersion,SmlVersion));
+
+    //各控件访问权限
+    MainDialogCtrlValidity::InitCtrl();
+    MainDialogCtrlValidity::Init();
+
+    //刷新通信方式
+    updateCommunityWay();
+
+    //自动检查更新
+    if(conf["AutoCheck"]=="true"){
+        if(isConnectedNet()){
+            if(NetGetVersion()>Version){
+                MyLog::user("有可更新版本,在设置中更新.");
+            }
+        }
+    }
 }
 
 void sendMainDialogMessage(int Message){
@@ -172,9 +196,9 @@ void autoConnect(){
                         bool ret=comm.connect(needConnectId,getInt(cmbBaud));
                         if(ret){
                             setText(btnConnect,"断开连接");
-                            CtrlValidity::AfterConnect();
+                            MainDialogCtrlValidity::AfterConnect();
                         } else{
-                            CtrlValidity::BeforeConnect();
+                            MainDialogCtrlValidity::BeforeConnect();
                         }
                     }
                 }
@@ -227,7 +251,7 @@ void autoDisconnect(){
         }
         if(needDisconnect){
             comm.disconnect();
-            CtrlValidity::BeforeConnect();
+            MainDialogCtrlValidity::BeforeConnect();
             btnConnect->SetWindowText(_T("连接下位机"));
         }
     }

@@ -15,3 +15,7 @@ typedef unsigned int   uint32_t;
 
 #define _Function_t(ReturnType,...) std::function<ReturnType(__VA_ARGS__)>
 #define _Function(ReturnType,...) [&](__VA_ARGS__)->ReturnType
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif

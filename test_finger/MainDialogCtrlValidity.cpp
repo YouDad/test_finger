@@ -3,13 +3,13 @@
 #define foreach(it,container) for(auto it=container.begin();it!=container.end();it++)
 #define Merge(Dest,Src) Dest.insert(Dest.end(),Src.begin(),Src.end())
 
-typedef CtrlValidity::vec vec;
+typedef MainDialogCtrlValidity::vec vec;
 
 vec InitVec;
 vec WorkedVec;
 vec WorkingVec;
 
-void CtrlValidity::InitCtrl(){
+void MainDialogCtrlValidity::InitCtrl(){
     InitVec=vec{cmbBaud,cmbWay,btnConnect,editAddress,editPassword};
     WorkedVec=vec{editFingerId,cmbProtocolType,btnConnect,btnAdvDbg,
         btnRawImage,btnTestImage,btnContinueImage,btnContinueBGImg,
@@ -17,7 +17,7 @@ void CtrlValidity::InitCtrl(){
     WorkingVec=vec{btnCancel};
 }
 
-void CtrlValidity::Init(vec except){
+void MainDialogCtrlValidity::Init(vec except){
     vec Disable,Enable;
     Merge(Disable,WorkedVec);
     Merge(Disable,WorkingVec);
@@ -26,7 +26,7 @@ void CtrlValidity::Init(vec except){
     update(Disable,Enable);
 }
 
-void CtrlValidity::Connecting(vec except){
+void MainDialogCtrlValidity::Connecting(vec except){
     vec Disable,Enable;
     Merge(Disable,WorkedVec);
     Merge(Disable,WorkingVec);
@@ -35,15 +35,15 @@ void CtrlValidity::Connecting(vec except){
     update(Disable,Enable);
 }
 
-void CtrlValidity::BeforeConnect(vec except){
+void MainDialogCtrlValidity::BeforeConnect(vec except){
     Init(except);
 }
 
-void CtrlValidity::AfterConnect(vec except){
+void MainDialogCtrlValidity::AfterConnect(vec except){
     Work(except);
 }
 
-void CtrlValidity::Work(vec except){
+void MainDialogCtrlValidity::Work(vec except){
     vec Disable,Enable;
     Merge(Disable,InitVec);
     Merge(Disable,WorkingVec);
@@ -52,7 +52,7 @@ void CtrlValidity::Work(vec except){
     update(Disable,Enable);
 }
 
-void CtrlValidity::Working(vec except){
+void MainDialogCtrlValidity::Working(vec except){
     vec Disable,Enable;
     Merge(Disable,InitVec);
     Merge(Disable,WorkedVec);
@@ -61,7 +61,7 @@ void CtrlValidity::Working(vec except){
     update(Disable,Enable);
 }
 
-inline void CtrlValidity::update(vec& Disable,vec& Enable){
+inline void MainDialogCtrlValidity::update(vec& Disable,vec& Enable){
     foreach(it,Disable){
         disable(*it);
     }
@@ -70,10 +70,10 @@ inline void CtrlValidity::update(vec& Disable,vec& Enable){
     }
 }
 
-inline void CtrlValidity::disable(CWnd * pWnd){
+inline void MainDialogCtrlValidity::disable(CWnd * pWnd){
     pWnd->EnableWindow(FALSE);
 }
 
-inline void CtrlValidity::enable(CWnd * pWnd){
+inline void MainDialogCtrlValidity::enable(CWnd * pWnd){
     pWnd->EnableWindow(TRUE);
 }

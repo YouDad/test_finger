@@ -183,7 +183,7 @@
     <ClInclude Include="MyImage.h" />
     <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="Comm.h" />
-    <ClInclude Include="CtrlValidity.h" />
+    <ClInclude Include="MainDialogCtrlValidity.h" />
     <ClInclude Include="DataPacket.h" />
     <ClInclude Include="enumcd.h" />
     <ClInclude Include="ListenerBoardcast.h" />
@@ -210,6 +210,12 @@
     <ClInclude Include="UsbPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MainDialog_Communication.cpp" />
+    <ClCompile Include="MainDialog_ImageManager.cpp" />
+    <ClCompile Include="MainDialog_Other.cpp" />
+    <ClCompile Include="MainDialog_Protocol.cpp" />
+    <ClCompile Include="MainDialog_EnrollMatch.cpp" />
+    <ClCompile Include="MainDialog_RWRegister.cpp" />
     <ClCompile Include="MyImage.cpp" />
     <ClCompile Include="AdvancedDebugDialog.cpp" />
     <ClCompile Include="ASFComm.cpp" />
@@ -221,7 +227,7 @@
     <ClCompile Include="DataPacket.cpp" />
     <ClCompile Include="ListenerBoardcast.cpp" />
     <ClCompile Include="ConverterBoardcast.cpp" />
-    <ClCompile Include="CtrlValidity.cpp" />
+    <ClCompile Include="MainDialogCtrlValidity.cpp" />
     <ClCompile Include="MainControl.cpp" />
     <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyFlow.cpp" />

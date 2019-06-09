@@ -8,7 +8,7 @@ void READ_REGISTER_Listener::listen(DataPacket response){
         MyLog::user("接收数据成功");
     }
     sendMainDialogMessage(WM_READ_REGISTER);
-    CtrlValidity::Work();
+    MainDialogCtrlValidity::Work();
     ExecFlowVal();
 }
 
