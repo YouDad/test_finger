@@ -63,7 +63,7 @@ BOOL MainDialog::OnInitDialog(){
     SetIcon(m_hIcon,FALSE);
 
     ///1.全局控件赋值
-    initMyControl(this);
+    initMainControl(this);
 
     ///2.设置标题
     int BigVersion=Version/100;
@@ -420,15 +420,15 @@ void MainDialog::OnBnClickedBtncontinuebackgroundimage(){
         return;
     }
     //根据按钮上的文字判断当前连接状态
-    if(getText(btnContinueBackGroundImage)=="连续获取背景"){
+    if(getText(btnContinueBGImg)=="连续获取背景"){
         MyLog::user("开始连续获取背景");
-        CtrlValidity::Working(CtrlValidity::vec{btnContinueBackGroundImage});
-        setText(btnContinueBackGroundImage,"停止获取背景");
+        CtrlValidity::Working(CtrlValidity::vec{btnContinueBGImg});
+        setText(btnContinueBGImg,"停止获取背景");
         SendMessage(WM_GET_CON_BKI,WM_GET_CON_BKI,0);
     } else{
         MyLog::user("停止连续获取背景");
         CtrlValidity::Work();
-        setText(btnContinueBackGroundImage,"连续获取背景");
+        setText(btnContinueBGImg,"连续获取背景");
         SendMessage(WM_STP_GET_BKI,WM_STP_GET_BKI,0);
     }
 }

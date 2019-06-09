@@ -9,7 +9,7 @@ void CmdCodeLOG_AdvDbg_AdjImg_Listener::listen(DataPacket response){
     uint8_t Histogram[256*64];
     generateHistogram(Histogram,256,64,response.getPointer(),32,32);
     saveBmp(256,64,Histogram,"collectedTempImage",MyString("Histogram")+conf["AdvDbg_ImgId"]);
-    sendMessage(WM_APPEND_CONTROLS);
+    sendMainDialogMessage(WM_APPEND_CONTROLS);
     response.readData(32*32);
 }
 

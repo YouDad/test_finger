@@ -152,7 +152,7 @@ void updateControlDisable(action a){
             disable(btnRawImage);
             disable(btnTestImage);
             disable(btnContinueImage);
-            disable(btnContinueBackGroundImage);
+            disable(btnContinueBGImg);
             disable(btnReadReg);
             disable(btnWriteReg);
             break;
@@ -170,7 +170,7 @@ void updateControlDisable(action a){
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
-            enable(btnContinueBackGroundImage);
+            enable(btnContinueBGImg);
             enable(btnReadReg);
             enable(btnWriteReg);
 
@@ -191,7 +191,7 @@ void updateControlDisable(action a){
             disable(btnRawImage);
             disable(btnTestImage);
             disable(btnContinueImage);
-            disable(btnContinueBackGroundImage);
+            disable(btnContinueBGImg);
             disable(btnReadReg);
             disable(btnWriteReg);
             break;
@@ -205,7 +205,7 @@ void updateControlDisable(action a){
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
-            enable(btnContinueBackGroundImage);
+            enable(btnContinueBGImg);
             enable(btnReadReg);
             enable(btnWriteReg);
             break;
@@ -213,10 +213,10 @@ void updateControlDisable(action a){
         case actGetConImage:
             if(a==actGetConBKI){
                 disable(btnContinueImage);
-                enable(btnContinueBackGroundImage);
+                enable(btnContinueBGImg);
             } else{
                 enable(btnContinueImage);
-                disable(btnContinueBackGroundImage);
+                disable(btnContinueBGImg);
             }
 
             disable(editAddress);
@@ -237,7 +237,7 @@ void updateControlDisable(action a){
             enable(btnRawImage);
             enable(btnTestImage);
             enable(btnContinueImage);
-            enable(btnContinueBackGroundImage);
+            enable(btnContinueBGImg);
             enable(btnReadReg);
             enable(btnWriteReg);
             break;

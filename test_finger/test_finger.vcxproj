@@ -189,6 +189,7 @@
     <ClInclude Include="ListenerBoardcast.h" />
     <ClInclude Include="ConverterBoardcast.h" />
     <ClInclude Include="MyConfig.h" />
+    <ClInclude Include="MainControl.h" />
     <ClInclude Include="MyControl.h" />
     <ClInclude Include="MyConverterHeadFile.h" />
     <ClInclude Include="MyDefine.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="ListenerBoardcast.cpp" />
     <ClCompile Include="ConverterBoardcast.cpp" />
     <ClCompile Include="ControlAvailability.cpp" />
+    <ClCompile Include="MainControl.cpp" />
     <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyFlow.cpp" />
     <ClCompile Include="MyLocker.cpp" />

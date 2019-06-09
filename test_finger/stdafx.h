@@ -66,6 +66,7 @@
 #include "resource.h"
 
 #include "MyLocker.h"
+#include "MyControl.h"
 #include "MyConfig.h"
 #include "str4err_warn.h"
 #include "MyThread.h"
@@ -83,7 +84,7 @@
 #include "AdvancedDebugDialog.h"
 #include "SettingDialog.h"
 
-#include "MyControl.h"
+#include "MainControl.h"
 #include "ControlAvailability.h"
 
 #include "DataPacket.h"

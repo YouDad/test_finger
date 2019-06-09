@@ -60,9 +60,6 @@
     <ClInclude Include="MyThread.h">
       <Filter>My</Filter>
     </ClInclude>
-    <ClInclude Include="MyControl.h">
-      <Filter>My</Filter>
-    </ClInclude>
     <ClInclude Include="MyConverterHeadFile.h">
       <Filter>Comm</Filter>
     </ClInclude>
@@ -117,6 +114,12 @@
     <ClInclude Include="MyDefine.h">
       <Filter>My</Filter>
     </ClInclude>
+    <ClInclude Include="MainControl.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MyControl.h">
+      <Filter>My</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -144,9 +147,6 @@
       <Filter>My</Filter>
     </ClCompile>
     <ClCompile Include="MyThread.cpp">
-      <Filter>My</Filter>
-    </ClCompile>
-    <ClCompile Include="MyControl.cpp">
       <Filter>My</Filter>
     </ClCompile>
     <ClCompile Include="MyString.cpp">
@@ -228,6 +228,12 @@
       <Filter>Include</Filter>
     </ClCompile>
     <ClCompile Include="MyLocker.cpp">
+      <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="MainControl.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MyControl.cpp">
       <Filter>My</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,7 +12,7 @@ vec WorkingVec;
 void CtrlValidity::InitCtrl(){
     InitVec=vec{cmbBaud,cmbWay,btnConnect,editAddress,editPassword};
     WorkedVec=vec{editFingerId,cmbProtocolType,btnConnect,btnAdvDbg,
-        btnRawImage,btnTestImage,btnContinueImage,btnContinueBackGroundImage,
+        btnRawImage,btnTestImage,btnContinueImage,btnContinueBGImg,
         btnReadReg,btnWriteReg,btnEnroll,btnMatch,btnDeviceInfo,btnViewEnrollIds};
     WorkingVec=vec{btnCancel};
 }

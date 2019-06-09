@@ -22,7 +22,7 @@ __ILC(ASFComm,GetTestImage){
     progress->SetPos(50);
     MyLog::debug("接收到数据包,大小为%d",response.size());
     MyLog::debug("线程向主线程发送消息CMD_GET_TEST_IMAGE");
-    sendMessage(WM_GET_TEST_IMAGE);
+    sendMainDialogMessage(WM_GET_TEST_IMAGE);
     progress->SetPos(75);
     MyLog::debug("消息处理函数收到消息WM_GET_TEST_IMAGE");
 
@@ -43,7 +43,7 @@ __ILC(ASFComm,ReadRegister){
         setText(editReadRegVal,MyString::Format("%X",response.getPointer()[0]));
         MyLog::user("接收数据成功");
     }
-    sendMessage(WM_READ_REGISTER);
+    sendMainDialogMessage(WM_READ_REGISTER);
     CtrlValidity::Work();
 }
 
@@ -84,6 +84,6 @@ __ILC(ASFComm,AdjustingImage){
     uint8_t Histogram[256*64];
     generateHistogram(Histogram,256,64,response.getPointer(),32,32);
     saveBmp(256,64,Histogram,"collectedTempImage",MyString("Histogram")+conf["AdvDbg_ImgId"]);
-    sendMessage(WM_APPEND_CONTROLS);
+    sendMainDialogMessage(WM_APPEND_CONTROLS);
     response.readData(32*32);
 }

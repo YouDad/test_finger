@@ -7,7 +7,7 @@ void READ_REGISTER_Listener::listen(DataPacket response){
         setText(editReadRegVal,MyString::Format("%X",response.getPointer()[0]));
         MyLog::user("接收数据成功");
     }
-    sendMessage(WM_READ_REGISTER);
+    sendMainDialogMessage(WM_READ_REGISTER);
     CtrlValidity::Work();
     ExecFlowVal();
 }
@@ -16,7 +16,7 @@ void GET_TEST_IMAGE_Listener::listen(DataPacket response){
     progress->SetPos(50);
     MyLog::debug("接收到数据包,大小为%d",response.size());
     MyLog::debug("线程向主线程发送消息CMD_GET_TEST_IMAGE");
-    sendMessage(WM_GET_TEST_IMAGE);
+    sendMainDialogMessage(WM_GET_TEST_IMAGE);
     progress->SetPos(75);
     MyLog::debug("消息处理函数收到消息WM_GET_TEST_IMAGE");
 
