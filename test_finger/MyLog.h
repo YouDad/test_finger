@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+#include "MyString.h"
 
 class MyLog{
 public:

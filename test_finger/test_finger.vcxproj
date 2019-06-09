@@ -191,8 +191,10 @@
     <ClInclude Include="MyConfig.h" />
     <ClInclude Include="MyControl.h" />
     <ClInclude Include="MyConverterHeadFile.h" />
+    <ClInclude Include="MyDefine.h" />
     <ClInclude Include="MyFlow.h" />
     <ClInclude Include="MyListenerHeadFile.h" />
+    <ClInclude Include="MyLocker.h" />
     <ClInclude Include="MyNet.h" />
     <ClInclude Include="MyString.h" />
     <ClInclude Include="MyThread.h" />
@@ -222,6 +224,7 @@
     <ClCompile Include="ControlAvailability.cpp" />
     <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyFlow.cpp" />
+    <ClCompile Include="MyLocker.cpp" />
     <ClCompile Include="MyNet.cpp" />
     <ClCompile Include="RequestConverterASFComm.cpp" />
     <ClCompile Include="RequestConverterSuUSB.cpp" />

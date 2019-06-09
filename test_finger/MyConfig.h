@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include <map>
+
 class MyConfig{
 private:
     const char* FILENAME="config";

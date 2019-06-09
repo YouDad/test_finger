@@ -1,5 +1,4 @@
-#pragma once
-#include"stdafx.h"
+#include "stdafx.h"
 
 MyThread::MyThread(ThreadFunction_t pFunction){
     pf=pFunction;

@@ -176,7 +176,7 @@ void MainDialog::OnBnClickedBtnsavelog(){
 HANDLE timeoutThread_continueImage_Mutex=CreateMutex(0,0,0);
 bool timeoutThread_continueImage;
 
-MyThread ImageTimeout(ThreadFunction__(timeoutFunction)(void){
+MyThread ImageTimeout([&](){
     Sleep(10*1000);
     WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
     if(!timeoutThread_continueImage){
@@ -187,7 +187,7 @@ MyThread ImageTimeout(ThreadFunction__(timeoutFunction)(void){
 });
 
 
-MyThread RegisterTimeout(ThreadFunction__(timeoutFunction)(void){
+MyThread RegisterTimeout([&](){
     Sleep(1*1000);
     MyLog::user("¶Á¼Ä´æÆ÷³¬Ê±");
     CtrlValidity::Work();

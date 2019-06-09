@@ -6,8 +6,7 @@
 /test_finger/collectedImage/
 /test_finger/_collectedImage/
 /test_finger/collectedBGI/
-backup.txt
+*.txt
 *.rar
 /test_finger/collectedTempImage
 /test_finger/config
-/test_finger/backup_log.txt

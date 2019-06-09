@@ -60,23 +60,12 @@
 #include <vector>
 #include <queue>
 #include <map>
-//Net
 
-#define WM_GET_RAW_IMAGE	WM_USER+5
-#define WM_GET_CON_IMAGE	WM_USER+6
-#define WM_STP_GET_IMAGE	WM_USER+7
-#define WM_READ_REGISTER	WM_USER+8
-#define WM_APPEND_CONTROLS	WM_USER+9
-#define WM_GET_CON_BKI		WM_USER+10
-#define WM_STP_GET_BKI		WM_USER+11
-#define WM_GET_TEST_IMAGE	WM_USER+12
-
-typedef unsigned char  uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int   uint32_t;
+#include "MyDefine.h"
 
 #include "resource.h"
 
+#include "MyLocker.h"
 #include "MyConfig.h"
 #include "str4err_warn.h"
 #include "MyThread.h"
@@ -103,8 +92,5 @@ typedef unsigned int   uint32_t;
 #include "ListenerBoardcast.h"
 #include "MyListenerHeadFile.h"
 #include "Comm.h"
-#include "CCommunication.h"
 
 #include "algo.h"
-#include <afxcontrolbars.h>
-#include <afxcontrolbars.h>

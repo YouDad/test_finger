@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "MyDefine.h"
 
 //返回true代表可以继续执行下一个流程,false就是执行之后中断
 #define FlowFunction_t _Function_t(bool,int&)

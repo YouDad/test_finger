@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "MyFlow.h"
 
 int FlowID=0;
 std::vector<FlowFunction_t>Flow;

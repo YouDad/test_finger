@@ -124,7 +124,7 @@ void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
     len=Len;
     data=new uint8_t[len];
     memcpy(data,Data,len);
-    Comm_request=new MyThread(ThreadFunction__(request)(void){
+    Comm_request=new MyThread([&](){
         auto converter=converterBoardcast.RequestConvert();
         if(converter){
             auto dataPacket=converter->convert(cmdCode,data,len);

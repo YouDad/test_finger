@@ -1,12 +1,9 @@
 #pragma once
-#include"stdafx.h"
+#include <functional>
+#include <Windows.h>
 
-#define _Function_t(ReturnType,...) std::function<ReturnType(__VA_ARGS__)>
-#define _Function(ReturnType,...) [&](__VA_ARGS__)->ReturnType
-
-#define ThreadFunction_t _Function_t(void,void)
-#define VoidFunction(Param1) _Function(void,Param1)
-#define ThreadFunction__(name) VoidFunction
+#define ThreadFunction_t std::function<void(void)>
+#define ThreadFunction [&]()
 
 class MyThread{
 public:

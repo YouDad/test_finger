@@ -1,5 +1,4 @@
 #pragma once
-#include"stdafx.h"
 #include<string>
 
 //管理日益复杂的字符串转化

@@ -1,5 +1,4 @@
-#pragma once
-#include"stdafx.h"
+#include "stdafx.h"
 
 const char* MyLog::LOG_FILE="backup_log.txt";
 

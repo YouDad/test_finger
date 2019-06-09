@@ -2,8 +2,7 @@
 #define _Function(ReturnType,...) [&](__VA_ARGS__)->ReturnType
 
 #define ThreadFunction_t _Function_t(void,void)
-#define VoidFunction(Param1) _Function(void,Param1)
-#define ThreadFunction__(name) VoidFunction
+#define ThreadFunction [&]()
 
 //___SCN===Structure Class Name,快速拼凑类名的辅助宏
 #define ___SCN(Protocol,Message) \
