@@ -1,8 +1,5 @@
 #pragma once
-#include"stdafx.h"
-
-//将filePath的图像加载到图片控件上
-void loadImage(CStatic* image,MyString filePath);
+#include "MyString.h"
 
 bool saveBmp(int w,int h,uint8_t* pData,MyString dirname,MyString filename);
 

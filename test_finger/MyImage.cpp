@@ -1,14 +1,4 @@
-#include"stdafx.h"
-
-void loadImage(CStatic* image,MyString filePath){
-    HBITMAP hBmp=(HBITMAP)LoadImage(0,filePath,0,0,0,LR_LOADFROMFILE);
-    if(hBmp){
-        image->ModifyStyle(0xf,SS_BITMAP|SS_CENTERIMAGE);
-        image->SetBitmap(hBmp);
-    } else{
-        ASF_WARNING(4);
-    }
-}
+#include "stdafx.h"
 
 void reverse(uint8_t* p,int len){
     for(int i=0;i<len-1-i;i++){
