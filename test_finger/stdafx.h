@@ -86,6 +86,8 @@ typedef unsigned int   uint32_t;
 #include "MyNet.h"
 
 #include "Serial.h"
+#include "enumcd.h"
+#include "UsbPort.h"
 
 #include "App.h"
 #include "MainDialog.h"

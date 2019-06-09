@@ -116,14 +116,14 @@ HCURSOR MainDialog::OnQueryDragIcon(){
 //支持串口热拔插的设备更改监听函数
 BOOL MainDialog::OnDeviceChange(UINT nEventType,DWORD dwData){
     switch(nEventType){
-        case DBT_DEVICEREMOVECOMPLETE://移除设备
-            updateCommunityWay();
-            autoDisconnect();
-            break;
-        case DBT_DEVICEARRIVAL://添加设备
-            updateCommunityWay();
-            autoConnect();
-            break;
+    case DBT_DEVICEREMOVECOMPLETE://移除设备
+        updateCommunityWay();
+        autoDisconnect();
+        break;
+    case DBT_DEVICEARRIVAL://添加设备
+        updateCommunityWay();
+        autoConnect();
+        break;
     }
     return TRUE;
 }
@@ -134,10 +134,14 @@ void MainDialog::OnBnClickedBtnconnect(){
     if(getText(btnConnect)=="连接下位机"){
         CtrlValidity::Connecting();
 
-        int com,baud=getInt(cmbBaud);//读取波特率
-        sscanf(getText(cmbWay),"COM%d",&com);//读取通信方式
-
-        bool ret=comm.connect(com,baud);
+        bool ret;
+        if(getText(cmbWay)=="USB"){
+            ret=comm.connectUSB();
+        } else{
+            int com,baud=getInt(cmbBaud);//读取波特率
+            sscanf(getText(cmbWay),"COM%d",&com);//读取通信方式
+            ret=comm.connect(com,baud);
+        }
         if(ret){
             setText(btnConnect,"断开连接");
             CtrlValidity::AfterConnect();
@@ -233,73 +237,73 @@ void MainDialog::OnBnClickedBtnrawimage(){
 LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     static bool continueImage=false;
     switch(w){
-        case WM_GET_CON_IMAGE:
-        {
-            continueImage=true;
-            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
-            timeoutThread_continueImage=true;
-            ReleaseMutex(timeoutThread_continueImage_Mutex);
-        }
-        case WM_GET_RAW_IMAGE:
-        {
-            ImageTimeout.terminate();
-            if(continueImage){
-                comm.request(SII(GetRawImage));
-                progress->SetPos(30);
-                MyLog::user("请放手指");
-                ImageTimeout.start();
-            } else{
-                CtrlValidity::Work();
-            }
-        }break;
-        case WM_STP_GET_IMAGE:
-        {
-            continueImage=false;
-            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
-            timeoutThread_continueImage=false;
-            ReleaseMutex(timeoutThread_continueImage_Mutex);
+    case WM_GET_CON_IMAGE:
+    {
+        continueImage=true;
+        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage=true;
+        ReleaseMutex(timeoutThread_continueImage_Mutex);
+    }
+    case WM_GET_RAW_IMAGE:
+    {
+        ImageTimeout.terminate();
+        if(continueImage){
+            comm.request(SII(GetRawImage));
+            progress->SetPos(30);
+            MyLog::user("请放手指");
+            ImageTimeout.start();
+        } else{
             CtrlValidity::Work();
-            ImageTimeout.terminate();
-            progress->SetPos(0);
-        }break;
-        case WM_READ_REGISTER:
-        {
-            RegisterTimeout.terminate();
-            progress->SetPos(100);
-        }break;
-        case WM_APPEND_CONTROLS:
-        {
-            advancedDebugDialog->append(MyString::ParseInt(conf["id"]),conf["AdvDbg_ImgId"]);
-            conf["AdvDbg_ImgId"]=MyString::IntToMyString(MyString::ParseInt(conf["AdvDbg_ImgId"])+1);
-        }break;
-        case WM_GET_CON_BKI:
-        {
-            continueImage=true;
-            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
-            timeoutThread_continueImage=true;
-            ReleaseMutex(timeoutThread_continueImage_Mutex);
         }
-        case WM_GET_TEST_IMAGE:
-        {
-            ImageTimeout.terminate();
-            if(continueImage){
-                comm.request(SII(GetTestImage));
-                progress->SetPos(30);
-                ImageTimeout.start();
-            } else{
-                CtrlValidity::Work();
-            }
-        }break;
-        case WM_STP_GET_BKI:
-        {
-            continueImage=false;
-            WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
-            timeoutThread_continueImage=false;
-            ReleaseMutex(timeoutThread_continueImage_Mutex);
+    }break;
+    case WM_STP_GET_IMAGE:
+    {
+        continueImage=false;
+        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage=false;
+        ReleaseMutex(timeoutThread_continueImage_Mutex);
+        CtrlValidity::Work();
+        ImageTimeout.terminate();
+        progress->SetPos(0);
+    }break;
+    case WM_READ_REGISTER:
+    {
+        RegisterTimeout.terminate();
+        progress->SetPos(100);
+    }break;
+    case WM_APPEND_CONTROLS:
+    {
+        advancedDebugDialog->append(MyString::ParseInt(conf["id"]),conf["AdvDbg_ImgId"]);
+        conf["AdvDbg_ImgId"]=MyString::IntToMyString(MyString::ParseInt(conf["AdvDbg_ImgId"])+1);
+    }break;
+    case WM_GET_CON_BKI:
+    {
+        continueImage=true;
+        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage=true;
+        ReleaseMutex(timeoutThread_continueImage_Mutex);
+    }
+    case WM_GET_TEST_IMAGE:
+    {
+        ImageTimeout.terminate();
+        if(continueImage){
+            comm.request(SII(GetTestImage));
+            progress->SetPos(30);
+            ImageTimeout.start();
+        } else{
             CtrlValidity::Work();
-            ImageTimeout.terminate();
-            progress->SetPos(0);
-        }break;
+        }
+    }break;
+    case WM_STP_GET_BKI:
+    {
+        continueImage=false;
+        WaitForSingleObject(timeoutThread_continueImage_Mutex,-1);
+        timeoutThread_continueImage=false;
+        ReleaseMutex(timeoutThread_continueImage_Mutex);
+        CtrlValidity::Work();
+        ImageTimeout.terminate();
+        progress->SetPos(0);
+    }break;
     }
     progress->SetPos(0);
     return 1;

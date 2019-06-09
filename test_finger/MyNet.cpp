@@ -103,7 +103,7 @@ MyString NetVersionInfo(int NetVersion){
     for(tmp_i=0;*p;tmp_i++){
         if(p[0]=='\\'&&p[1]=='u'){
             memcpy(tmp_str,p,6);
-            sscanf(tmp_str,"\\u%x",tmp+tmp_i);
+            sscanf(tmp_str,"\\u%x",(unsigned int*)(tmp+tmp_i));
             p+=6;
         } else if(p[0]=='\\'&&p[1]=='n'){
             tmp[tmp_i]='\n';

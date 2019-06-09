@@ -33,6 +33,8 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(Syno,Match);
     __BCL(Syno,LoadChar);
     __BCL(Syno,DeleteChar);
+
+    __BCL(SuUSB,DeviceInfo);
 }
 
 void ListenerBoardcast::attach(int event,ICommListener* listener){

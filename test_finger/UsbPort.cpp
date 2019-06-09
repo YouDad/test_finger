@@ -124,11 +124,9 @@ int CUsbPort::InitUsbPort(int CommType,char *pDesc){
 
 
 
-bool CUsbPort::USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut){
+bool CUsbPort::USBSCSIRead(BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,ULONG& nReadLen,DWORD nTimeOut){
 
     SCSI_PASS_THROUGH_WITH_BUFFERS sptwb;
-    ULONG returned,length;
-    bool status;
 
     // Get nand information
     //SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER sptdwb;
@@ -157,16 +155,16 @@ bool CUsbPort::USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,D
     //		sptwb.Spt.TimeOutValue		= 30;
     //	}
 
-    length=offsetof(SCSI_PASS_THROUGH_WITH_BUFFERS,DataBuf)+
+    ULONG length=offsetof(SCSI_PASS_THROUGH_WITH_BUFFERS,DataBuf)+
         sptwb.Spt.DataTransferLength;
 
-    status=DeviceIoControl(hHandle,
+    bool status=DeviceIoControl(m_DeviceHandle,
                            IOCTL_SCSI_PASS_THROUGH,
                            &sptwb,
                            sizeof(SCSI_PASS_THROUGH),
                            &sptwb,
                            length,
-                           &returned,
+                           &nReadLen,
                            false);
 
     DWORD dwErrCode=GetLastError();
@@ -178,7 +176,7 @@ bool CUsbPort::USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,D
     }
 }
 
-bool CUsbPort::USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut){
+bool CUsbPort::USBSCSIWrite(BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut){
     ULONG returned,length;
     DWORD dwErrCode;
     bool status;
@@ -205,7 +203,7 @@ bool CUsbPort::USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,
 
     length=sizeof(SCSI_PASS_THROUGH_DIRECT_WITH_BUFFER);
 
-    status=DeviceIoControl(hHandle,
+    status=DeviceIoControl(m_DeviceHandle,
                            IOCTL_SCSI_PASS_THROUGH_DIRECT,
                            &sptdwb,
                            length,
@@ -225,7 +223,7 @@ bool CUsbPort::USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,
 }
 
 
-bool CUsbPort::USBHidWrite(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOut){
+bool CUsbPort::USBHidWrite(BYTE* pData,DWORD nLength,DWORD nTimeOut){
     BYTE *OutputReport=NULL;
     OutputReport=(BYTE *)malloc(Capabilities.OutputReportByteLength);
     USHORT HidPackSize;
@@ -245,14 +243,14 @@ bool CUsbPort::USBHidWrite(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeO
 
     for(i=0; i<n; i++){
         memcpy(&OutputReport[1],&pData[i*HidPackSize],HidPackSize);
-        Success=WriteFile(hHandle,OutputReport,Capabilities.OutputReportByteLength,&bWritten,NULL);
+        Success=WriteFile(m_DeviceHandle,OutputReport,Capabilities.OutputReportByteLength,&bWritten,NULL);
         ErrorNnr=GetLastError();
     }
 
     if(l!=0){
         memset(&OutputReport[1],0x00,HidPackSize);
         memcpy(&OutputReport[1],&pData[n*HidPackSize],l);
-        Success=WriteFile(hHandle,OutputReport,Capabilities.OutputReportByteLength,&bWritten,NULL);
+        Success=WriteFile(m_DeviceHandle,OutputReport,Capabilities.OutputReportByteLength,&bWritten,NULL);
         ErrorNnr=GetLastError();
     }
 
@@ -262,7 +260,7 @@ bool CUsbPort::USBHidWrite(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeO
 
 }
 
-bool CUsbPort::USBHidRead(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOut){
+bool CUsbPort::USBHidRead(BYTE* pData,DWORD nLength,DWORD nTimeOut){
     BYTE *InputReport=NULL;
     InputReport=(BYTE *)malloc(Capabilities.InputReportByteLength);
     USHORT HidPackSize;
@@ -273,7 +271,7 @@ bool CUsbPort::USBHidRead(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOu
     DWORD	ErrorNnr;
     DWORD offset=0;
 
-    Result=ReadFile(hHandle,InputReport,Capabilities.InputReportByteLength,&bRead,NULL);
+    Result=ReadFile(m_DeviceHandle,InputReport,Capabilities.InputReportByteLength,&bRead,NULL);
     ErrorNnr=GetLastError();
 
     //caculate the length
@@ -296,13 +294,13 @@ bool CUsbPort::USBHidRead(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOu
     l=LeftLength%HidPackSize;
     DWORD i;
     for(i=0; i<n; i++){
-        Result=ReadFile(hHandle,InputReport,Capabilities.InputReportByteLength,&bRead,NULL);
+        Result=ReadFile(m_DeviceHandle,InputReport,Capabilities.InputReportByteLength,&bRead,NULL);
         ErrorNnr=GetLastError();
         memcpy(pData+offset,&InputReport[1],HidPackSize);
         offset+=HidPackSize;
     }
 
-    Result=ReadFile(hHandle,InputReport,Capabilities.InputReportByteLength,&bRead,NULL);
+    Result=ReadFile(m_DeviceHandle,InputReport,Capabilities.InputReportByteLength,&bRead,NULL);
     ErrorNnr=GetLastError();
     memcpy(pData+offset,&InputReport[1],l);
 

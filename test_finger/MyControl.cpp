@@ -107,8 +107,8 @@ void initMyControl(MainDialog* Dlg){
     cmbBaud->SetCurSel(MyString::ParseInt(conf["Baud"]));
 
     //–æ∆¨¿‡–Õ
-    MyString chipType[]={"GD32F30","ASFComm","Syno"};
-    for(int i=0;i<3;i++){
+    MyString chipType[]={"GD32F30","ASFComm","Syno","SuUSB"};
+    for(int i=0;i<4;i++){
         cmbProtocolType->InsertString(i,chipType[i]);
     }
     cmbProtocolType->SetCurSel(MyString::ParseInt(conf["ProtocolType"]));

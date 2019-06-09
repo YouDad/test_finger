@@ -5,6 +5,9 @@ HANDLE lastCmdCodeMutex=CreateMutex(0,0,0);
 std::queue<DataPacket> dataQueue;
 uint8_t buffer[1<<18];
 Comm comm;
+int CommType=-1;
+bool USB_Send(BYTE CmdBuf[],DWORD CmdLength);
+bool USB_Receive(BYTE RspBuf[],DWORD RspLength,ULONG& RspReadLen);
 
 Comm::Comm(){
     id=0;
@@ -68,13 +71,33 @@ bool Comm::connect(int id,int baud){
     return retCode==ERROR_SUCCESS;
 }
 
+bool Comm::connectUSB(){
+    if(-1!=UsbPort.InitUsbPort(COMM_USB_MASS,"UD")){
+        MyLog::user("连接USB成功");
+        CommType=COMM_USB_MASS;
+        responseThread=CreateThread(0,0,ResponseThread,0,0,0);
+        startListen();
+        return true;
+    } else{
+        MyLog::user("连接USB失败");
+        CommType=-1;
+        return false;
+    }
+
+}
+
 bool Comm::disconnect(){
     TerminateThread(responseThread,-1);
     CloseHandle(responseThread);
     responseThread=0;
     terminateListen();
 
-    int ret=serial.Close();
+    int ret;
+    if(CommType==-1){
+        ret=serial.Close();
+    } else{
+        ret=UsbPort.CloseUsbPort();
+    }
     MyLog::user("断开连接成功");
     if(ret==ERROR_SUCCESS){
         id=0;
@@ -106,7 +129,7 @@ void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
         if(converter){
             auto dataPacket=converter->convert(cmdCode,data,len);
             for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
-                serial.Write(it->getPointer(),it->size());
+                sendBytes(it->getPointer(),it->size());
                 it->Destruction();
             }
         } else{
@@ -116,7 +139,7 @@ void Comm::request(int CmdCode,uint8_t * Data,uint16_t Len){
     Comm_request->start();
 }
 
-DWORD WINAPI ListenThread(LPVOID params){
+DWORD WINAPI ListenSerialThread(LPVOID params){
     CSerial* serial=(CSerial*)params;
     while(serial->IsOpen()){
         DWORD cnt;
@@ -131,9 +154,25 @@ DWORD WINAPI ListenThread(LPVOID params){
     return 0;
 }
 
+DWORD WINAPI ListenUSBThread(LPVOID params){
+    while(-1!=*(int*)params){
+        ULONG cnt;
+        if(USB_Receive(buffer,1<<18,cnt)){
+            WaitForSingleObject(dataQueueMutex,INFINITE);
+            dataQueue.push(DataPacket(buffer,cnt));
+            ReleaseMutex(dataQueueMutex);
+        }
+    }
+    return 0;
+}
+
 bool Comm::startListen(){
     if(listenThread==0){
-        listenThread=CreateThread(0,0,ListenThread,&serial,0,0);
+        if(CommType==-1){
+            listenThread=CreateThread(0,0,ListenSerialThread,&serial,0,0);
+        } else{
+            listenThread=CreateThread(0,0,ListenUSBThread,&CommType,0,0);
+        }
     }
     return listenThread!=0;
 }
@@ -146,4 +185,23 @@ bool Comm::terminateListen(){
         return ret;
     }
     return true;
+}
+
+void Comm::sendBytes(uint8_t * data,int len){
+    if(CommType==-1){
+        serial.Write(data,len);
+    } else{
+        USB_Send(data,len);
+    }
+}
+
+BYTE cdb_w[16]={0xef,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+BYTE cdb_r[16]={0xef,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
+bool USB_Send(BYTE CmdBuf[],DWORD CmdLength){
+    return UsbPort.USBSCSIWrite(cdb_w,IOCTRL_CDB_LEN,CmdBuf,CmdLength,SCSI_TIMEOUT);
+}
+
+bool USB_Receive(BYTE RspBuf[],DWORD RspLength,ULONG& RspReadLen){
+    return UsbPort.USBSCSIRead(cdb_r,IOCTRL_CDB_LEN,RspBuf,RspLength,RspReadLen,SCSI_TIMEOUT);
 }

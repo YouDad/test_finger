@@ -185,6 +185,7 @@
     <ClInclude Include="Comm.h" />
     <ClInclude Include="ControlAvailability.h" />
     <ClInclude Include="DataPacket.h" />
+    <ClInclude Include="enumcd.h" />
     <ClInclude Include="ListenerBoardcast.h" />
     <ClInclude Include="ConverterBoardcast.h" />
     <ClInclude Include="MyConfig.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="MainDialog.h" />
+    <ClInclude Include="UsbPort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
@@ -212,6 +214,7 @@
     <ClCompile Include="CmdCodeGD32F30.cpp" />
     <ClCompile Include="CmdCodeLOG.cpp" />
     <ClCompile Include="Comm.cpp" />
+    <ClCompile Include="enumcd.cpp" />
     <ClCompile Include="MyConfig.cpp" />
     <ClCompile Include="DataPacket.cpp" />
     <ClCompile Include="ListenerBoardcast.cpp" />
@@ -221,6 +224,7 @@
     <ClCompile Include="MyFlow.cpp" />
     <ClCompile Include="MyNet.cpp" />
     <ClCompile Include="RequestConverterASFComm.cpp" />
+    <ClCompile Include="RequestConverterSuUSB.cpp" />
     <ClCompile Include="RequestConverterSyno.cpp" />
     <ClCompile Include="ResponseConverterASFComm.cpp" />
     <ClCompile Include="MyLog.cpp" />
@@ -230,6 +234,7 @@
     <ClCompile Include="RequestConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterLOG.cpp" />
+    <ClCompile Include="ResponseConverterSuUSB.cpp" />
     <ClCompile Include="ResponseConverterSyno.cpp" />
     <ClCompile Include="Serial.cpp" />
     <ClCompile Include="SettingDialog.cpp" />
@@ -241,7 +246,9 @@
     </ClCompile>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="MainDialog.cpp" />
+    <ClCompile Include="SuUSB.cpp" />
     <ClCompile Include="Syno.cpp" />
+    <ClCompile Include="UsbPort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

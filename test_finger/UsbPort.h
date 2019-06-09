@@ -14,12 +14,17 @@ extern "C"
 
 #define IOCTRL_CDB_LEN	16
 
+#define COMM_USB_MASS 0
+#define COMM_UART 1
+#define COMM_USB_HID 2
+#define COMM_USB_DRIVER 3
+
 class CUsbPort{
 public:
     CUsbPort(void);
     ~CUsbPort(void);
 
-public:
+private:
     //	CWnd*	m_pOwner;
     HANDLE	m_DeviceHandle;
     HIDP_CAPS	Capabilities;
@@ -27,11 +32,11 @@ public:
 public:
     int		InitUsbPort(int CommType,char *pDesc);
 
-    bool	USBSCSIRead(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut);
-    bool	USBSCSIWrite(HANDLE hHandle,BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut);
+    bool	USBSCSIRead(BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,ULONG& nReadLen,DWORD nTimeOut);
+    bool	USBSCSIWrite(BYTE* pCDB,DWORD nCDBLen,BYTE* pData,DWORD nLength,DWORD nTimeOut);
 
-    bool	USBHidWrite(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOut);
-    bool	USBHidRead(HANDLE hHandle,BYTE* pData,DWORD nLength,DWORD nTimeOut);
+    bool	USBHidWrite(BYTE* pData,DWORD nLength,DWORD nTimeOut);
+    bool	USBHidRead(BYTE* pData,DWORD nLength,DWORD nTimeOut);
 
     int		CloseUsbPort(void);
 

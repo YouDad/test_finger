@@ -3,6 +3,9 @@
 ConverterBoardcast converterBoardcast;
 
 ConverterBoardcast::ConverterBoardcast(){
+    attach(new RequestConverterSuUSB());
+    attach(new ResponseConverterSuUSB());
+
     attach(new RequestConverterSyno());
     attach(new ResponseConverterSyno());
 

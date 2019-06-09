@@ -45,6 +45,8 @@ void updateCommunityWay(){
             cmbWay->InsertString(i,name);
         }
     }
+    //对USB的支持
+    cmbWay->InsertString(0,_T("USB"));
 }
 
 

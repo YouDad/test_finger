@@ -28,6 +28,9 @@
     <Filter Include="UI">
       <UniqueIdentifier>{a72b18df-e855-4d04-8887-8bd588abfade}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{49fd43a0-a3ac-4b7e-8343-32744397d4e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -40,9 +43,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="algo.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Serial.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="str4err_warn.h">
@@ -102,15 +102,21 @@
     <ClInclude Include="SettingDialog.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Serial.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="enumcd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="UsbPort.h">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="algo.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Serial.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="RequestConverterGD32F30.cpp">
@@ -196,6 +202,24 @@
     </ClCompile>
     <ClCompile Include="SettingDialog.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SuUSB.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="RequestConverterSuUSB.cpp">
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseConverterSuUSB.cpp">
+      <Filter>Comm\CommProtocolConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="enumcd.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="Serial.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="UsbPort.cpp">
+      <Filter>Include</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

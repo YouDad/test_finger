@@ -100,6 +100,16 @@ enum CmdCode{
     SII(DeviceInfo),
 };
 
+#pragma region SuUSB协议区
+
+__DLC(SuUSB,DeviceInfo);
+
+enum CmdCodeSuUSB{
+    __SCC(SuUSB,DeviceInfo)=0x01
+};
+
+#pragma endregion
+
 #pragma region ASFComm协议区
 
 __DLC(ASFComm,GetRawImage);
