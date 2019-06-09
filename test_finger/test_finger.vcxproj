@@ -183,7 +183,7 @@
     <ClInclude Include="algo.h" />
     <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="Comm.h" />
-    <ClInclude Include="ControlAvailability.h" />
+    <ClInclude Include="CtrlValidity.h" />
     <ClInclude Include="DataPacket.h" />
     <ClInclude Include="enumcd.h" />
     <ClInclude Include="ListenerBoardcast.h" />
@@ -222,7 +222,7 @@
     <ClCompile Include="DataPacket.cpp" />
     <ClCompile Include="ListenerBoardcast.cpp" />
     <ClCompile Include="ConverterBoardcast.cpp" />
-    <ClCompile Include="ControlAvailability.cpp" />
+    <ClCompile Include="CtrlValidity.cpp" />
     <ClCompile Include="MainControl.cpp" />
     <ClCompile Include="MyControl.cpp" />
     <ClCompile Include="MyFlow.cpp" />

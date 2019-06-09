@@ -85,7 +85,7 @@
 #include "SettingDialog.h"
 
 #include "MainControl.h"
-#include "ControlAvailability.h"
+#include "CtrlValidity.h"
 
 #include "DataPacket.h"
 #include "ConverterBoardcast.h"

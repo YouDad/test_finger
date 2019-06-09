@@ -87,9 +87,6 @@
     <ClInclude Include="MyFlow.h">
       <Filter>My</Filter>
     </ClInclude>
-    <ClInclude Include="ControlAvailability.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="MyNet.h">
       <Filter>My</Filter>
     </ClInclude>
@@ -120,6 +117,9 @@
     <ClInclude Include="MyControl.h">
       <Filter>My</Filter>
     </ClInclude>
+    <ClInclude Include="CtrlValidity.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -139,9 +139,6 @@
     </ClCompile>
     <ClCompile Include="Comm.cpp">
       <Filter>Comm</Filter>
-    </ClCompile>
-    <ClCompile Include="ControlAvailability.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MyLog.cpp">
       <Filter>My</Filter>
@@ -235,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="MyControl.cpp">
       <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="CtrlValidity.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
