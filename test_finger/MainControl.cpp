@@ -106,3 +106,129 @@ void initMainControl(MainDialog* Dlg){
 void sendMainDialogMessage(int Message){
     SendMessage(hwnd,Message,Message,0);
 }
+
+std::vector<int>* idle=new std::vector<int>();
+std::vector<int>* lastIdle=NULL;
+
+void updateCommunityWay(){
+    if(lastIdle){
+        delete lastIdle;
+    }
+    lastIdle=idle;
+    idle=new std::vector<int>();
+
+    //清除串口数组内容
+    idle->clear();
+    //因为至多有255个串口，所以依次检查各串口是否存在
+    //如果能打开某一串口，或打开串口不成功，但返回的是 ERROR_ACCESS_DENIED错误信息，
+    //都认为串口存在，只不过后者表明串口已经被占用,否则串口不存在
+    //检查255个太费时间,且用前30个的几率较大
+    for(int i=1; i<30; i++){
+        //生成原始设备名
+        CString sPort;
+        sPort.Format(_T("\\\\.\\COM%d"),i);
+
+        HANDLE hPort=::CreateFile(sPort,GENERIC_READ|GENERIC_WRITE,0,0,OPEN_EXISTING,0,0);
+        if(hPort!=INVALID_HANDLE_VALUE){
+            idle->push_back(i);
+            CloseHandle(hPort);
+        }
+    }
+
+    //UI:组合框 更新
+    cmbWay->ResetContent();
+    if(idle->size()==0){
+        MyLog::user("未发现空闲的串口");
+        return;
+    } else{
+        MyLog::user("发现%d个串口",idle->size());
+        for(int i=0;i<idle->size();i++){
+            CString name;
+            name.Format(_T("COM%d"),(*idle)[i]);
+            cmbWay->InsertString(i,name);
+        }
+    }
+    //对USB的支持
+    cmbWay->InsertString(0,_T("USB"));
+}
+
+
+void autoConnect(){
+    int id=comm.getConnectId();
+    //自动连接只在未连接状态生效
+    if(id==0){
+        if(idle->size()==lastIdle->size()+1){ //应该会增加一个空闲设备
+            std::vector<int> diff;
+            std::set_difference(
+                idle->begin(),idle->end(),
+                lastIdle->begin(),lastIdle->end(),
+                std::inserter(diff,diff.begin())
+            );//求idle-lastIdle
+            if(diff.size()==1){ //差集应该只有一个元素
+                int needConnectId=diff[0];
+                for(int i=0;i<idle->size();i++){
+                    if((*idle)[i]==needConnectId){
+                        cmbWay->SetCurSel(i);
+                        bool ret=comm.connect(needConnectId,getInt(cmbBaud));
+                        if(ret){
+                            setText(btnConnect,"断开连接");
+                            CtrlValidity::AfterConnect();
+                        } else{
+                            CtrlValidity::BeforeConnect();
+                        }
+                    }
+                }
+            } else{
+                MyLog::error("发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle和lastIdle的差集元素个数不是一个,详细信息:");
+                {
+                    MyString error="diff:";
+                    for(std::vector<int>::iterator it=diff.begin();it!=diff.end();it++){
+                        char number[20];
+                        sprintf(number," %d",*it);
+                        error+=number;
+                    }
+                    MyLog::error(error);
+                }
+            }
+        } else{
+            //其他异常情况
+            MyLog::error("发现Bug,当前串口处于未连接状态,经过一次串口枚举,发现idle并不比lastIdle多,详细信息:");
+            {
+                MyString error="idle:";
+                for(std::vector<int>::iterator it=idle->begin();it!=idle->end();it++){
+                    char number[20];
+                    sprintf(number," %d",*it);
+                    error+=number;
+                }
+                MyLog::error(error);
+            }
+            {
+                MyString error="lastIdle:";
+                for(std::vector<int>::iterator it=lastIdle->begin();it!=lastIdle->end();it++){
+                    char number[20];
+                    sprintf(number," %d",*it);
+                    error+=number;
+                }
+                MyLog::error(error);
+            }
+        }
+    }
+}
+
+void autoDisconnect(){
+    int id=comm.getConnectId();
+    //自动断开仅当连接状态下
+    if(id!=0){
+        bool needDisconnect=true;
+        for(int i=0;i<idle->size();i++){
+            if((*idle)[i]==id){
+                needDisconnect=false;
+            }
+        }
+        if(needDisconnect){
+            comm.disconnect();
+            CtrlValidity::BeforeConnect();
+            btnConnect->SetWindowText(_T("连接下位机"));
+        }
+    }
+}

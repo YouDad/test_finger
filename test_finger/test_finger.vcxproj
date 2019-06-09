@@ -180,7 +180,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="algo.h" />
+    <ClInclude Include="MyImage.h" />
     <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="Comm.h" />
     <ClInclude Include="CtrlValidity.h" />
@@ -205,13 +205,12 @@
     <ClInclude Include="SettingDialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="str4err_warn.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="MainDialog.h" />
     <ClInclude Include="UsbPort.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="algo.cpp" />
+    <ClCompile Include="MyImage.cpp" />
     <ClCompile Include="AdvancedDebugDialog.cpp" />
     <ClCompile Include="ASFComm.cpp" />
     <ClCompile Include="CmdCodeGD32F30.cpp" />

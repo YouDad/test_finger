@@ -4,6 +4,13 @@
 void initMainControl(MainDialog* Dlg);
 void sendMainDialogMessage(int Message);
 
+//更新通信方式组合框
+void updateCommunityWay();
+//自动连接
+void autoConnect();
+//自动断开连接
+void autoDisconnect();
+
 extern CEdit* editLog;
 extern CEdit* editNow;
 extern CEdit* editAddress;

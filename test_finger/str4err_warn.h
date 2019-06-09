@@ -1,14 +1,6 @@
 #pragma once
 #include"stdafx.h"
 
-/*
-警告或错误前面如果有:
-~:随着工程的进行,可能需要发生变化
-!:随着工程的进行,不太可能发生变化
-有 没有序号的警告和错误(模板)
-可以复制一个新的,然后再改上一个
-*/
-
 #ifdef ASF_WARNING
 #error macro is repeated!
 #else
@@ -25,35 +17,35 @@
 #error macro is repeated!
 #else
 #define ASF_WARNING1 \
-"~好像调用了过于高级的MyLog::print"
+"好像调用了过于高级的MyLog::print"
 #endif
 
 #ifdef ASF_WARNING2
 #error macro is repeated!
 #else
 #define ASF_WARNING2 \
-"~数据包格式不完全正确"
+"数据包格式不完全正确"
 #endif
 
 #ifdef ASF_WARNING3
 #error macro is repeated!
 #else
 #define ASF_WARNING3 \
-"~图片像素个数不是160*160个"
+"图片像素个数不是160*160个"
 #endif
 
 #ifdef ASF_WARNING4
 #error macro is repeated!
 #else
 #define ASF_WARNING4 \
-"!位图对象句柄为0x00"
+"位图对象句柄为0x00"
 #endif
 
 #ifdef ASF_WARNING5
 #error macro is repeated!
 #else
 #define ASF_WARNING5 \
-"!串口关闭返回值不是ERROR_SUCCESS"
+"串口关闭返回值不是ERROR_SUCCESS"
 #endif
 
 #ifdef ASF_WARNING__
@@ -74,42 +66,42 @@
 #error macro is repeated!
 #else
 #define ASF_ERROR1 \
-"!试图保存文件时失败"
+"试图保存文件时失败"
 #endif
 
 #ifdef ASF_ERROR2
 #error macro is repeated!
 #else
 #define ASF_ERROR2 \
-"!芯片类型错误"
+"芯片类型错误"
 #endif
 
 #ifdef ASF_ERROR3
 #error macro is repeated!
 #else
 #define ASF_ERROR3 \
-"!没有这种convert"
+"没有这种convert"
 #endif
 
 #ifdef ASF_ERROR4
 #error macro is repeated!
 #else
 #define ASF_ERROR4 \
-"~转化失败"
+"转化失败"
 #endif
 
 #ifdef ASF_ERROR5
 #error macro is repeated!
 #else
 #define ASF_ERROR5 \
-"~命令包出错"
+"命令包出错"
 #endif
 
 #ifdef ASF_ERROR6
 #error macro is repeated!
 #else
 #define ASF_ERROR6 \
-"~当前协议不支持该操作"
+"当前协议不支持该操作"
 #endif
 
 #ifdef ASF_ERROR_
