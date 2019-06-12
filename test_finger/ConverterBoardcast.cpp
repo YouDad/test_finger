@@ -3,19 +3,12 @@
 ConverterBoardcast converterBoardcast;
 
 ConverterBoardcast::ConverterBoardcast(){
-    attach(new RequestConverterSuUSB());
-    attach(new ResponseConverterSuUSB());
-
     attach(new RequestConverterSyno());
     attach(new ResponseConverterSyno());
 
-    attach(new RequestConverterASFComm());
-    attach(new ResponseConverterASFComm());
-
-    attach(new RequestConverterACH512());
     attach(new RequestConverterGD32F30());
-
     attach(new ResponseConverterGD32F30());
+
     attach(new ResponseConverterLOG());
 }
 

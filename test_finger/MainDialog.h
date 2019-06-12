@@ -41,4 +41,5 @@ public:
     afx_msg void OnBnClickedBtnsetting();
     afx_msg void OnCbnSelchangeCmbbaud();
     afx_msg void OnCbnSelchangeCmbprotocoltype();
+    afx_msg void OnCbnSelchangeCmbway();
 };

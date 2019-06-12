@@ -125,7 +125,7 @@ void MyLog::user(const char * format,...){
     print(LOGU,tmp);
 }
 
-int Version=261;
+int Version=270;
 void MyLog::DevelopLog(){
     //print(MyLog::LOGU,"V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
     print(MyLog::LOGU,"V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
@@ -146,7 +146,8 @@ void MyLog::DevelopLog(){
     //print(MyLog::LOGU,"V2.51<2019年5月24日12:49:24>:修复GD32协议读寄存器bug,记忆波特率和协议");
     //print(MyLog::LOGU,"V2.52<2019年5月26日21:36:00>:增加GD32协议下的DeviceInfo命令,多一个设备信息的按钮,增强更新功能");
     print(MyLog::LOGU,"V2.6 <2019年5月27日22:49:28>:优化日志框性能,适配设备信息命令");
-    print(MyLog::LOGU,"V2.61<2019年5月29日16:29:31>:修复设备信息命令ChipVersion bug");
+    //print(MyLog::LOGU,"V2.61<2019年5月29日16:29:31>:修复设备信息命令ChipVersion bug");
+    print(MyLog::LOGU,"V2.7 <2019年6月12日20:25:27>:增加USB连接方式,增强串口扫描功能,增强界面健壮性,优化代码结构");
 }
 
 void MyLog::ClearLog(){

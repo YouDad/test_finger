@@ -13,14 +13,6 @@
 #define VC_EXTRALEAN            // 从 Windows 头中排除极少使用的资料
 #endif
 
-// 包括 SDKDDKVer.h 将定义最高版本的可用 Windows 平台。
-
-// 如果要为以前的 Windows 平台生成应用程序，请包括 WinSDKVer.h，并将
-// WIN32_WINNT 宏设置为要支持的平台，然后再包括 SDKDDKVer.h。
-
-#include <SDKDDKVer.h>
-
-
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // 某些 CString 构造函数将是显式的
 
 // 关闭 MFC 对某些常见但经常可放心忽略的警告消息的隐藏

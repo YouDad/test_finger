@@ -39,9 +39,12 @@ extern CButton* btnDeviceInfo;
 extern CButton* btnViewEnrollIds;
 extern CButton* btnCancel;
 extern CButton* btnClearLog;
+extern CButton* btnDeleteTemplate;
 extern CStatic* image;
 extern CProgressCtrl* progress;
 
 extern HWND hwnd;
 
 extern AdvancedDebugDialog* advancedDebugDialog;
+extern std::vector<int>* idle;
+extern std::vector<int>* lastIdle;

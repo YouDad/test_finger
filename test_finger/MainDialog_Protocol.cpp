@@ -2,6 +2,7 @@
 
 void MainDialog::OnCbnSelchangeCmbprotocoltype(){
     conf["ProtocolType"]=MyString::Format("%d",cmbProtocolType->GetCurSel());
+    MainDialogCtrlValidity::Work();
 }
 
 void MainDialog::OnBnClickedBtnadvdbg(){

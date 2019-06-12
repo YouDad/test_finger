@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 __ILC(Syno,GetImage){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://录入成功
@@ -19,6 +20,7 @@ __ILC(Syno,GetImage){
 }
 
 __ILC(Syno,UpImage){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -47,6 +49,7 @@ __ILC(Syno,UpImage){
 }
 
 __ILC(Syno,GenChar){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -74,6 +77,7 @@ __ILC(Syno,GenChar){
 }
 
 __ILC(Syno,GetEnrollImage){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -92,6 +96,7 @@ __ILC(Syno,GetEnrollImage){
 }
 
 __ILC(Syno,RegModel){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -107,6 +112,7 @@ __ILC(Syno,RegModel){
 }
 
 __ILC(Syno,StoreChar){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -125,6 +131,7 @@ __ILC(Syno,StoreChar){
 }
 
 __ILC(Syno,Search){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -143,6 +150,7 @@ __ILC(Syno,Search){
 }
 
 __ILC(Syno,ReadIndexTable){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -179,6 +187,7 @@ __ILC(Syno,ReadIndexTable){
 }
 
 __ILC(Syno,Match){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -196,6 +205,7 @@ __ILC(Syno,Match){
 }
 
 __ILC(Syno,LoadChar){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功
@@ -214,6 +224,7 @@ __ILC(Syno,LoadChar){
 }
 
 __ILC(Syno,DeleteChar){
+    if(getText(cmbProtocolType)!="Syno")return;
     int front=response.getPointer()[0];
     switch(front){
         case 0x00://成功

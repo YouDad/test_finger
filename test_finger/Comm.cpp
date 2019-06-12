@@ -4,7 +4,7 @@ MyLocker dataQueueMutex;
 //指示lastCmdCode的CmdCode的数量
 MyLocker vaildLastCmdCode(0,10);
 std::queue<DataPacket> dataQueue;
-uint8_t buffer[1<<18];
+uint8_t buffer[1<<16];
 Comm comm;
 int CommType=-1;
 bool USB_Send(BYTE CmdBuf[],DWORD CmdLength);
@@ -79,7 +79,7 @@ bool Comm::connectUSB(){
         startListen();
         return true;
     } else{
-        MyLog::user("连接USB失败");
+        MyLog::user("连接USB失败(注意,连接USB需要管理员权限)");
         CommType=-1;
         return false;
     }
@@ -144,7 +144,7 @@ DWORD WINAPI ListenSerialThread(LPVOID params){
     while(serial->IsOpen()){
         DWORD cnt;
         LONG result;
-        result=serial->Read(buffer,1<<18,&cnt);
+        result=serial->Read(buffer,sizeof(buffer),&cnt);
         if(result==ERROR_SUCCESS){
             dataQueue.push(DataPacket(buffer,cnt));
             dataQueueMutex.unlock();
@@ -156,8 +156,8 @@ DWORD WINAPI ListenSerialThread(LPVOID params){
 DWORD WINAPI ListenUSBThread(LPVOID params){
     while(-1!=*(int*)params){
         ULONG cnt;
-        if(USB_Receive(buffer,1<<18,cnt)){
-            dataQueue.push(DataPacket(buffer,cnt));
+        if(USB_Receive(buffer,sizeof(buffer),cnt)){
+            dataQueue.push(DataPacket(buffer,sizeof(buffer)));
             dataQueueMutex.unlock();
         }
     }

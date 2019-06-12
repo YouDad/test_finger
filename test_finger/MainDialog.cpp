@@ -48,6 +48,7 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_BN_CLICKED(IDC_BTNSetting,&MainDialog::OnBnClickedBtnsetting)
     ON_CBN_SELCHANGE(IDC_CMBBaud,&MainDialog::OnCbnSelchangeCmbbaud)
     ON_CBN_SELCHANGE(IDC_CMBProtocolType,&MainDialog::OnCbnSelchangeCmbprotocoltype)
+    ON_CBN_SELCHANGE(IDC_CMBWay,&MainDialog::OnCbnSelchangeCmbway)
 END_MESSAGE_MAP()
 
 void MainDialog::OnOK(){}
@@ -57,7 +58,7 @@ BOOL MainDialog::OnInitDialog(){
     SetIcon(m_hIcon,TRUE);
     SetIcon(m_hIcon,FALSE);
 
-    initMainControl(this);
+    (new MyThread([&](){initMainControl(this);},true))->start();
 
     return TRUE;//除非将焦点设置到控件，否则返回 TRUE
 }

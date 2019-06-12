@@ -7,12 +7,14 @@
 
 class MyThread{
 public:
-    MyThread(ThreadFunction_t pFunction);
+    MyThread(ThreadFunction_t pFunction,bool tmp=false);
     bool start();
     bool terminate();
     bool isRun();
 private:
     HANDLE thread=0;
     ThreadFunction_t pf;
+    bool temporary;
     static DWORD WINAPI run(LPVOID params);
+    static DWORD WINAPI temporaryRun(LPVOID params);
 };

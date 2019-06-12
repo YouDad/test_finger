@@ -5,46 +5,6 @@ extern MyLocker vaildLastCmdCode;
 extern std::queue<int> lastCmdCode;
 
 #pragma pack(1)
-struct DataPacketASFComm{
-    char head[3];//ASF
-    unsigned short cmd;
-    unsigned short len;
-    unsigned char sign;
-    unsigned char data[256-8];
-};
-#pragma pack(4)
-
-class RequestConverterASFComm:public ICommProtocolRequestConverter{
-public:
-    virtual bool checkProtocol(DataPacket dataPacket) override;
-    virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
-};
-
-class ResponseConverterASFComm:public ICommProtocolResponseConverter{
-public:
-    virtual bool checkProtocol(DataPacket dataPacket) override;
-    virtual DataPacket convert(DataPacket & data) override;
-    virtual int getCmdCode(DataPacket data) override;
-};
-
-#pragma pack(1)
-struct HangXinSendPacket{
-    char fixed[3];//'z','t','\0'
-    uint8_t cmd;
-    char fixed2[4];//'\0','\0','\0','\0'
-    uint32_t len;
-    uint8_t data[242*266+2];
-    uint16_t sumVal;
-};
-#pragma pack(4)
-
-class RequestConverterACH512:public ICommProtocolRequestConverter{
-public:
-    virtual bool checkProtocol(DataPacket dataPacket) override;
-    virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
-};
-
-#pragma pack(1)
 struct DataPacketGD32F30{
     uint16_t	Head;
     uint32_t	Addr;
@@ -148,33 +108,6 @@ public:
 };
 
 class ResponseConverterSyno:public ICommProtocolResponseConverter{
-public:
-    virtual bool checkProtocol(DataPacket dataPacket) override;
-    virtual DataPacket convert(DataPacket & data) override;
-    virtual int getCmdCode(DataPacket data) override;
-};
-
-#pragma pack(1)
-struct DataPacketSuUSB{
-    char head[2];//zt
-    uint8_t dir;//request:0 response:1
-    uint8_t cmd;
-    int result;
-    uint32_t len;
-    uint8_t data[91*1024-14];
-};
-enum DirSuUSB{
-    DIR_OUT,DIR_IN
-};
-#pragma pack(4)
-
-class RequestConverterSuUSB:public ICommProtocolRequestConverter{
-public:
-    virtual bool checkProtocol(DataPacket dataPacket) override;
-    virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
-};
-
-class ResponseConverterSuUSB:public ICommProtocolResponseConverter{
 public:
     virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual DataPacket convert(DataPacket & data) override;

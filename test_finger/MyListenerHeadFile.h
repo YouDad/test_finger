@@ -100,42 +100,6 @@ enum CmdCode{
     SII(DeviceInfo),
 };
 
-#pragma region SuUSB协议区
-
-__DLC(SuUSB,DeviceInfo);
-
-enum CmdCodeSuUSB{
-    __SCC(SuUSB,DeviceInfo)=0x01
-};
-
-#pragma endregion
-
-#pragma region ASFComm协议区
-
-__DLC(ASFComm,GetRawImage);
-__DLC(ASFComm,GetTestImage);
-__DLC(ASFComm,ReadRegister);
-__DLC(ASFComm,WriteRegister);
-__DLC(ASFComm,ToSleep);
-__DLC(ASFComm,ToIdle);
-__DLC(ASFComm,MyLog);
-__DLC(ASFComm,AdjustingImage);
-
-enum CmdCodeASFComm{
-    //上位机发送的命令
-    __SCC(ASFComm,GetRawImage)=0xBB00,
-    __SCC(ASFComm,GetTestImage),
-    __SCC(ASFComm,ReadRegister),
-    __SCC(ASFComm,WriteRegister),
-    __SCC(ASFComm,ToSleep),
-    __SCC(ASFComm,ToIdle),
-    //下位机发送的命令
-    __SCC(ASFComm,MyLog),
-    __SCC(ASFComm,AdjustingImage),
-};
-
-#pragma endregion
-
 #pragma region Syno协议区
 
 __DLC(Syno,GetImage);
@@ -282,44 +246,5 @@ enum CmdCodeGD32F30{
     CMD_READ_CHAR_DIRECT=0x0343,
     CMD_GET_FIRSTVALID_ADD=0x0344,
     CMD_CHIP_ERASE=0x0380,
-    //CMD_FINGER_DETECT=0X0400,
-    //CMD_Sleep_MODE=0X0401,
-    //CMD_SleepToIdle=0x0402,
-    //CMD_AdjustImage=0x0403,
     __SCC(GD32F30,DeviceInfo)=0x0381,
-};
-
-enum CmdCodeACH512{
-    USR_CMD_GET_INFO=1,
-    USR_CMD_GET_DEVICESN,
-    USR_CMD_SET_DEVICESN,
-    USR_CMD_GET_SESSION,
-    USR_CMD_SET_SESSION,
-    USR_CMD_GET_SENSOR_INFO,
-    USR_CMD_CONFIG_SENSOR,
-    USR_CMD_GRAB,
-    USR_CMD_GRAB_NO_CHECK,
-    USR_CMD_GRAB_WAIT,
-    USR_CMD_GENERATE,
-    USR_CMD_MERGE,
-    USR_CMD_STORE,
-    USR_CMD_SEARCH,
-    USR_CMD_MATCH,
-    USR_CMD_UP_IMG,
-    USR_CMD_DOWN_IMG,
-    USR_CMD_LOAD_CHAR,
-    USR_CMD_UP_CHAR,
-    USR_CMD_DOWN_CHAR,
-    USR_CMD_LIST,
-    USR_CMD_GET_EMPTY_ID,
-    USR_CMD_CHECK_ID,
-    USR_CMD_DELETE_ID,
-    USR_CMD_REMOVE_ALL,
-    USR_CMD_SET_LED,
-    USR_CMD_ENTER_IAP,
-    USR_CMD_CANCEL,
-    USR_CMD_WIRTE_PRODUCT_SESSION,
-    USR_CMD_SLEEP,
-    USR_CMD_DEV_BOOTLOADER,
-    USR_CMD_UP_IMG_EX=0x22
 };

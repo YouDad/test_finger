@@ -13,14 +13,6 @@ ListenerBoardcast::ListenerBoardcast(){
     attach(CmdCodeLOG_MeasureTimeStart,new CmdCodeLOG_MeasureTimeStart_Listener());
     attach(CmdCodeLOG_MeasureTimeEnd,new CmdCodeLOG_MeasureTimeEnd_Listener());
     attach(CmdCodeLOG_AdvDbg_AdjImg,new CmdCodeLOG_AdvDbg_AdjImg_Listener());
-    __BCL(ASFComm,GetRawImage);
-    __BCL(ASFComm,GetTestImage);
-    __BCL(ASFComm,ReadRegister);
-    __BCL(ASFComm,WriteRegister);
-    __BCL(ASFComm,ToSleep);
-    __BCL(ASFComm,ToIdle);
-    __BCL(ASFComm,MyLog);
-    __BCL(ASFComm,AdjustingImage);
 
     __BCL(Syno,GetImage);
     __BCL(Syno,UpImage);
@@ -33,8 +25,6 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(Syno,Match);
     __BCL(Syno,LoadChar);
     __BCL(Syno,DeleteChar);
-
-    __BCL(SuUSB,DeviceInfo);
 }
 
 void ListenerBoardcast::attach(int event,ICommListener* listener){

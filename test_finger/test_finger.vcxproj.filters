@@ -116,12 +116,12 @@
     <ClInclude Include="MainDialogCtrlValidity.h">
       <Filter>UI\MainDialog</Filter>
     </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RequestConverterGD32F30.cpp">
-      <Filter>Comm\CommProtocolConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="RequestConverterACH512.cpp">
       <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
     <ClCompile Include="ResponseConverterGD32F30.cpp">
@@ -157,21 +157,6 @@
     <ClCompile Include="AdvancedDebugDialog.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="CmdCodeLOG.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdCodeGD32F30.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="ASFComm.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="ResponseConverterASFComm.cpp">
-      <Filter>Comm\CommProtocolConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="RequestConverterASFComm.cpp">
-      <Filter>Comm\CommProtocolConverter</Filter>
-    </ClCompile>
     <ClCompile Include="RequestConverterSyno.cpp">
       <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
@@ -192,15 +177,6 @@
     </ClCompile>
     <ClCompile Include="SettingDialog.cpp">
       <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="SuUSB.cpp">
-      <Filter>Comm\CommListener</Filter>
-    </ClCompile>
-    <ClCompile Include="RequestConverterSuUSB.cpp">
-      <Filter>Comm\CommProtocolConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="ResponseConverterSuUSB.cpp">
-      <Filter>Comm\CommProtocolConverter</Filter>
     </ClCompile>
     <ClCompile Include="enumcd.cpp">
       <Filter>Include</Filter>
@@ -249,6 +225,12 @@
     </ClCompile>
     <ClCompile Include="MainDialog_Other.cpp">
       <Filter>UI\MainDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="GD32F30.cpp">
+      <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="LOG.cpp">
+      <Filter>Comm\CommListener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
