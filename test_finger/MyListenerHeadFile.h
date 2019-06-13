@@ -29,11 +29,12 @@ CmdCode##Protocol##_##Message
 class ___SCN(Protocol,Message):public ICommListener{\
 public:\
     void listen(DataPacket response);\
+    ___SCN(Protocol,Message)(const char* protocol):ICommListener(protocol){}\
 }
 
 //__BCL===Binding Command into Listener,快速把命令绑到监听器的宏
-#define __BCL(Protocol,Message) \
-attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)())
+#define __BCL(ProtocolName,Protocol,Message) \
+attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)(ProtocolName))
 
 //__ILC===Implement Listener Class,快速实现监听器类的宏
 #define __ILC(Protocol,Message) \

@@ -3,7 +3,11 @@
 
 class ICommListener{
 public:
+    ICommListener(const char* protocol=0);
+    bool accept();
     virtual void listen(DataPacket response)=0;
+private:
+    const char* protocol;
 };
 
 class ListenerBoardcast{
