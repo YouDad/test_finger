@@ -4,7 +4,7 @@
 
 #pragma comment(lib, "hid.lib")
 
-CUsbPort UsbPort;
+//CUsbPort UsbPort;
 
 CUsbPort::CUsbPort(void){
     m_DeviceHandle=NULL;

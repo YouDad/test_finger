@@ -30,7 +30,6 @@ Global
 		{338E004E-2BA8-4B9C-975E-65D3DDF7530F}.Release|x64.ActiveCfg = Release|x64
 		{338E004E-2BA8-4B9C-975E-65D3DDF7530F}.Release|x64.Build.0 = Release|x64
 		{338E004E-2BA8-4B9C-975E-65D3DDF7530F}.Release|x86.ActiveCfg = Release|Win32
-		{338E004E-2BA8-4B9C-975E-65D3DDF7530F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
