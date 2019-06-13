@@ -12,3 +12,4 @@
 // TODO: 在此处引用程序需要的其他头文件
 #define private public
 #include "../test_finger/stdafx.h"
+#undef private

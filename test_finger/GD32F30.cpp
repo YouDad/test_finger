@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 void READ_REGISTER_Listener::listen(DataPacket response){
-    if(getText(cmbProtocolType)!="GD32F30")return;
+    if(getText(cmbProtocolType)!=GD32)return;
     if(response.size()==0){
         MyLog::user("接收数据超时");
     } else{
@@ -14,7 +14,7 @@ void READ_REGISTER_Listener::listen(DataPacket response){
 }
 
 void GET_TEST_IMAGE_Listener::listen(DataPacket response){
-    if(getText(cmbProtocolType)!="GD32F30")return;
+    if(getText(cmbProtocolType)!=GD32)return;
     progress->SetPos(50);
     MyLog::debug("接收到数据包,大小为%d",response.size());
     MyLog::debug("线程向主线程发送消息CMD_GET_TEST_IMAGE");
@@ -34,7 +34,7 @@ void GET_TEST_IMAGE_Listener::listen(DataPacket response){
 }
 
 void GET_RAW_IMAGE_Listener::listen(DataPacket response){
-    if(getText(cmbProtocolType)!="GD32F30")return;
+    if(getText(cmbProtocolType)!=GD32)return;
     SendMessage(hwnd,WM_GET_RAW_IMAGE,WM_GET_RAW_IMAGE,0);
     progress->SetPos(50);
     MyLog::debug("接收到数据包,大小为%d",response.size());
@@ -54,7 +54,7 @@ void GET_RAW_IMAGE_Listener::listen(DataPacket response){
 }
 
 __ILC(GD32F30,DeviceInfo){
-    if(getText(cmbProtocolType)!="GD32F30")return;
+    if(getText(cmbProtocolType)!=GD32)return;
     /*
     [02] 44 30 30 2E 30 30 2E 30 31 00 [4D 61 79 20 32 37 20 32 30 31 39] 00 31 38 3A 33 30 3A 34 34 00
     PC Application log dialog display:

@@ -14,9 +14,9 @@ vec GD32F30Vec;
 vec Empty;
 
 vec* getWorkedVec(){
-    if(getText(cmbProtocolType)=="Syno"){
+    if(getText(cmbProtocolType)==SYNO){
         return &SynoVec;
-    } else if(getText(cmbProtocolType)=="GD32F30"){
+    } else if(getText(cmbProtocolType)==GD32){
         return &GD32F30Vec;
     } else{
         return &Empty;

@@ -20,7 +20,7 @@ public:
     //测试有参构造函数
     TEST_METHOD(DataPacket2){
         char* str=new char[4];
-        strcpy(str,"str");
+        memcpy(str,"str",4);
         DataPacket packet(str,4);
         Assert::AreEqual(4,packet.len);
         Assert::AreNotEqual((char*)packet.data,str);

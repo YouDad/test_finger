@@ -3,7 +3,7 @@ typedef DataPacketSyno Request;
 
 
 bool RequestConverterSyno::checkProtocol(DataPacket dataPacket){
-    return getText(cmbProtocolType)=="Syno";
+    return getText(cmbProtocolType)==SYNO;
 }
 
 std::queue<int> lastCmdCode;

@@ -3,7 +3,7 @@ typedef struct DataPacketGD32F30 Request;
 uint16_t GetCRC16(const void*pSource,uint16_t len);
 
 bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
-    return getText(cmbProtocolType)=="GD32F30";
+    return getText(cmbProtocolType)==GD32;
 }
 
 int ToGD32F30(int cmdCode){

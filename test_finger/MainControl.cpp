@@ -103,7 +103,7 @@ void initMainControl(MainDialog* Dlg){
     progress->SetPos(50);
 
     //–æ∆¨¿‡–Õ
-    MyString chipType[]={"GD32F30","Syno"};
+    MyString chipType[]={GD32,SYNO};
     for(int i=0;i<sizeof(chipType)/sizeof(chipType[0]);i++){
         cmbProtocolType->InsertString(i,chipType[i]);
     }

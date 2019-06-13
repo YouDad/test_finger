@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 void MainDialog::OnBnClickedBtnreadreg(){
-    if(getText(cmbProtocolType)=="Syno"){
+    if(getText(cmbProtocolType)==SYNO){
         progress->SetPos(0);
         MyLog::user("不支持的操作");
         return;
@@ -26,7 +26,7 @@ void MainDialog::OnBnClickedBtnreadreg(){
 }
 
 void MainDialog::OnBnClickedBtnwritereg(){
-    if(getText(cmbProtocolType)=="Syno"){
+    if(getText(cmbProtocolType)==SYNO){
         progress->SetPos(0);
         MyLog::user("不支持的操作");
         return;

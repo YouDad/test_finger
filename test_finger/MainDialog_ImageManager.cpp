@@ -18,7 +18,7 @@ void MainDialog::OnBnClickedBtnopenbackgroundimage(){
 
 //原始图像的点击事件
 void MainDialog::OnBnClickedBtnrawimage(){
-    if(getText(cmbProtocolType)=="Syno"){
+    if(getText(cmbProtocolType)==SYNO){
         MyLog::user("开始获取图像");
         Flow.clear();
         Flow.push_back(FlowFunction(0)(int& result){
@@ -56,7 +56,7 @@ void MainDialog::OnBnClickedBtnrawimage(){
 }
 
 void MainDialog::OnBnClickedBtnbackgroundimage(){
-    if(getText(cmbProtocolType)=="Syno"){
+    if(getText(cmbProtocolType)==SYNO){
         progress->SetPos(0);
         MyLog::user("不支持的操作");
         return;
@@ -69,7 +69,7 @@ void MainDialog::OnBnClickedBtnbackgroundimage(){
 }
 
 void MainDialog::OnBnClickedBtncontinuebackgroundimage(){
-    if(getText(cmbProtocolType)=="Syno"){
+    if(getText(cmbProtocolType)==SYNO){
         progress->SetPos(0);
         MyLog::user("不支持的操作");
         return;
@@ -90,7 +90,7 @@ void MainDialog::OnBnClickedBtncontinuebackgroundimage(){
 
 //连续获取图像的点击事件
 void MainDialog::OnBnClickedBtncontinueimage(){
-    if(getText(cmbProtocolType)=="Syno"){
+    if(getText(cmbProtocolType)==SYNO){
         MyLog::user("开始连续获取图像");
         Flow.clear();
         Flow.push_back(FlowFunction(0)(int& result){
