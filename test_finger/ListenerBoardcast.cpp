@@ -4,9 +4,9 @@
 ListenerBoardcast listenerBoardcast;
 
 ListenerBoardcast::ListenerBoardcast(){
-    attach(CMD_GET_RAW_IMAGE,new GET_RAW_IMAGE_Listener());
-    attach(CMD_GET_TEST_IMAGE,new GET_TEST_IMAGE_Listener());
-    attach(CMD_READ_NOTE_BOOK,new READ_REGISTER_Listener());
+    __BCL(GD32F30,GetRawImage);
+    __BCL(GD32F30,GetTestImage);
+    __BCL(GD32F30,ReadRegister);
     __BCL(GD32F30,DeviceInfo);
 
     attach(CmdCodeLOG_Info,new CmdCodeLOG_Info_Listener());

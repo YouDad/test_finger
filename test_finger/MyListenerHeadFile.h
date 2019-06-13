@@ -1,20 +1,5 @@
 #pragma once
 
-class GET_RAW_IMAGE_Listener:public ICommListener{
-public:
-    void listen(DataPacket response);
-};
-
-class GET_TEST_IMAGE_Listener:public ICommListener{
-public:
-    void listen(DataPacket response);
-};
-
-class READ_REGISTER_Listener:public ICommListener{
-public:
-    void listen(DataPacket response);
-};
-
 class CmdCodeLOG_AdvDbg_AdjImg_Listener:public ICommListener{
 public:
     void listen(DataPacket response);
@@ -210,13 +195,18 @@ enum CmdCodeLOG{
     CmdCodeLOG_AdvDbg_AdjImg,
 };
 
+#pragma region GD32F30Ð­ÒéÇø
+
+__DLC(GD32F30,GetRawImage);
+__DLC(GD32F30,GetTestImage);
+__DLC(GD32F30,ReadRegister);
 __DLC(GD32F30,DeviceInfo);
 
 enum CmdCodeGD32F30{
-    CMD_GET_TEST_IMAGE=0x031F,
+    __SCC(GD32F30,GetTestImage)=0x031F,//CMD_GET_TEST_IMAGE=0x031F,
     CMD_DEVICE_RESET=0x0320,
     CMD_DETECT_FINGER=0x0321,
-    CMD_GET_RAW_IMAGE=0x0322,
+    __SCC(GD32F30,GetRawImage)=0x0322,//CMD_GET_RAW_IMAGE=0x0322,
     CMD_GET_REDRESS_IMAGE=0x0323,
     CMD_UPLOAD_IMAGE=0x0324,
     CMD_GEN_CHAR=0x0325,
@@ -229,8 +219,8 @@ enum CmdCodeGD32F30{
     CMD_GET_CHAR=0x032C,
     CMD_PUT_CHAR=0x032D,
     CMD_GET_MBINDEX=0x032E,
-    CMD_READ_NOTE_BOOK=0x032F,
-    CMD_WRITE_NOTE_BOOK=0x0330,
+    __SCC(GD32F30,ReadRegister)=0x032F,//CMD_READ_NOTE_BOOK=0x032F,
+    __SCC(GD32F30,WriteRegister)=0x0330,//CMD_WRITE_NOTE_BOOK=0x0330,
     CMD_READ_PAR_TABLE=0x0331,
     CMD_SET_BAUD_RATE=0x0332,
     CMD_SET_SECURLEVEL=0x0333,
@@ -248,3 +238,5 @@ enum CmdCodeGD32F30{
     CMD_CHIP_ERASE=0x0380,
     __SCC(GD32F30,DeviceInfo)=0x0381,
 };
+
+#pragma endregion

@@ -9,13 +9,13 @@ bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
 int ToGD32F30(int cmdCode){
     switch(cmdCode){
         case SII(GetTestImage):
-            return CMD_GET_TEST_IMAGE;
+            return __SCC(GD32F30,GetTestImage);
         case SII(GetRawImage):
-            return CMD_GET_RAW_IMAGE;
+            return __SCC(GD32F30,GetRawImage);
         case SII(ReadRegister):
-            return CMD_READ_NOTE_BOOK;
+            return __SCC(GD32F30,ReadRegister);
         case SII(WriteRegister):
-            return CMD_WRITE_NOTE_BOOK;
+            return __SCC(GD32F30,WriteRegister);
         case SII(DeviceInfo):
             return __SCC(GD32F30,DeviceInfo);
         default:
