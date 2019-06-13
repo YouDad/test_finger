@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-void CmdCodeLOG_AdvDbg_AdjImg_Listener::listen(DataPacket response){
+__ILC(LOG,AdvDbg_AdjImg){
     conf["id"]=MyString((char*)response.getPointer(),response.size()-32*32);
     response.readData(response.size()-32*32);
     uint8_t bigImg[64*64];
@@ -13,16 +13,16 @@ void CmdCodeLOG_AdvDbg_AdjImg_Listener::listen(DataPacket response){
     response.readData(32*32);
 }
 
-void CmdCodeLOG_Info_Listener::listen(DataPacket response){
+__ILC(LOG,Info){
     MyLog::debug((char*)response.getPointer());
 }
 
 clock_t clockTime;
 
-void CmdCodeLOG_MeasureTimeStart_Listener::listen(DataPacket response){
+__ILC(LOG,MeasureTimeStart){
     clockTime=clock();
 }
 
-void CmdCodeLOG_MeasureTimeEnd_Listener::listen(DataPacket response){
+__ILC(LOG,MeasureTimeEnd){
     MyLog::debug("MeasureTime:%d",clock()-clockTime);
 }

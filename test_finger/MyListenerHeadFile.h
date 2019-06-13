@@ -1,29 +1,8 @@
 #pragma once
 
-class CmdCodeLOG_AdvDbg_AdjImg_Listener:public ICommListener{
-public:
-    void listen(DataPacket response);
-};
-
-class CmdCodeLOG_Info_Listener:public ICommListener{
-public:
-    void listen(DataPacket response);
-};
-
-class CmdCodeLOG_MeasureTimeStart_Listener:public ICommListener{
-public:
-    void listen(DataPacket response);
-};
-
-class CmdCodeLOG_MeasureTimeEnd_Listener:public ICommListener{
-public:
-    void listen(DataPacket response);
-};
-
 #pragma region SCC_DLC_ILC_BCL宏定义
 
 /*
-OS:前面是不用宏的定义,很占地儿,看起来很费劲
     给一个协议添加一个监听器有如下步骤:
     1.SCC,定义一个命令            本文件下面的枚举类型定义里
     2.DLC,定义一个监听器          本文件枚举类型定义前
@@ -188,12 +167,21 @@ enum CmdCodeSyno{
 
 #pragma endregion
 
+#pragma region LOG协议区
+
+__DLC(LOG,Info);
+__DLC(LOG,MeasureTimeStart);
+__DLC(LOG,MeasureTimeEnd);
+__DLC(LOG,AdvDbg_AdjImg);
+
 enum CmdCodeLOG{
-    CmdCodeLOG_Info=0xCC00,
-    CmdCodeLOG_MeasureTimeStart,
-    CmdCodeLOG_MeasureTimeEnd,
-    CmdCodeLOG_AdvDbg_AdjImg,
+    __SCC(LOG,Info)=0xCC00,
+    __SCC(LOG,MeasureTimeStart)=0xCC01,
+    __SCC(LOG,MeasureTimeEnd)=0xCC02,
+    __SCC(LOG,AdvDbg_AdjImg)=0xCC03,
 };
+
+#pragma endregion
 
 #pragma region GD32F30协议区
 
