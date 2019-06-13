@@ -7,34 +7,13 @@ namespace UnitTest{
 
     TEST_CLASS(DataPacketUnitTest){
 public:
-    struct Mock{
-        //数据包
-        uint8_t* data;
-        //数据包长度
-        int   len;
-        //已读字节数
-        int   read;
-    };
-    Mock getMock(DataPacket packet){
-        Mock ret;
-        Assert::AreEqual(sizeof packet,12u);
-        memcpy(&ret,&packet,sizeof packet);
-        return ret;
-    }
-    DataPacket getPacket(Mock mock){
-        DataPacket packet;
-        Assert::AreEqual(sizeof packet,12u);
-        memcpy(&packet,&mock,sizeof packet);
-        return packet;
-    }
 
     //测试无参构造函数
     TEST_METHOD(DataPacket1){
         DataPacket packet;
-        Mock mock=getMock(packet);
-        Assert::AreEqual(-1,mock.len);
-        Assert::AreEqual(0,(int)mock.data);
-        Assert::AreEqual(0,mock.read);
+        Assert::AreEqual(-1,packet.len);
+        Assert::AreEqual(0,(int)packet.data);
+        Assert::AreEqual(0,packet.read);
         packet.Destruction();
     }
 
@@ -43,11 +22,10 @@ public:
         char* str=new char[4];
         strcpy(str,"str");
         DataPacket packet(str,4);
-        Mock mock=getMock(packet);
-        Assert::AreEqual(4,mock.len);
-        Assert::AreNotEqual((char*)mock.data,str);
-        Assert::AreEqual(0,mock.read);
-        Assert::AreEqual(0,strcmp((char*)mock.data,str));
+        Assert::AreEqual(4,packet.len);
+        Assert::AreNotEqual((char*)packet.data,str);
+        Assert::AreEqual(0,packet.read);
+        Assert::AreEqual(0,strcmp((char*)packet.data,str));
         packet.Destruction();
         delete[] str;
     }

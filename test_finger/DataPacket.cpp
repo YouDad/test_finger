@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include"DataPacket.h"
 
 DataPacket::DataPacket(const void * d,int l){
     data=new uint8_t[l+1];
@@ -11,31 +10,31 @@ DataPacket::DataPacket(const void * d,int l){
 
 DataPacket::DataPacket(){
     data=0;
-    len=-1;
+    len=0;
     read=0;
 }
 
 void DataPacket::Destruction(){
     if(isValid()){
         delete data;
-        len=-1;
+        len=0;
         read=0;
     }
 }
 
-bool DataPacket::isValid(){
-    return len!=-1&&len>read;
+bool DataPacket::isValid() const{
+    return len>read;
 }
 
-int DataPacket::size(){
+int DataPacket::size() const{
     return len;
 }
 
-int DataPacket::readSize(){
+int DataPacket::readSize() const{
     return len-read;
 }
 
-uint8_t * DataPacket::getPointer(){
+uint8_t * DataPacket::getPointer() const{
     return data+read;
 }
 
@@ -43,6 +42,6 @@ void DataPacket::readData(int readByteSize){
     read+=readByteSize;
 }
 
-bool DataPacket::haveData(){
-    return read!=len;
+bool DataPacket::haveData() const{
+    return len>read;
 }

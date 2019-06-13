@@ -11,7 +11,7 @@ void MainDialog::OnBnClickedBtnreadreg(){
         MainDialogCtrlValidity::Working();
         MyLog::debug("¿ªÊ¼¶Á¼Ä´æÆ÷");
         uint8_t address=getHex(editReadRegAddr);
-        comm.request(SII(ReadRegister),&address,1);
+        comm.request(SII(ReadRegister),DataPacket(&address,1));
         progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
@@ -39,7 +39,7 @@ void MainDialog::OnBnClickedBtnwritereg(){
     addrVal[0]=getHex(editWriteRegAddr);
     addrVal[1]=getHex(editWriteRegVal);
 
-    comm.request(SII(WriteRegister),addrVal,2);
+    comm.request(SII(WriteRegister),DataPacket(addrVal,2));
 
     progress->SetPos(100);
     MainDialogCtrlValidity::Work();

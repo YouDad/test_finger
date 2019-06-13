@@ -8,16 +8,14 @@ public:
     bool connect(int id,int baud);
     bool connectUSB();
     bool disconnect();
-    void request(int CmdCode,uint8_t* Data=0,uint16_t Len=0);
+    void request(int cmdCode,DataPacket packet=DataPacket());
 private:
     CSerial serial;
     CUsbPort usb;
     int id;
 
-    HANDLE responseThread;
+    MyThread* responseThread;
     MyThread* listenThread;
-    bool startListen();
-    bool terminateListen();
     void sendBytes(uint8_t* data,int len);
     bool readBytes(uint8_t* buffer,int blen,ULONG& cnt);
     bool isOpen();

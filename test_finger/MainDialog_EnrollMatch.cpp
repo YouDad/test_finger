@@ -33,7 +33,7 @@ void MainDialog::OnBnClickedBtnenroll(){
     });
     Flow.push_back(FlowFunction(2)(int& result){
         if(result==0x00){//上传图像成功
-            comm.request(SII(GenChar),&BufferID,1);//生成特征
+            comm.request(SII(GenChar),DataPacket(&BufferID,1));//生成特征
             progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{//上传图像失败
@@ -49,7 +49,7 @@ void MainDialog::OnBnClickedBtnenroll(){
             MyLog::debug("生成特征成功(%d/%d)",BufferID,EnrollCount);
 
             uint8_t x[]={BufferID,0,0,0,0x87};
-            comm.request(SII(Search),x,sizeof x);//搜索指纹
+            comm.request(SII(Search),DataPacket(x,sizeof x));//搜索指纹
             progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{//生成特征失败
@@ -105,7 +105,7 @@ void MainDialog::OnBnClickedBtnenroll(){
     });
     Flow.push_back(FlowFunction(9)(int& result){
         uint8_t data[]={1,0,FingerID};
-        comm.request(SII(StoreChar),data,sizeof data);//存储模板
+        comm.request(SII(StoreChar),DataPacket(data,sizeof data));//存储模板
         progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
@@ -141,7 +141,7 @@ void MainDialog::OnBnClickedBtnmatch(){
     Flow.push_back(FlowFunction(0)(int& result){
         MainDialogCtrlValidity::Working();
         uint8_t data[]={02,00,FingerID};
-        comm.request(SII(LoadChar),data,sizeof data);
+        comm.request(SII(LoadChar),DataPacket(data,sizeof data));
         FlowID++;
         MyLog::user("读出指纹模板中...");
         return false;
@@ -160,7 +160,7 @@ void MainDialog::OnBnClickedBtnmatch(){
         if(result==0x00){
             MyLog::user("取指纹图成功");
             uint8_t data[]={02};
-            comm.request(SII(GenChar),data,sizeof data);
+            comm.request(SII(GenChar),DataPacket(data,sizeof data));
             progress->SetPos(100*++FlowID/Flow.size());
             return false;
         } else{
@@ -210,7 +210,7 @@ void MainDialog::OnBnClickedBtnviewenrollids(){
     Flow.push_back(FlowFunction(0)(int& result){
         MainDialogCtrlValidity::Working();
         uint8_t data[]={0};
-        comm.request(SII(ReadIndexTable),data,sizeof data);
+        comm.request(SII(ReadIndexTable),DataPacket(data,sizeof data));
         progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
@@ -234,7 +234,7 @@ void MainDialog::OnBnClickedBtndeletetemplate(){
     Flow.push_back(FlowFunction(0)(int& result){
         MainDialogCtrlValidity::Working();
         uint8_t data[]={0,FingerID,0,1};
-        comm.request(SII(DeleteChar),data,sizeof data);
+        comm.request(SII(DeleteChar),DataPacket(data,sizeof data));
         progress->SetPos(100*++FlowID/Flow.size());
         return false;
     });
