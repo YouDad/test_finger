@@ -1,6 +1,8 @@
 #include "stdafx.h"
+// 定义本文件处理的回应是DataPacketLOG这个格式的
 typedef DataPacketLOG Response;
 
+// 查看数据包的开头确定协议
 bool ResponseConverterLOG::checkProtocol(DataPacket dataPacket){
     if(!dataPacket.haveData()){
         return false;
@@ -9,6 +11,7 @@ bool ResponseConverterLOG::checkProtocol(DataPacket dataPacket){
     return p[0]=='L'&&p[1]=='O'&&p[2]=='G';
 }
 
+// LOG的数据清洗过程,结果是数据部分
 DataPacket ResponseConverterLOG::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
     int totalLength=0;
@@ -28,6 +31,7 @@ DataPacket ResponseConverterLOG::convert(DataPacket& data){
     return ret;
 }
 
+// 返回命令码
 int ResponseConverterLOG::getCmdCode(DataPacket data){
     return ((Response*)data.getPointer())->Cmd;
 }

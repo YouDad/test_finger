@@ -3,6 +3,11 @@
 void MainDialog::OnCbnSelchangeCmbprotocoltype(){
     conf["ProtocolType"]=MyString::Format("%d",cmbProtocolType->GetCurSel());
     MainDialogCtrlValidity::Work();
+    if(getText(cmbProtocolType)==SYNO){
+        comm.setBlock(true);
+    } else{
+        comm.setBlock(false);
+    }
 }
 
 void MainDialog::OnBnClickedBtnadvdbg(){

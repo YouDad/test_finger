@@ -48,21 +48,21 @@ SII_##Name##_软件内部指令
 
 //软件内部命令标识符
 enum CmdCode{
-    SII(GetRawImage),
-    SII(GetTestImage),
-    SII(ReadRegister),
-    SII(WriteRegister),
-    SII(UpImage),
-    SII(GenChar),
-    SII(GetEnrollImage),
-    SII(RegModel),
-    SII(StoreChar),
-    SII(Search),
-    SII(ReadIndexTable),
-    SII(Match),
-    SII(LoadChar),
-    SII(DeleteChar),
-    SII(DeviceInfo),
+    SII(GetRawImage),           //获得原始图像
+    SII(GetTestImage),          //获得测试图像
+    SII(ReadRegister),          //读寄存器
+    SII(WriteRegister),         //写寄存器
+    SII(UpImage),               //上传图像
+    SII(GenChar),               //根据原始图像生成指纹特征存于特征文件缓冲区
+    SII(GetEnrollImage),        //注册用获取图像
+    SII(RegModel),              //将特征文件合并生成模板存于特征文件缓冲区
+    SII(StoreChar),             //将特征缓冲区中的文件储存到flash指纹库中
+    SII(Search),                //以特征文件缓冲区中的特征文件搜索整个或部分指纹库
+    SII(ReadIndexTable),        //读索引表
+    SII(Match),                 //精确比对特征文件缓冲区中的特征文件
+    SII(LoadChar),              //从flash指纹库中读取一个模板到特征缓冲区
+    SII(DeleteChar),            //删除flash指纹库中的一个特征文件
+    SII(DeviceInfo),            //获取设备信息
 };
 
 #pragma region Syno协议区
@@ -95,7 +95,7 @@ __DLC(Syno,DeleteChar);
     9	|DownChar			|09H	|从上位机下载一个特征文件到特征缓冲区
     10	|UpImage			|0aH	|上传原始图像
     11	|DownImage			|0bH	|下载原始图像
-    12	|DeletChar			|0cH	|删除flash指纹库中的一个特征文件
+    12	|DeleteChar			|0cH	|删除flash指纹库中的一个特征文件
     13	|Empty				|0dH	|清空flash指纹库
     14	|WriteReg			|0eH	|写SOC系统寄存器
     15	|ReadSysPara		|0FH	|读系统基本参数
@@ -176,10 +176,10 @@ __DLC(LOG,MeasureTimeEnd);
 __DLC(LOG,AdvDbg_AdjImg);
 
 enum CmdCodeLOG{
-    __SCC(LOG,Info)=0xCC00,
-    __SCC(LOG,MeasureTimeStart)=0xCC01,
-    __SCC(LOG,MeasureTimeEnd)=0xCC02,
-    __SCC(LOG,AdvDbg_AdjImg)=0xCC03,
+    __SCC(LOG,Info)                 =0xCC00,//显示下位机的Info
+    __SCC(LOG,MeasureTimeStart)     =0xCC01,//开始计时
+    __SCC(LOG,MeasureTimeEnd)       =0xCC02,//结束计时
+    __SCC(LOG,AdvDbg_AdjImg)        =0xCC03,//获得调整中的图像
 };
 
 #pragma endregion
@@ -192,10 +192,10 @@ __DLC(GD32F30,ReadRegister);
 __DLC(GD32F30,DeviceInfo);
 
 enum CmdCodeGD32F30{
-    __SCC(GD32F30,GetTestImage)=0x031F,//CMD_GET_TEST_IMAGE=0x031F,
+    __SCC(GD32F30,GetTestImage)=0x031F,     //获得原始图像
     CMD_DEVICE_RESET=0x0320,
     CMD_DETECT_FINGER=0x0321,
-    __SCC(GD32F30,GetRawImage)=0x0322,//CMD_GET_RAW_IMAGE=0x0322,
+    __SCC(GD32F30,GetRawImage)=0x0322,      //获得测试图像
     CMD_GET_REDRESS_IMAGE=0x0323,
     CMD_UPLOAD_IMAGE=0x0324,
     CMD_GEN_CHAR=0x0325,
@@ -208,8 +208,8 @@ enum CmdCodeGD32F30{
     CMD_GET_CHAR=0x032C,
     CMD_PUT_CHAR=0x032D,
     CMD_GET_MBINDEX=0x032E,
-    __SCC(GD32F30,ReadRegister)=0x032F,//CMD_READ_NOTE_BOOK=0x032F,
-    __SCC(GD32F30,WriteRegister)=0x0330,//CMD_WRITE_NOTE_BOOK=0x0330,
+    __SCC(GD32F30,ReadRegister)=0x032F,     //读寄存器
+    __SCC(GD32F30,WriteRegister)=0x0330,    //写寄存器
     CMD_READ_PAR_TABLE=0x0331,
     CMD_SET_BAUD_RATE=0x0332,
     CMD_SET_SECURLEVEL=0x0333,
@@ -225,7 +225,7 @@ enum CmdCodeGD32F30{
     CMD_READ_CHAR_DIRECT=0x0343,
     CMD_GET_FIRSTVALID_ADD=0x0344,
     CMD_CHIP_ERASE=0x0380,
-    __SCC(GD32F30,DeviceInfo)=0x0381,
+    __SCC(GD32F30,DeviceInfo)=0x0381,       //获取设备信息
 };
 
 #pragma endregion

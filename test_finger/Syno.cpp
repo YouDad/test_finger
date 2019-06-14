@@ -56,6 +56,7 @@ const char* SynoFormatMessage(int errorCode){
     case 0xf4:return "烧写内部FLASH时，包长度错误";
     case 0xf5:return "烧写内部FLASH时，代码长度太长";
     case 0xf6:return "烧写内部FLASH时，烧写FLASH失败";
+    default:return "";
     }
 }
 

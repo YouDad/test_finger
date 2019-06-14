@@ -1,10 +1,8 @@
 ﻿#pragma once
 #include"stdafx.h"
 
-extern MyLocker vaildLastCmdCode;
-extern std::queue<int> lastCmdCode;
-
 #pragma pack(1)
+// GD32所用的请求数据包格式
 struct DataPacketGD32F30{
     uint16_t	Head;
     uint32_t	Addr;
@@ -17,6 +15,7 @@ struct DataPacketGD32F30{
 };
 #pragma pack(4)
 
+// GD32的请求转化器
 class RequestConverterGD32F30:public ICommProtocolRequestConverter{
 public:
     virtual bool checkProtocol(DataPacket dataPacket) override;
@@ -24,6 +23,7 @@ public:
 };
 
 #pragma pack(1)
+// GD32所用的回应数据包格式
 struct ResponsePacketGD32F30{
     uint16_t	Head;
     uint32_t	Addr;
@@ -39,6 +39,7 @@ struct ResponsePacketGD32F30{
 };
 #pragma pack(4)
 
+// GD32的回应转化器
 class ResponseConverterGD32F30:public ICommProtocolResponseConverter{
     virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual DataPacket convert(DataPacket& data) override;
@@ -46,6 +47,7 @@ class ResponseConverterGD32F30:public ICommProtocolResponseConverter{
 };
 
 #pragma pack(1)
+// LOG所用的数据包格式
 struct DataPacketLOG{
     char Head[3];
     uint16_t Cmd;
@@ -57,6 +59,7 @@ struct DataPacketLOG{
 };
 #pragma pack(4)
 
+// LOG的请求转化器
 class ResponseConverterLOG:public ICommProtocolResponseConverter{
     virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual DataPacket convert(DataPacket& data) override;
@@ -64,6 +67,7 @@ class ResponseConverterLOG:public ICommProtocolResponseConverter{
 };
 
 #pragma pack(1)
+// Syno所用的数据包格式,有大小端转换代码
 struct DataPacketSyno{
     char head[2];//0xEF01
     unsigned int address;//缺省0xFFFFFFFF
@@ -101,12 +105,14 @@ private:
 };
 #pragma pack(4)
 
+// Syno的请求转化器
 class RequestConverterSyno:public ICommProtocolRequestConverter{
 public:
     virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
 };
 
+// Syno的回应转化器
 class ResponseConverterSyno:public ICommProtocolResponseConverter{
 public:
     virtual bool checkProtocol(DataPacket dataPacket) override;

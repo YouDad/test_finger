@@ -1,8 +1,10 @@
 #pragma once
 #include"stdafx.h"
 
+// 全局唯一监听器广播对象
 ListenerBoardcast listenerBoardcast;
 
+// 构造器,初始化需要监听的map
 ListenerBoardcast::ListenerBoardcast(){
     __BCL(GD32,GD32F30,GetRawImage);
     __BCL(GD32,GD32F30,GetTestImage);
@@ -27,6 +29,7 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(SYNO,Syno,DeleteChar);
 }
 
+// 增加事件码对应的监听器
 void ListenerBoardcast::attach(int event,ICommListener* listener){
     if(!m.count(event)){
         m[event]=std::vector<ICommListener*>();
@@ -34,6 +37,7 @@ void ListenerBoardcast::attach(int event,ICommListener* listener){
     m[event].push_back(listener);
 }
 
+// 广播事件
 void ListenerBoardcast::boardcast(int event,DataPacket response){
     std::vector<ICommListener*>::iterator it;
     for(it=m[event].begin();it!=m[event].end();it++){
@@ -43,10 +47,12 @@ void ListenerBoardcast::boardcast(int event,DataPacket response){
     }
 }
 
+// 构造器,参数是宏定义的字符串,代表这个监听器在什么协议下进行监听
 ICommListener::ICommListener(const char* protocol){
     this->protocol=protocol;
 }
 
+// 如果可以监听,返回真
 bool ICommListener::accept(){
     if(protocol==0){
         return true;

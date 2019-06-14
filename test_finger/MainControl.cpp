@@ -269,7 +269,7 @@ void updateCommunityWay(){
 void autoConnect(){
     int id=comm.getConnectId();
     //自动连接只在未连接状态生效
-    if(id==0){
+    if(id>0){
         if(idle->size()==lastIdle->size()+1){ //应该会增加一个空闲设备
             std::vector<int> diff;
             std::sort(idle->begin(),idle->end());

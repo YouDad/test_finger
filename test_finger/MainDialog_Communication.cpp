@@ -11,7 +11,7 @@ void MainDialog::OnBnClickedBtnconnect(){
 
         bool ret;
         if(getText(cmbWay)=="USB"){
-            ret=comm.connectUSB();
+            ret=comm.connect();
         } else{
             int baud=getInt(cmbBaud);//¶ÁÈ¡²¨ÌØÂÊ
             int com=(*idle)[idle->size()-cmbWay->GetCurSel()];

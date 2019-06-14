@@ -66,9 +66,6 @@ void MainDialog::OnBnClickedBtncancel(){
     ExecEnd();
     MyLog::user("取消了操作");
     MainDialogCtrlValidity::Work();
-    if(lastCmdCode.size()){
-        lastCmdCode.pop();
-    }
 }
 
 void MainDialog::OnBnClickedBtnclearlog(){
