@@ -13,6 +13,8 @@ public:
     };
     static void print(LogLevel level,MyString info);
     static void print(LogLevel level,const char* format,...);
+    static void trace(MyString info);
+    static void trace(const char* format,...);
     static void debug(MyString info);
     static void debug(const char* format,...);
     static void error(MyString info);

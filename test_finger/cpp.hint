@@ -38,3 +38,17 @@ SII_##Name##_ForNotOverLapped
 #define FlowFunction(id) __FlowFunction
 
 #define foreach(it,container) for(auto it=container.begin();it!=container.end();it++)
+
+#define FastDefineLogName(FuncName,LogLevel)    \
+void MyLog::FuncName(MyString info){            \
+    print(LogLevel,info);                       \
+}                                               \
+void MyLog::FuncName(const char * format,...){  \
+    char tmp[512];                              \
+    va_list ap;                                 \
+    va_start(ap,format);                        \
+    vsprintf(tmp,format,ap);                    \
+    va_end(ap);                                 \
+                                                \
+    print(LogLevel,tmp);                        \
+}

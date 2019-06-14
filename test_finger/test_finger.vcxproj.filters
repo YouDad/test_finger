@@ -32,9 +32,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -119,6 +116,9 @@
     <ClInclude Include="strings.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RequestConverterGD32F30.cpp">
@@ -196,9 +196,6 @@
     <ClCompile Include="MyImage.cpp">
       <Filter>My</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="MainControl.cpp">
       <Filter>UI\MainDialog</Filter>
     </ClCompile>
@@ -231,6 +228,9 @@
     </ClCompile>
     <ClCompile Include="LOG.cpp">
       <Filter>Comm\CommListener</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
