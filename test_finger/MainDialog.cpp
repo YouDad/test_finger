@@ -124,6 +124,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     }break;
     case WM_READ_REGISTER:
     {
+        MainDialogCtrlValidity::Work();
         progress->SetPos(100);
     }break;
     case WM_APPEND_CONTROLS:

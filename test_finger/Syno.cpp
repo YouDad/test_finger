@@ -1,229 +1,171 @@
 #include "stdafx.h"
 
+// 根据返回值生成Syno's 错误信息
+const char* SynoFormatMessage(int errorCode){
+    switch(errorCode){
+        //case 0x00:return "指令执行完毕或OK";
+    case 0x00:return "";
+    case 0x01:return "数据包接收错误";
+    case 0x02:return "传感器上没有手指";
+    case 0x03:return "录入指纹图像失败或录入面积不足";
+    case 0x04:return "指纹图像太干、太淡而生不成特征";
+    case 0x05:return "指纹图像太湿、太糊而生不成特征";
+    case 0x06:return "指纹图像太乱而生不成特征";
+    case 0x07:return "指纹图像正常，但特征点太少（或面积太小）而生不成特征";
+    case 0x08:return "指纹不匹配";
+    case 0x09:return "没搜索到指纹";
+    case 0x0a:return "特征合并失败";
+    case 0x0b:return "访问指纹库时地址序号超出指纹库范围";
+    case 0x0c:return "从指纹库读模板出错或无效";
+    case 0x0d:return "上传特征失败";
+    case 0x0e:return "模块不能接收后续数据包";
+    case 0x0f:return "上传图像失败";
+    case 0x10:return "删除模板失败";
+    case 0x11:return "清空指纹库失败";
+    case 0x12:return "不能进入低功耗状态";
+    case 0x13:return "口令不正确";
+    case 0x14:return "系统复位失败";
+    case 0x15:return "缓冲区内没有有效原始图而生不成图像";
+    case 0x16:return "在线升级失败";
+    case 0x17:return "残留指纹或两次采集之间手指没有移动过";
+    case 0x18:return "读写FLASH出错";
+    case 0x19:return "随机数生成失败";
+    case 0x1a:return "无效寄存器号";
+    case 0x1b:return "寄存器设定内容错误号";
+    case 0x1c:return "记事本页码指定错误";
+    case 0x1d:return "端口操作失败";
+    case 0x1e:return "自动注册（enroll）失败";
+    case 0x1f:return "指纹库满";
+    case 0x20:return "设备地址错误";
+    case 0x21:return "密码有误";
+    case 0x22:return "指纹模板非空";
+    case 0x23:return "指纹模板为空";
+    case 0x24:return "指纹库为空";
+    case 0x25:return "录入次数设置错误";
+    case 0x26:return "超时";
+    case 0x27:return "指纹已存在";
+    case 0x28:return "指纹模板有关联";
+    case 0x29:return "传感器初始化失败";
+    case 0x2A:return "模组唯一序列号非空";
+    case 0x2B:return "模组唯一序列号为空";
+    case 0x2C:return "OTP操作失败";
+    case 0xf0:return "有后续数据包的指令，正确接收后用0xf0应答";
+    case 0xf1:return "有后续数据包的指令，命令包用0xf1应答";
+    case 0xf2:return "烧写内部FLASH时，校验和错误";
+    case 0xf3:return "烧写内部FLASH时，包标识错误";
+    case 0xf4:return "烧写内部FLASH时，包长度错误";
+    case 0xf5:return "烧写内部FLASH时，代码长度太长";
+    case 0xf6:return "烧写内部FLASH时，烧写FLASH失败";
+    }
+}
+
+// 对response的标准处理
+// 即只对错误信息进行输出,然后执行下一个流程
+void standardProcessResponse(DataPacket& response){
+    int retVal=response.getPointer()[0];
+    MyLog::user(SynoFormatMessage(retVal));
+    ExecFlowRef(retVal);
+}
+
+// 从传感器上读入图像存于图像缓冲区
 __ILC(Syno,GetImage){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://录入成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x02://传感器上无手指
-            MyLog::user("传感器上无手指");
-            break;
-        case 0x03://录入不成功或面积不足
-            MyLog::user("录入不成功或面积不足");
-            break;
-    }
-    ExecFlowRef(front);
+    standardProcessResponse(response);
 }
 
-__ILC(Syno,UpImage){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            response.readData(1);
-            SendMessage(hwnd,WM_GET_RAW_IMAGE,WM_GET_RAW_IMAGE,0);
-            progress->SetPos(50);
-            MyLog::debug("接收到数据包,大小为%d",response.readSize());
-            MyLog::debug("线程向主线程发送消息WM_GET_RAW_IMAGE");
-            progress->SetPos(75);
-            MyLog::debug("消息处理函数收到消息WM_GET_RAW_IMAGE");
-
-            saveImage(_T("collectedImage"),response);
-            progress->SetPos(100);
-            MyLog::debug("加载图片完成");
-            MyLog::user("接收数据成功");
-
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x0f://不能发送后续数据包
-            MyLog::user("不能发送后续数据包");
-            break;
-    }
-    ExecFlowRef(front);
-}
-
+// 根据原始图像生成指纹特征存于特征文件缓冲区
 __ILC(Syno,GenChar){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x06://图像太乱,生不成特征
-            MyLog::user("图像太乱,生不成特征");
-            break;
-        case 0x07://图像特征太少,生不成特征
-            MyLog::user("图像特征太少,生不成特征");
-            break;
-        case 0x15://图像缓冲区里没有图像,生不成图像
-            MyLog::user("图像缓冲区里没有图像,生不成图像");
-            break;
-        case 0x1b://寄存器设定内容错误
-            MyLog::user("寄存器设定内容错误");
-            break;
-        case 0x28://当前指纹模板与之前的模板之间有关联
-            MyLog::user("当前指纹模板与之前的模板之间有关联");
-            break;
-    }
-    ExecFlowRef(front);
+    standardProcessResponse(response);
 }
 
-__ILC(Syno,GetEnrollImage){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x02://传感器上无手指
-            MyLog::user("传感器上无手指");
-            break;
-        case 0x03://录入不成功或面积不足
-            MyLog::user("录入不成功或面积不足");
-            break;
-    }
-    ExecFlowRef(front);
-}
-
-__ILC(Syno,RegModel){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x0a://合并失败
-            MyLog::user("合并失败");
-            break;
-    }
-    ExecFlowRef(front);
-}
-
-__ILC(Syno,StoreChar){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x0b://PageID超出指纹库范围
-            MyLog::user("PageID超出指纹库范围");
-            break;
-        case 0x18://写FLASH出错
-            MyLog::user("写FLASH出错");
-            break;
-    }
-    ExecFlowRef(front);
-}
-
-__ILC(Syno,Search){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x09://没搜索到
-            MyLog::user("没搜索到");
-            break;
-        case 0x17://手指没有移动
-            MyLog::user("手指没有移动");
-            break;
-    }
-    ExecFlowRef(front);
-}
-
-__ILC(Syno,ReadIndexTable){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            response.readData(1);
-            if(response.readSize()!=32){
-                MyLog::user("ReadIndexTable命令执行失败");
-            } else{
-                MyString msg="已注册指纹编号为:";
-                std::vector<int>v;
-                uint8_t* p=response.getPointer();
-                for(int i=0;i<32;i++){
-                    if(p[i]){
-                        for(int j=0;j<8;j++){
-                            if(p[i]&(1<<j)){
-                                v.push_back(i*8+j);
-                            }
-                        }
-                    }
-                }
-                if(v.size()){
-                    msg+=MyString::IntToMyString(v[0]);
-                    for(int i=1;i<v.size();i++){
-                        msg+=MyString(",")+MyString::IntToMyString(v[i]);
-                    }
-                }
-                MyLog::user(msg);
-            }
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-    }
-    ExecFlowRef(front);
-}
-
+// 精确比对特征文件缓冲区中的特征文件
 __ILC(Syno,Match){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            response.readData(1);
-            MyLog::user("指纹匹配成功,得分:%d",response.getPointer()[0]*256+response.getPointer()[1]);
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x08://指纹不匹配
-            MyLog::user("指纹不匹配");
-            break;
+    int retVal=response.getPointer()[0];
+    MyLog::user(SynoFormatMessage(retVal));
+    if(retVal==0x00){// 成功
+        response.readData(1);
+        uint8_t* ptr=response.getPointer();
+        MyLog::user("指纹匹配成功,得分:%d",ptr[0]*256+ptr[1]);
     }
-    ExecFlowRef(front);
+    ExecFlowRef(retVal);
 }
 
+// 以特征文件缓冲区中的特征文件搜索整个或部分指纹库
+__ILC(Syno,Search){
+    standardProcessResponse(response);
+}
+
+// 将特征文件合并生成模板存于特征文件缓冲区
+__ILC(Syno,RegModel){
+    standardProcessResponse(response);
+}
+
+// 将特征缓冲区中的文件储存到flash指纹库中
+__ILC(Syno,StoreChar){
+    standardProcessResponse(response);
+}
+
+// 从flash指纹库中读取一个模板到特征缓冲区
 __ILC(Syno,LoadChar){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x0b://编号超出指纹库范围
-            MyLog::user("编号超出指纹库范围");
-            break;
-        case 0x0c://读出有错或模板无效
-            MyLog::user("读出有错或模板无效");
-            break;
-    }
-    ExecFlowRef(front);
+    standardProcessResponse(response);
 }
 
-__ILC(Syno,DeleteChar){
-    int front=response.getPointer()[0];
-    switch(front){
-        case 0x00://成功
-            break;
-        case 0x01://收包有错
-            ASF_ERROR(5);
-            return;
-        case 0x10://删除模板失败
-            MyLog::user("删除模板失败");
-            break;
+// 上传原始图像
+__ILC(Syno,UpImage){
+    int retVal=response.getPointer()[0];
+    MyLog::user(SynoFormatMessage(retVal));
+    if(retVal==0x00){// 成功
+        response.readData(1);
+        progress->SetPos(50);
+        MyLog::trace("接收到数据包,大小为%d",response.readSize());
+        MyLog::trace("线程向主线程发送消息WM_GET_RAW_IMAGE");
+        sendMainDialogMessage(WM_GET_RAW_IMAGE);
+        progress->SetPos(75);
+
+        saveImage(_T("collectedImage"),response);
+        progress->SetPos(100);
+        MyLog::trace("加载图片完成");
+        MyLog::user("接收数据成功");
     }
-    ExecFlowRef(front);
+    ExecFlowRef(retVal);
+}
+
+// 删除flash指纹库中的一个特征文件
+__ILC(Syno,DeleteChar){
+    standardProcessResponse(response);
+}
+
+// 读索引表
+__ILC(Syno,ReadIndexTable){
+    int retVal=response.getPointer()[0];
+    MyLog::user(SynoFormatMessage(retVal));
+    if(retVal==0x00){// 成功
+        response.readData(1);
+        // 数据长度一定是32个字节
+        if(response.readSize()!=32){
+            MyLog::user("读索引表失败");
+        } else{
+            // 构造已注册指纹编号序列
+            MyString msg="已注册指纹编号为: ";
+            uint8_t* p=response.getPointer();
+
+            //给了32个uint8_t,每一位为1代表对应的指纹存在
+            for(int i=0;i<32;i++){
+                if(p[i]==0){
+                    continue;
+                }
+                for(int j=0;j<8;j++){
+                    if(p[i]&(1<<j)){
+                        msg+=MyString::IntToMyString(i*8+j)+" ";
+                    }
+                }
+            }
+            MyLog::user(msg);
+        }
+    }
+    ExecFlowRef(retVal);
+}
+
+// 注册用获取图像
+__ILC(Syno,GetEnrollImage){
+    standardProcessResponse(response);
 }

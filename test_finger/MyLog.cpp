@@ -27,12 +27,18 @@ void MyLog::appendLog(const char* text){
 }
 
 void MyLog::print(LogLevel level,MyString info){
-    //日志等级异常
+    // 日志等级异常
     if(level>=LOG_HIGHEST){
         ASF_WARNING(1);
         level=LOGD;
     }
-    //增加等级提示
+
+    // 空信息不输出
+    if(info==""){
+        return;
+    }
+
+    // 增加等级提示
     const char* pLevel;
     switch(level){
         case LOGU:pLevel="U";break;
@@ -42,9 +48,11 @@ void MyLog::print(LogLevel level,MyString info){
         case LOGT:pLevel="T";break;
         default:pLevel=" Unknown ";break;
     }
-    //构造包装过后的信息
+
+    // 构造包装过后的信息
     MyString content=MyString(pLevel)+MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
-    //更新逻辑
+
+    // 更新日志框
     static MyString last_info="";
     if(info!=last_info){
         int len=editLog->GetWindowTextLength();

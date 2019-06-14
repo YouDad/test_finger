@@ -1,11 +1,15 @@
 #include "stdafx.h"
+// 定义本文件处理的请求是DataPacketGD32F30这个格式的
 typedef struct DataPacketGD32F30 Request;
+
 uint16_t GetCRC16(const void*pSource,uint16_t len);
 
+// 确认是这个转换器的任务,就看协议选的是不是GD32
 bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
     return getText(cmbProtocolType)==GD32;
 }
 
+// 把软件内部指令转化为对应的命令码
 int ToGD32F30(int cmdCode){
     switch(cmdCode){
         case SII(GetTestImage):
@@ -24,6 +28,7 @@ int ToGD32F30(int cmdCode){
     }
 }
 
+// GD32的转化过程
 std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * Data,uint16_t Len){
     std::vector<DataPacket> ret;
     try{
@@ -32,39 +37,45 @@ std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * D
         return ret;
     }
 
+    // Head & CMD, Addr=0 and Password=0
     Request request={};
     request.Head=0x02EF;
     request.CMD=CmdCode;
 
     const int interval=sizeof request.Sendbuf-2;
-    for(int i=0;Len>interval+i*interval;i++){
+    for(int i=0;true;i++){
+        // NO
         request.NO=i;
-        request.Sign=DataNotEnd;
-        request.Length=interval;
-        memset(request.Sendbuf,0,sizeof request.Sendbuf);
+
+        // SendBuf
         if(Data){
+            memset(request.Sendbuf,0,sizeof request.Sendbuf);
             memcpy(request.Sendbuf,Data+request.NO*interval,interval);
         }
+
+        // Sign & Length
+        if(Len>interval+i*interval){
+            request.Sign=DataNotEnd;
+            request.Length=interval;
+        } else{
+            request.Sign=DataEnd;
+            if(Len>0&&Len%interval==0){
+                request.Length=interval;
+            } else{
+                request.Length=Len%interval;
+            }
+        }
+
+        // CRC check
         UINT16 crcValue=GetCRC16(&request,sizeof Request-interval+request.Length);
         request.Sendbuf[request.Length]=crcValue&0xFF;
         request.Sendbuf[request.Length+1]=(crcValue>>8)&0xFF;
-        ret.push_back(DataPacket(&request,sizeof request));
+
+        ret.push_back(DataPacket(&request,sizeof request-interval+request.Length));
+        if(Len<=interval+i*interval){
+            break;
+        }
     }
-    request.NO=Len/interval;
-    request.Sign=DataEnd;
-    if(Len>0&&Len%interval==0){
-        request.Length=interval;
-    } else{
-        request.Length=Len%interval;
-    }
-    memset(request.Sendbuf,0,sizeof request.Sendbuf);
-    if(Data){
-        memcpy(request.Sendbuf,Data+request.NO*interval,interval);
-    }
-    UINT16 crcValue=GetCRC16(&request,sizeof Request-interval+request.Length);
-    request.Sendbuf[request.Length]=crcValue&0xFF;
-    request.Sendbuf[request.Length+1]=(crcValue>>8)&0xFF;
-    ret.push_back(DataPacket(&request,sizeof request-interval+request.Length));
     return ret;
 }
 
