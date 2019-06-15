@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+// 把p代表的数组,长度为len翻转一下
 void reverse(uint8_t* p,int len){
     for(int i=0;i<len-1-i;i++){
         uint8_t t=p[len-1-i];
@@ -8,6 +9,7 @@ void reverse(uint8_t* p,int len){
     }
 }
 
+// 把长为w,宽为h的图片pData,存到当前目录的dirname目录下,文件名叫filename
 bool saveBmp(int w,int h,uint8_t* pData,MyString dirname,MyString filename){
     BITMAPINFOHEADER bmpInfo;
     bmpInfo.biSize=sizeof bmpInfo;
@@ -50,6 +52,7 @@ bool saveBmp(int w,int h,uint8_t* pData,MyString dirname,MyString filename){
     return true;
 }
 
+// 把dataPacket里的数据当做图片存到dir路径下
 void saveImage(MyString dir,DataPacket dataPacket){
     MyString fileName=MyString::Time();
     MyString dirFileName=dir+"/"+fileName+".bmp";
@@ -124,6 +127,7 @@ void saveImage(MyString dir,DataPacket dataPacket){
     dataPacket.readData(dataPacket.size());
 }
 
+// 生成亮度直方图,输入为w*h的pData,输出为hw*hh的Histogram
 void generateHistogram(uint8_t* Histogram,int hw,int hh,uint8_t* pData,int w,int h){
     auto func=[&](int position,int height)->void{
         for(int i=0;i<hh;i++){
@@ -159,6 +163,7 @@ void generateHistogram(uint8_t* Histogram,int hw,int hh,uint8_t* pData,int w,int
     delete[] count;
 }
 
+// 把w*h的src的图片放大一倍,存到dest里
 void imgSizeX2(uint8_t * src,int w,int h,uint8_t * dest){
     int dw=w+w,dh=h+h;
     for(int i=0;i<dh;i++){

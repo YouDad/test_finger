@@ -1,7 +1,9 @@
 #include "stdafx.h"
 
+// 日志备份位置
 const char* MyLog::LOG_FILE="backup_log.txt";
 
+// 是否已经存在日志文件
 bool MyLog::isExistLog(){
     FILE* fp=fopen(LOG_FILE,"r");
     if(fp){
@@ -10,22 +12,26 @@ bool MyLog::isExistLog(){
     return fp!=NULL;
 }
 
+// 删除日志文件
 void MyLog::clearLog(){
     if(isExistLog()){
         remove(LOG_FILE);
     }
 }
 
+// 创造日志文件
 void MyLog::createLog(){
     fclose(fopen(LOG_FILE,"a+"));
 }
 
+// 追加日志内容
 void MyLog::appendLog(const char* text){
     FILE* fp=fopen(LOG_FILE,"a+");
     fprintf_s(fp,"%s",text);
     fclose(fp);
 }
 
+// 输出level的info
 void MyLog::print(LogLevel level,MyString info){
     // 日志等级异常
     if(level>=LOG_HIGHEST){
@@ -67,6 +73,7 @@ void MyLog::print(LogLevel level,MyString info){
     last_info=info;
 }
 
+// 输出level的info(printf的样子)
 void MyLog::print(LogLevel level,const char* format,...){
     char tmp[512];
     va_list ap;
@@ -77,6 +84,7 @@ void MyLog::print(LogLevel level,const char* format,...){
     print(level,MyString(tmp));
 }
 
+// 快速定义各个等级的log函数
 #define FastDefineLogName(FuncName,LogLevel)    \
 void MyLog::FuncName(MyString info){            \
     print(LogLevel,info);                       \
@@ -97,7 +105,9 @@ FastDefineLogName(warn,LOGW)
 FastDefineLogName(error,LOGE)
 FastDefineLogName(user,LOGU)
 
+// 当前版本
 int Version=270;
+// 开发日志,小版本加以注释
 void MyLog::DevelopLog(){
     //user("V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
     user("V1.0 <2019年3月16日15:36:11>:完成原始图像和连续取图按钮功能");
@@ -122,6 +132,7 @@ void MyLog::DevelopLog(){
     user("V2.7 <2019年6月12日20:25:27>:增加USB连接方式,增强串口扫描功能,增强界面健壮性,优化代码结构");
 }
 
+// 清空日志框
 void MyLog::ClearLog(){
     clearLog();
     createLog();

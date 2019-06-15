@@ -1,10 +1,13 @@
 #include "stdafx.h"
 
+// 静态成员声明
 char MyConfig::buffer[1<<16];
 char MyConfig::key[1<<6];
 char MyConfig::val[1<<6];
+// 全局唯一配置
 MyConfig conf;
 
+// 默认配置
 void MyConfig::defaultConfig(){
     if(!m.count("AdvDbg")){
         m["AdvDbg"]="false";
@@ -24,6 +27,7 @@ void MyConfig::defaultConfig(){
     return;
 }
 
+// 构造函数是从文件中读取配置
 MyConfig::MyConfig(){
     FILE* fp=fopen(FILENAME,"r");
     if(fp){
@@ -41,6 +45,7 @@ MyConfig::MyConfig(){
     defaultConfig();
 }
 
+// 析构函数是把配置写到文件里
 MyConfig::~MyConfig(){
     FILE* fp=fopen(FILENAME,"w");
     if(!fp){
@@ -59,6 +64,7 @@ MyConfig::~MyConfig(){
     fclose(fp);
 }
 
+// 像map<string,string>一样,键类型是字符串,值类型也是字符串
 std::string& MyConfig::operator[](std::string s){
     return m[s];
 }
