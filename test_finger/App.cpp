@@ -1,22 +1,8 @@
-
-// App.cpp : 定义应用程序的类行为。
-//
-
 #include "stdafx.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
-
-// App
 
 BEGIN_MESSAGE_MAP(App,CWinApp)
     ON_COMMAND(ID_HELP,&CWinApp::OnHelp)
 END_MESSAGE_MAP()
-
-
-// App 构造
 
 App::App(){
     // 支持重新启动管理器
@@ -25,15 +11,9 @@ App::App(){
     // TODO: 在此处添加构造代码，
     // 将所有重要的初始化放置在 InitInstance 中
 }
-
-
 // 唯一的一个 App 对象
-
 App theApp;
-
-
 // App 初始化
-
 BOOL App::InitInstance(){
     // 如果一个运行在 Windows XP 上的应用程序清单指定要
     // 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
@@ -46,7 +26,6 @@ BOOL App::InitInstance(){
     InitCommonControlsEx(&InitCtrls);
 
     CWinApp::InitInstance();
-
 
     AfxEnableControlContainer();
 
@@ -74,4 +53,3 @@ BOOL App::InitInstance(){
     //  而不是启动应用程序的消息泵。
     return FALSE;
 }
-

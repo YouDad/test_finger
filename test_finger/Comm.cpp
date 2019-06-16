@@ -82,50 +82,32 @@ void Comm::setBlock(bool block){
 
 // 向下位机发送命令(数据)
 void Comm::request(int cmdCode,DataPacket packet){
-    if(!this->block){
-        (new MyThread(
-            [=](){
-                // 把cmdCode和packet按照所选协议来转化为对应格式
-                auto converter=converterBoardcast.RequestConvert();
-                if(converter){
-                    // 转化为输出用的Packet
-                    auto dataPacket=converter->convert(cmdCode,packet.getPointer(),packet.size());
-                    for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
-                        this->sendBytes(it->getPointer(),it->size());
-                        it->Destruction();
-                    }
-                } else{
-                    // 找不到Converter?
-                    ASF_ERROR(3);
+    blockQueue.push_back(new MyThread(
+        [=](){
+            // 把cmdCode和packet按照所选协议来转化为对应格式
+            auto converter=converterBoardcast.RequestConvert();
+            if(converter){
+                // 转化为输出用的Packet
+                auto dataPacket=converter->convert(cmdCode,packet.getPointer(),packet.size());
+                for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
+                    this->sendBytes(it->getPointer(),it->size());
+                    it->Destruction();
                 }
-            },true
-        ))->start();
-    } else{
-        blockQueue.push_back(new MyThread(
-            [=](){
-                // 把cmdCode和packet按照所选协议来转化为对应格式
-                auto converter=converterBoardcast.RequestConvert();
-                if(converter){
-                    // 转化为输出用的Packet
-                    auto dataPacket=converter->convert(cmdCode,packet.getPointer(),packet.size());
-                    for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
-                        this->sendBytes(it->getPointer(),it->size());
-                        it->Destruction();
-                    }
-                } else{
-                    // 找不到Converter?
-                    ASF_ERROR(3);
-                }
-            },true
-        ));
-        (new MyThread(
-            [=](){
+            } else{
+                // 找不到Converter?
+                ASF_ERROR(3);
+            }
+        },true
+    ));
+    (new MyThread(
+        [=](){
+            if(this->block){
                 this->blockLocker.lock();
-                blockQueue.back()->start();
-                blockQueue.pop_back();
-            },true
-        ))->start();
-    }
+            }
+            blockQueue.back()->start();
+            blockQueue.pop_back();
+        },true
+    ))->start();
 }
 
 // 返回设备是否打开

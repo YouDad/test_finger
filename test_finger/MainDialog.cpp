@@ -1,10 +1,12 @@
 #include "stdafx.h"
 
+// 主窗口的构造函数
 MainDialog::MainDialog(CWnd* pParent /*=NULL*/)
     : CDialogEx(MainDialog::IDD,pParent){
     m_hIcon=AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
+// 消息映射宏处理块
 BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_WM_PAINT()
     ON_MESSAGE(WM_GET_RAW_IMAGE,serialResponse)
@@ -17,19 +19,19 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_MESSAGE(WM_STP_GET_BKI,serialResponse)
     ON_WM_QUERYDRAGICON()
     ON_WM_DEVICECHANGE()
-    ON_BN_CLICKED(IDC_BTNConnect,&MainDialog::OnBnClickedBtnconnect)
-    ON_BN_CLICKED(IDC_BTNSaveLog,&MainDialog::OnBnClickedBtnsavelog)
-    ON_BN_CLICKED(IDC_BTNRawImage,&MainDialog::OnBnClickedBtnrawimage)
-    ON_BN_CLICKED(IDC_BTNContinueImage,&MainDialog::OnBnClickedBtncontinueimage)
-    ON_BN_CLICKED(IDC_BTNdevLog,&MainDialog::OnBnClickedBtndevlog)
-    ON_BN_CLICKED(IDC_BTNreadReg,&MainDialog::OnBnClickedBtnreadreg)
-    ON_BN_CLICKED(IDC_BTNwriteReg,&MainDialog::OnBnClickedBtnwritereg)
-    ON_BN_CLICKED(IDC_BTNOpenImage,&MainDialog::OnBnClickedBtnopenimage)
-    ON_BN_CLICKED(IDC_BTNContinueBackGroundImage,&MainDialog::OnBnClickedBtncontinuebackgroundimage)
-    ON_BN_CLICKED(IDC_BTNOpenBackGroundImage,&MainDialog::OnBnClickedBtnopenbackgroundimage)
-    ON_BN_CLICKED(IDC_BTNTestImage,&MainDialog::OnBnClickedBtnbackgroundimage)
-    ON_CBN_CLOSEUP(IDC_CMBLogLevel,&MainDialog::OnCbnCloseupCmbloglevel)
-    ON_BN_CLICKED(IDC_BTNAdvDbg,&MainDialog::OnBnClickedBtnadvdbg)
+    ON_BN_CLICKED(IDC_BTNConnect,&MainDialog::OnBnClickedBtnConnect)
+    ON_BN_CLICKED(IDC_BTNSaveLog,&MainDialog::OnBnClickedBtnSaveLog)
+    ON_BN_CLICKED(IDC_BTNRawImage,&MainDialog::OnBnClickedBtnRawImage)
+    ON_BN_CLICKED(IDC_BTNContinueImage,&MainDialog::OnBnClickedBtnContinueImage)
+    ON_BN_CLICKED(IDC_BTNdevLog,&MainDialog::OnBnClickedBtnDevLog)
+    ON_BN_CLICKED(IDC_BTNreadReg,&MainDialog::OnBnClickedBtnReadReg)
+    ON_BN_CLICKED(IDC_BTNwriteReg,&MainDialog::OnBnClickedBtnWriteReg)
+    ON_BN_CLICKED(IDC_BTNOpenImage,&MainDialog::OnBnClickedBtnOpenImage)
+    ON_BN_CLICKED(IDC_BTNContinueBackGroundImage,&MainDialog::OnBnClickedBtnContinueBackgroundImage)
+    ON_BN_CLICKED(IDC_BTNOpenBackGroundImage,&MainDialog::OnBnClickedBtnOpenBackgroundImage)
+    ON_BN_CLICKED(IDC_BTNTestImage,&MainDialog::OnBnClickedBtnBackgroundImage)
+    ON_CBN_CLOSEUP(IDC_CMBLogLevel,&MainDialog::OnCbnCloseupCmbLogLevel)
+    ON_BN_CLICKED(IDC_BTNAdvDbg,&MainDialog::OnBnClickedBtnAdvDbg)
     ON_BN_CLICKED(IDC_BTN0,&MainDialog::OnBnClickedBtn)
     ON_BN_CLICKED(IDC_BTN1,&MainDialog::OnBnClickedBtn)
     ON_BN_CLICKED(IDC_BTN2,&MainDialog::OnBnClickedBtn)
@@ -38,21 +40,23 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_BN_CLICKED(IDC_BTN5,&MainDialog::OnBnClickedBtn)
     ON_BN_CLICKED(IDC_BTN6,&MainDialog::OnBnClickedBtn)
     ON_BN_CLICKED(IDC_BTN7,&MainDialog::OnBnClickedBtn)
-    ON_BN_CLICKED(IDC_BTNEnroll,&MainDialog::OnBnClickedBtnenroll)
-    ON_BN_CLICKED(IDC_BTNMatch,&MainDialog::OnBnClickedBtnmatch)
-    ON_BN_CLICKED(IDC_BTNDeviceInfo,&MainDialog::OnBnClickedBtndeviceinfo)
-    ON_BN_CLICKED(IDC_BTNViewEnrollIds,&MainDialog::OnBnClickedBtnviewenrollids)
-    ON_BN_CLICKED(IDC_BTNDeleteTemplate,&MainDialog::OnBnClickedBtndeletetemplate)
-    ON_BN_CLICKED(IDC_BTNCancel,&MainDialog::OnBnClickedBtncancel)
-    ON_BN_CLICKED(IDC_BTNClearLog,&MainDialog::OnBnClickedBtnclearlog)
-    ON_BN_CLICKED(IDC_BTNSetting,&MainDialog::OnBnClickedBtnsetting)
-    ON_CBN_SELCHANGE(IDC_CMBBaud,&MainDialog::OnCbnSelchangeCmbbaud)
-    ON_CBN_SELCHANGE(IDC_CMBProtocolType,&MainDialog::OnCbnSelchangeCmbprotocoltype)
-    ON_CBN_SELCHANGE(IDC_CMBWay,&MainDialog::OnCbnSelchangeCmbway)
+    ON_BN_CLICKED(IDC_BTNEnroll,&MainDialog::OnBnClickedBtnEnroll)
+    ON_BN_CLICKED(IDC_BTNMatch,&MainDialog::OnBnClickedBtnMatch)
+    ON_BN_CLICKED(IDC_BTNDeviceInfo,&MainDialog::OnBnClickedBtnDeviceInfo)
+    ON_BN_CLICKED(IDC_BTNViewEnrollIds,&MainDialog::OnBnClickedBtnViewEnrollIDs)
+    ON_BN_CLICKED(IDC_BTNDeleteTemplate,&MainDialog::OnBnClickedBtnDeleteTemplate)
+    ON_BN_CLICKED(IDC_BTNCancel,&MainDialog::OnBnClickedBtnCancel)
+    ON_BN_CLICKED(IDC_BTNClearLog,&MainDialog::OnBnClickedBtnClearLog)
+    ON_BN_CLICKED(IDC_BTNSetting,&MainDialog::OnBnClickedBtnSetting)
+    ON_CBN_SELCHANGE(IDC_CMBBaud,&MainDialog::OnCbnSelChangeCmbBaud)
+    ON_CBN_SELCHANGE(IDC_CMBProtocolType,&MainDialog::OnCbnSelChangeCmbProtocolType)
+    ON_CBN_SELCHANGE(IDC_CMBWay,&MainDialog::OnCbnSelChangeCmbWay)
 END_MESSAGE_MAP()
 
+// 重写Enter事件,阻止Enter默认行为:关闭窗口
 void MainDialog::OnOK(){}
 
+// 初始化窗口事件
 BOOL MainDialog::OnInitDialog(){
     CDialogEx::OnInitDialog();
     SetIcon(m_hIcon,TRUE);
@@ -63,6 +67,7 @@ BOOL MainDialog::OnInitDialog(){
     return TRUE;//除非将焦点设置到控件，否则返回 TRUE
 }
 
+// 重画事件
 void MainDialog::OnPaint(){
     if(IsIconic()){
         CPaintDC dc(this);
@@ -79,6 +84,7 @@ void MainDialog::OnPaint(){
     }
 }
 
+// 查询图标事件
 HCURSOR MainDialog::OnQueryDragIcon(){
     return static_cast<HCURSOR>(m_hIcon);
 }
@@ -105,12 +111,12 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     case WM_GET_CON_IMAGE:
     {
         continueImage=true;
-    }
+    }// break; 没有break
     case WM_GET_RAW_IMAGE:
     {
         if(continueImage){
             comm.request(SII(GetRawImage));
-            progress->SetPos(30);
+            setProgress(30);
             MyLog::user("请放手指");
         } else{
             MainDialogCtrlValidity::Work();
@@ -120,12 +126,12 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     {
         continueImage=false;
         MainDialogCtrlValidity::Work();
-        progress->SetPos(0);
+        setProgress(0);
     }break;
     case WM_READ_REGISTER:
     {
         MainDialogCtrlValidity::Work();
-        progress->SetPos(100);
+        setProgress(100);
     }break;
     case WM_APPEND_CONTROLS:
     {
@@ -135,12 +141,12 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     case WM_GET_CON_BKI:
     {
         continueImage=true;
-    }
+    }// break; 没有break
     case WM_GET_TEST_IMAGE:
     {
         if(continueImage){
             comm.request(SII(GetTestImage));
-            progress->SetPos(30);
+            setProgress(30);
         } else{
             MainDialogCtrlValidity::Work();
         }
@@ -149,9 +155,9 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     {
         continueImage=false;
         MainDialogCtrlValidity::Work();
-        progress->SetPos(0);
+        setProgress(0);
     }break;
     }
-    progress->SetPos(0);
-    return 1;
+    setProgress(0);
+    return TRUE;
 }

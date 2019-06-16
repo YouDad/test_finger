@@ -1,8 +1,12 @@
 #include "stdafx.h"
 
-void MainDialog::OnCbnSelchangeCmbprotocoltype(){
+// 协议变动事件
+void MainDialog::OnCbnSelChangeCmbProtocolType(){
+    // 存入配置
     conf["ProtocolType"]=MyString::Format("%d",cmbProtocolType->GetCurSel());
+    // 重新设置控件可用性
     MainDialogCtrlValidity::Work();
+    // 设置串口阻塞态
     if(getText(cmbProtocolType)==SYNO){
         comm.setBlock(true);
     } else{
@@ -10,7 +14,8 @@ void MainDialog::OnCbnSelchangeCmbprotocoltype(){
     }
 }
 
-void MainDialog::OnBnClickedBtnadvdbg(){
+// 高级调试模式点击事件
+void MainDialog::OnBnClickedBtnAdvDbg(){
     if(advancedDebugDialog){
         delete advancedDebugDialog;
         advancedDebugDialog=0;

@@ -65,7 +65,7 @@ const char* SynoFormatMessage(int errorCode){
 void standardProcessResponse(DataPacket& response){
     int retVal=response.getPointer()[0];
     MyLog::user(SynoFormatMessage(retVal));
-    ExecFlowRef(retVal);
+    flow.execRef(retVal);
 }
 
 // 从传感器上读入图像存于图像缓冲区
@@ -87,7 +87,7 @@ __ILC(Syno,Match){
         uint8_t* ptr=response.getPointer();
         MyLog::user("指纹匹配成功,得分:%d",ptr[0]*256+ptr[1]);
     }
-    ExecFlowRef(retVal);
+    flow.execRef(retVal);
 }
 
 // 以特征文件缓冲区中的特征文件搜索整个或部分指纹库
@@ -116,18 +116,18 @@ __ILC(Syno,UpImage){
     MyLog::user(SynoFormatMessage(retVal));
     if(retVal==0x00){// 成功
         response.readData(1);
-        progress->SetPos(50);
+        setProgress(50);
         MyLog::trace("接收到数据包,大小为%d",response.readSize());
         MyLog::trace("线程向主线程发送消息WM_GET_RAW_IMAGE");
         sendMainDialogMessage(WM_GET_RAW_IMAGE);
-        progress->SetPos(75);
+        setProgress(75);
 
         saveImage(_T("collectedImage"),response);
-        progress->SetPos(100);
+        setProgress(100);
         MyLog::trace("加载图片完成");
         MyLog::user("接收数据成功");
     }
-    ExecFlowRef(retVal);
+    flow.execRef(retVal);
 }
 
 // 删除flash指纹库中的一个特征文件
@@ -163,7 +163,7 @@ __ILC(Syno,ReadIndexTable){
             MyLog::user(msg);
         }
     }
-    ExecFlowRef(retVal);
+    flow.execRef(retVal);
 }
 
 // 注册用获取图像

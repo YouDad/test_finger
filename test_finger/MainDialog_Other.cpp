@@ -1,28 +1,30 @@
 #include "stdafx.h"
 
-//日志保存按钮点击事件
-void MainDialog::OnBnClickedBtnsavelog(){
-    //获取文件路径名
+// 日志保存按钮点击事件
+void MainDialog::OnBnClickedBtnSaveLog(){
+    // 获取文件路径名
     LPCTSTR filter=_T("文本文件(*.txt)|*.txt||");
     CFileDialog dlgFileOpen(0,0,0,0,filter,0);
     if(dlgFileOpen.DoModal()==IDOK){
         MyString path=dlgFileOpen.GetPathName();
-        //Add .txt
+        //添加后缀 .txt
         if(path.find(".txt",path.length()-4)==-1){
             path=path+".txt";
         }
-        //write into file
+        //写到文件中
         FILE* fp=fopen(path,"w");
         fprintf_s(fp,"%s",(const char*)getText(editLog));
         fclose(fp);
     }
 }
 
-void MainDialog::OnBnClickedBtndevlog(){
+// 开发日志按钮点击事件
+void MainDialog::OnBnClickedBtnDevLog(){
     MyLog::DevelopLog();
 }
 
-void MainDialog::OnCbnCloseupCmbloglevel(){
+// 狂点调试框的事件
+void MainDialog::OnCbnCloseupCmbLogLevel(){
     static clock_t firstTime=0,secondTime=0;
     if(firstTime==0){
         firstTime=clock();
@@ -35,6 +37,7 @@ void MainDialog::OnCbnCloseupCmbloglevel(){
                 firstTime=secondTime;
                 secondTime=now;
             } else{
+                // 开启高级调试模式
                 conf["AdvDbg"]="true";
                 btnAdvDbg->ShowWindow(SW_SHOW);
             }
@@ -42,37 +45,46 @@ void MainDialog::OnCbnCloseupCmbloglevel(){
     }
 }
 
-void MainDialog::OnBnClickedBtndeviceinfo(){
-    Flow.clear();
-    Flow.push_back(FlowFunction(0)(int& result){
+// 设备信息按钮点击事件
+void MainDialog::OnBnClickedBtnDeviceInfo(){
+    // 定义流程
+    flow.clear();
+    // 流程 0:发送<获得设备信息>命令
+    flow.add(0,[](int& result){
         MainDialogCtrlValidity::Working();
         comm.request(SII(DeviceInfo));
-        progress->SetPos(100*++FlowID/Flow.size());
+        setProgress(100*flow.percent());
+        flow.next();
         return false;
     });
-    Flow.push_back(FlowFunction(1)(int& result){
-        progress->SetPos(100*++FlowID/Flow.size());
-        MainDialogCtrlValidity::Work();
+    // 流程 1:获得设备信息结束,善后工作
+    flow.add(1,[](int& result){
+        setProgress(100*flow.percent());
         MyLog::user("获取设备信息结束");
-        FlowID=0;
-        Flow.clear();
+        flow.clear();
+        MainDialogCtrlValidity::Work();
         return false;
     });
-    ExecStart();
+    // 开始执行流程
+    flow.start();
 }
 
-void MainDialog::OnBnClickedBtncancel(){
-    progress->SetPos(0);
-    ExecEnd();
+// 撤销操作点击事件
+void MainDialog::OnBnClickedBtnCancel(){
+    flow.terminate();
+    setProgress(0);
     MyLog::user("取消了操作");
     MainDialogCtrlValidity::Work();
 }
 
-void MainDialog::OnBnClickedBtnclearlog(){
+// 清理日志框点击事件
+void MainDialog::OnBnClickedBtnClearLog(){
     MyLog::ClearLog();
+    setText(editLog,"");
 }
 
-void MainDialog::OnBnClickedBtnsetting(){
+// 设置按钮点击事件
+void MainDialog::OnBnClickedBtnSetting(){
     static SettingDialog* dialog;
     if(dialog){
         delete dialog;

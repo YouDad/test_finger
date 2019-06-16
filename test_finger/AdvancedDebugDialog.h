@@ -20,6 +20,6 @@ protected:
 public:
     virtual void OnOK();
     void append(int id,MyString name);
-    afx_msg void OnBnClickedBtnadClearall();
+    afx_msg void OnBnClickedBtnClearAll();
     afx_msg BOOL PreTranslateMessage(MSG* pMsg);
 };

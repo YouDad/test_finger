@@ -132,9 +132,8 @@ void MyLog::DevelopLog(){
     user("V2.7 <2019年6月12日20:25:27>:增加USB连接方式,增强串口扫描功能,增强界面健壮性,优化代码结构");
 }
 
-// 清空日志框
+// 清空日志文件
 void MyLog::ClearLog(){
     clearLog();
     createLog();
-    setText(editLog,"");
 }

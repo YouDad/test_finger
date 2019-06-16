@@ -1,11 +1,13 @@
 #include"stdafx.h"
 
-#define foreach(it,container) for(auto it=container.begin();it!=container.end();it++)
+// 抽取出来的重复代码,写成宏
 #define Merge(Dest,Src) Dest.insert(Dest.end(),Src.begin(),Src.end())
 #define MergePtr(Dest,Src) Dest.insert(Dest.end(),Src->begin(),Src->end())
 
+// 重定义可以取消前缀,写着舒服
 typedef MainDialogCtrlValidity::vec vec;
 
+// 各种类型的控件向量
 vec InitVec;
 vec SynoVec;
 vec WorkingVec;
@@ -13,6 +15,7 @@ vec WorkedVec;
 vec GD32F30Vec;
 vec Empty;
 
+// 根据协议类型,返回准备工作向量
 vec* getWorkedVec(){
     if(getText(cmbProtocolType)==SYNO){
         return &SynoVec;
@@ -23,9 +26,10 @@ vec* getWorkedVec(){
     }
 }
 
+// 初始化控件
 void MainDialogCtrlValidity::InitCtrl(){
     InitVec=vec{cmbBaud,cmbWay,btnConnect,editAddress,editPassword};
-    //协议对应按钮可用性在这里设置,如果在Vec里出现那对应协议就可以点
+    // 协议对应按钮可用性在这里设置,如果在Vec里出现那对应协议就可以点
     SynoVec=vec{editFingerId,cmbProtocolType,btnConnect,btnAdvDbg,
         btnRawImage,btnContinueImage,btnEnroll,btnMatch,
         btnViewEnrollIds,btnDeleteTemplate};
@@ -45,6 +49,7 @@ void MainDialogCtrlValidity::InitCtrl(){
     update(Disable,Enable);
 }
 
+// 初始状态
 void MainDialogCtrlValidity::Init(vec except){
     vec Disable,Enable;
     Merge(Disable,WorkedVec);
@@ -55,6 +60,7 @@ void MainDialogCtrlValidity::Init(vec except){
     update(Disable,Enable);
 }
 
+// 连接中状态
 void MainDialogCtrlValidity::Connecting(vec except){
     vec Disable,Enable;
     Merge(Disable,WorkedVec);
@@ -65,14 +71,17 @@ void MainDialogCtrlValidity::Connecting(vec except){
     update(Disable,Enable);
 }
 
+// 在连接之前的状态
 void MainDialogCtrlValidity::BeforeConnect(vec except){
     Init(except);
 }
 
+// 连接之后的状态
 void MainDialogCtrlValidity::AfterConnect(vec except){
     Work(except);
 }
 
+// 准备态
 void MainDialogCtrlValidity::Work(vec except){
     vec Disable,Enable;
     Merge(Disable,InitVec);
@@ -83,6 +92,7 @@ void MainDialogCtrlValidity::Work(vec except){
     update(Disable,Enable);
 }
 
+// 工作态
 void MainDialogCtrlValidity::Working(vec except){
     vec Disable,Enable;
     Merge(Disable,InitVec);
@@ -93,19 +103,22 @@ void MainDialogCtrlValidity::Working(vec except){
     update(Disable,Enable);
 }
 
+// 更新控件可用性
 inline void MainDialogCtrlValidity::update(vec& Disable,vec& Enable){
-    foreach(it,Disable){
+    for(auto it=Disable.begin();it!=Disable.end();it++){
         disable(*it);
     }
-    foreach(it,Enable){
+    for(auto it=Enable.begin();it!=Enable.end();it++){
         enable(*it);
     }
 }
 
+// 禁用控件
 inline void MainDialogCtrlValidity::disable(CWnd * pWnd){
     pWnd->EnableWindow(FALSE);
 }
 
+// 启用控件
 inline void MainDialogCtrlValidity::enable(CWnd * pWnd){
     pWnd->EnableWindow(TRUE);
 }

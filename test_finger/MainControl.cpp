@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
+// 控件指针群
 CEdit* editLog;
 CEdit* editNow;
 CEdit* editAddress;
@@ -37,13 +38,15 @@ HWND hwnd;
 
 AdvancedDebugDialog* advancedDebugDialog;
 
+// 初始化MainDialog的控件指针,以及初始化一些控件设置
 void initMainControl(MainDialog* Dlg){
     progress=(CProgressCtrl*)Dlg->GetDlgItem(IDC_PROGRESS);
 
     //进度条设置
     progress->SetRange(0,100);
-    progress->SetPos(10);
+    setProgress(10);
 
+    // 控件指针群初始化
     editLog=(CEdit*)Dlg->GetDlgItem(IDC_EDITLog);
     editNow=(CEdit*)Dlg->GetDlgItem(IDC_EDITNow);
     editAddress=(CEdit*)Dlg->GetDlgItem(IDC_EDITAddress);
@@ -74,24 +77,26 @@ void initMainControl(MainDialog* Dlg){
     btnClearLog=(CButton*)Dlg->GetDlgItem(IDC_BTNClearLog);
     btnDeleteTemplate=(CButton*)Dlg->GetDlgItem(IDC_BTNDeleteTemplate);
     image=(CStatic*)Dlg->GetDlgItem(IDC_IMAGE);
+    hwnd=Dlg->m_hWnd;
 
-    progress->SetPos(20);
+    setProgress(20);
 
     //各控件访问权限
     MainDialogCtrlValidity::InitCtrl();
 
-    progress->SetPos(30);
+    setProgress(30);
 
+    // 设置日志框
     editLog->SetLimitText(-1);
     setText(editNow,MyString::Format("自动更新是否开启:%s\r\n",conf["AutoCheck"].c_str()));
-    hwnd=Dlg->m_hWnd;
 
+    // 设置高级调试按钮可见性
     if(conf["AdvDbg"]=="true"){
         btnAdvDbg->ShowWindow(SW_SHOW);
     }
     advancedDebugDialog=0;
 
-    progress->SetPos(40);
+    setProgress(40);
 
     //常用波特率
     MyString baud[]={"9600","19200","57600","115200","230400","460800","921600"};
@@ -100,7 +105,7 @@ void initMainControl(MainDialog* Dlg){
     }
     cmbBaud->SetCurSel(MyString::ParseInt(conf["Baud"]));
 
-    progress->SetPos(50);
+    setProgress(50);
 
     //芯片类型
     MyString chipType[]={GD32,SYNO};
@@ -110,7 +115,7 @@ void initMainControl(MainDialog* Dlg){
     //max是为了升级之后,兼容以前大于等于2的情况
     cmbProtocolType->SetCurSel(max(1,MyString::ParseInt(conf["ProtocolType"])));
 
-    progress->SetPos(60);
+    setProgress(60);
 
     //日志信息等级
     MyString logLevel[]={"用户","错误","警告","调试","临时"};
@@ -119,7 +124,7 @@ void initMainControl(MainDialog* Dlg){
     }
     cmbLogLevel->SetCurSel(3);
 
-    progress->SetPos(70);
+    setProgress(70);
 
     //设置标题
     int BigVersion=Version/100;
@@ -129,12 +134,12 @@ void initMainControl(MainDialog* Dlg){
     }
     setText(Dlg,getText(Dlg)+MyString::Format(" Ver%d.%d",BigVersion,SmlVersion));
 
-    progress->SetPos(80);
+    setProgress(80);
 
     //刷新通信方式
     updateCommunityWay();
 
-    progress->SetPos(90);
+    setProgress(90);
 
     //自动检查更新
     if(conf["AutoCheck"]=="true"){
@@ -145,19 +150,44 @@ void initMainControl(MainDialog* Dlg){
         }
     }
 
-    progress->SetPos(100);
+    setProgress(100);
     MyLog::user("初始化完毕");
     MainDialogCtrlValidity::Init();
-
 }
 
+// 向MainDialog的消息处理函数发送消息
 void sendMainDialogMessage(int Message){
     SendMessage(hwnd,Message,Message,0);
 }
 
+// 用于存放当前串口情况
 std::vector<int>* idle=new std::vector<int>();
+// 用于存放之前的串口情况,可以实现简单的自动连接
 std::vector<int>* lastIdle=NULL;
 
+// 获得通信方式中选择的Com号,USB返回=0,串口返回>0
+int getComID(){
+    if(cmbWay->GetCurSel()){
+        return 0;
+    }
+    return (*idle)[idle->size()-cmbWay->GetCurSel()];
+}
+
+void setProgress(int percent){
+    if(percent<0){
+        progress->SetPos(0);
+    } else if(percent>100){
+        progress->SetPos(100);
+    } else{
+        progress->SetPos(percent);
+    }
+}
+
+void setProgress(double percent){
+    setProgress((int)percent);
+}
+
+#pragma region 枚举串口的复杂代码
 
 #include <initguid.h>
 // 以下定义来自DDK中的<ntddser.h>,串行端口枚举也需要它
@@ -215,7 +245,9 @@ BOOL EnumPortsWdm(){
     return returnVal;
 }
 
+#pragma endregion
 
+// 更新通信方式组合框
 void updateCommunityWay(){
     if(lastIdle){
         delete lastIdle;
@@ -226,7 +258,7 @@ void updateCommunityWay(){
     //清除串口数组内容
     idle->clear();
 #define FastEnum
-    //原来不能显示名字的枚举方式:
+    //原来不能显示名字的枚举方式,代码没错,但是不够强:
 #ifndef FastEnum
     //因为至多有255个串口，所以依次检查各串口是否存在
     //如果能打开某一串口，或打开串口不成功，但返回的是 ERROR_ACCESS_DENIED错误信息，
@@ -265,7 +297,7 @@ void updateCommunityWay(){
     cmbWay->InsertString(0,_T("USB"));
 }
 
-
+// 尝试自动连接
 void autoConnect(){
     int id=comm.getConnectId();
     //自动连接只在未连接状态生效
@@ -330,6 +362,7 @@ void autoConnect(){
     }
 }
 
+// 自动断开连接
 void autoDisconnect(){
     int id=comm.getConnectId();
     //自动断开仅当连接状态下

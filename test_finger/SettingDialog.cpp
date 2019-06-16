@@ -2,11 +2,13 @@
 
 IMPLEMENT_DYNAMIC(SettingDialog,CDialogEx)
 
-SettingDialog::SettingDialog(CWnd* pParent)
-    : CDialogEx(IDD_SETTING_DIALOG,pParent){}
+// 构造函数
+SettingDialog::SettingDialog(CWnd* pParent) : CDialogEx(IDD_SETTING_DIALOG,pParent){}
 
+// 析构函数
 SettingDialog::~SettingDialog(){}
 
+// 控件指针群
 CButton* btnCheckUpdate;
 CButton* btnDownload;
 CStatic* UpdateInfo;
@@ -15,6 +17,7 @@ CStatic* DownloadDetail;
 CStatic* VersionInfo;
 CProgressCtrl* DownloadProgress;
 
+// 初始化事件
 BOOL SettingDialog::OnInitDialog(){
     CDialogEx::OnInitDialog();
     btnCheckUpdate=(CButton*)GetDlgItem(IDC_BTNCheckUpdate);
@@ -29,23 +32,25 @@ BOOL SettingDialog::OnInitDialog(){
     DownloadProgress->SetRange(0,100);
 
     if(conf["AutoCheck"]=="true"){
-        chkAutoCheck->SetCheck(1);
+        chkAutoCheck->SetCheck(TRUE);
     } else{
-        chkAutoCheck->SetCheck(0);
+        chkAutoCheck->SetCheck(FALSE);
     }
     return 0;
 }
 
+// 阻止Enter关闭窗口
 void SettingDialog::OnOK(){}
 
+// 消息映射
 BEGIN_MESSAGE_MAP(SettingDialog,CDialogEx)
-    ON_BN_CLICKED(IDC_BTNCheckUpdate,&SettingDialog::OnBnClickedBtncheckupdate)
-    ON_BN_CLICKED(IDC_BTNDownload,&SettingDialog::OnBnClickedBtndownload)
-    ON_BN_CLICKED(IDC_CHKAutoCheck,&SettingDialog::OnBnClickedChkautocheck)
+    ON_BN_CLICKED(IDC_BTNCheckUpdate,&SettingDialog::OnBnClickedBtnCheckUpdate)
+    ON_BN_CLICKED(IDC_BTNDownload,&SettingDialog::OnBnClickedBtnDownload)
+    ON_BN_CLICKED(IDC_CHKAutoCheck,&SettingDialog::OnBnClickedChkAutoCheck)
 END_MESSAGE_MAP()
 
-
-void SettingDialog::OnBnClickedBtncheckupdate(){
+// 确认更新点击事件
+void SettingDialog::OnBnClickedBtnCheckUpdate(){
     int NetVersion=NetGetVersion();
     if(NetVersion==Version){
         setText(UpdateInfo,"现在已是最新版本");
@@ -57,6 +62,7 @@ void SettingDialog::OnBnClickedBtncheckupdate(){
     }
 }
 
+// 把整数个字节转化为人比较好读的字符串
 MyString description(int size){
     if(size>1024LL*1024*1024*8/7){
         return MyString::Format("%.2lfGB",1.0*size/1024/1024/1024);
@@ -69,12 +75,14 @@ MyString description(int size){
     }
 }
 
-void SettingDialog::OnBnClickedBtndownload(){
+// 下载按钮的点击事件
+void SettingDialog::OnBnClickedBtnDownload(){
+    // 先给缺陷找理由
     if(2==MessageBoxA(0,"下载文件时不能操作该程序,即便如此也要下载么?",
                       "询问",MB_ICONEXCLAMATION|MB_OKCANCEL|MB_SYSTEMMODAL)){
         return;
     }
-
+    // 确定版本
     int NetVersion=NetGetVersion();
     if(Version>NetVersion){
         if(2==MessageBoxA(0,"当前版本比远程版本高,即便如此也要下载么?",
@@ -85,12 +93,13 @@ void SettingDialog::OnBnClickedBtndownload(){
         MessageBoxA(0,"当前版本和远程版本一样","不能下载",MB_ICONERROR|MB_OK|MB_SYSTEMMODAL);
         return;
     }
+    // 准备下载
     int BigVersion,SmlVersion;
     BigVersion=NetVersion/100;
     SmlVersion=NetVersion%100;
     FILE* fp=fopen(MyString::Format("test_fingerV%d.%d.release.exe",BigVersion,SmlVersion),"wb");
     int now=0;
-
+    // 下载,带上回调函数
     NetDownload(NetVersion,[&](uint8_t* data,int size,int total)->void{
         fwrite(data,1,size,fp);
         now+=size;
@@ -103,8 +112,8 @@ void SettingDialog::OnBnClickedBtndownload(){
     MessageBoxA(0,"下载完毕!","OK",MB_OK);
 }
 
-
-void SettingDialog::OnBnClickedChkautocheck(){
+// 自动更新Check的点击事件
+void SettingDialog::OnBnClickedChkAutoCheck(){
     if(chkAutoCheck->GetCheck()){
         conf["AutoCheck"]="true";
     } else{

@@ -8,7 +8,7 @@ public:
     // 获得ID
     int getConnectId();
     // 连接下位机
-    bool connect(int id=0,int baud=0);
+    bool connect(int id,int baud);
     // 断开与下位机的连接
     bool disconnect();
     // 向下位机发送命令(数据)

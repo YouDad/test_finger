@@ -20,7 +20,7 @@ protected:
     
 public:
     virtual void OnOK();
-    afx_msg void OnBnClickedBtncheckupdate();
-    afx_msg void OnBnClickedBtndownload();
-    afx_msg void OnBnClickedChkautocheck();
+    afx_msg void OnBnClickedBtnCheckUpdate();
+    afx_msg void OnBnClickedBtnDownload();
+    afx_msg void OnBnClickedChkAutoCheck();
 };
