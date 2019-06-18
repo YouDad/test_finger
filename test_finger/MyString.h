@@ -14,7 +14,7 @@ public:
     MyString(char* pc,int len);
     MyString(wchar_t* pw);
     MyString(CString pCS);
-    MyString(MyString& other);
+    MyString(const MyString& other);
     MyString(MyString&& other);
     MyString(const char* pcc);
     MyString(std::string str);
@@ -32,6 +32,7 @@ public:
     operator CString();
 
     // 重载关系操作符
+    bool operator==(const MyString other)const;
     bool operator==(MyString other);
     bool operator==(const char* other);
     bool operator!=(MyString other);

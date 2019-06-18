@@ -44,6 +44,11 @@ void MyLog::print(LogLevel level,MyString info){
         return;
     }
 
+    if(test.isTest(test.My)){
+        test.myTest.My_logs.push_back(info);
+        return;
+    }
+
     // 增加等级提示
     const char* pLevel;
     switch(level){

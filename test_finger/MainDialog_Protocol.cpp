@@ -7,7 +7,7 @@ void MainDialog::OnCbnSelChangeCmbProtocolType(){
     // 重新设置控件可用性
     MainDialogCtrlValidity::Work();
     // 设置串口阻塞态
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         comm.setBlock(true);
     } else{
         comm.setBlock(false);

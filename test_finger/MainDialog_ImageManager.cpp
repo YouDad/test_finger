@@ -20,7 +20,7 @@ void MainDialog::OnBnClickedBtnOpenBackgroundImage(){
 
 //原始图像的点击事件
 void MainDialog::OnBnClickedBtnRawImage(){
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         MyLog::user("开始获取图像");
         // 定义流程
         flow.clear();
@@ -57,7 +57,7 @@ void MainDialog::OnBnClickedBtnRawImage(){
         // 开始执行流程
         flow.start();
     }
-    if(getText(cmbProtocolType)==GD32){
+    if(getProtocol()==GD32){
         MainDialogCtrlValidity::Working();
         // 发送<获取原始图像>命令
         comm.request(SII(GetRawImage));
@@ -67,7 +67,7 @@ void MainDialog::OnBnClickedBtnRawImage(){
 }
 
 void MainDialog::OnBnClickedBtnBackgroundImage(){
-    if(getText(cmbProtocolType)==GD32){
+    if(getProtocol()==GD32){
         MainDialogCtrlValidity::Working();
         setProgress(30);
         MyLog::debug("开始采集背景");
@@ -77,7 +77,7 @@ void MainDialog::OnBnClickedBtnBackgroundImage(){
 }
 
 void MainDialog::OnBnClickedBtnContinueBackgroundImage(){
-    if(getText(cmbProtocolType)==GD32){
+    if(getProtocol()==GD32){
         // 根据按钮上的文字判断当前连接状态
         if(getText(btnContinueBGImg)=="连续获取背景"){
             MyLog::user("开始连续获取背景");
@@ -95,7 +95,7 @@ void MainDialog::OnBnClickedBtnContinueBackgroundImage(){
 
 //连续获取图像的点击事件
 void MainDialog::OnBnClickedBtnContinueImage(){
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         MyLog::user("开始连续获取图像");
         // 定义流程
         flow.clear();
@@ -137,7 +137,7 @@ void MainDialog::OnBnClickedBtnContinueImage(){
         });
         flow.start();
     }
-    if(getText(cmbProtocolType)==GD32){
+    if(getProtocol()==GD32){
         //根据按钮上的文字判断当前连接状态
         if(getText(btnContinueImage)=="连续获取图像"){
             MyLog::user("开始连续获取图像");

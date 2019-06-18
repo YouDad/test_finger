@@ -1,7 +1,4 @@
 #include "stdafx.h"
-#include "CppUnitTest.h"
-
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest{
 
@@ -11,7 +8,7 @@ public:
     //测试无参构造函数
     TEST_METHOD(DataPacket1){
         DataPacket packet;
-        Assert::AreEqual(-1,packet.len);
+        Assert::AreEqual(0,packet.len);
         Assert::AreEqual(0,(int)packet.data);
         Assert::AreEqual(0,packet.read);
         packet.Destruction();

@@ -4,7 +4,7 @@ typedef struct DataPacketSyno Request;
 
 // 确认是这个转换器的任务,就看协议选的是不是SYNO
 bool RequestConverterSyno::checkProtocol(DataPacket dataPacket){
-    return getText(cmbProtocolType)==SYNO;
+    return getProtocol()==SYNO;
 }
 
 // Karl<2019年5月19日13:21:47>悟:

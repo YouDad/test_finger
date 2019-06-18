@@ -199,6 +199,7 @@
     <ClInclude Include="MyLocker.h" />
     <ClInclude Include="MyNet.h" />
     <ClInclude Include="MyString.h" />
+    <ClInclude Include="MyTest.h" />
     <ClInclude Include="MyThread.h" />
     <ClInclude Include="MyLog.h" />
     <ClInclude Include="Resource.h" />
@@ -209,6 +210,9 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="MainDialog.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="CommTest.h" />
+    <ClInclude Include="Test.h" />
+    <ClInclude Include="UITest.h" />
     <ClInclude Include="UsbPort.h" />
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +238,7 @@
     <ClCompile Include="MyFlow.cpp" />
     <ClCompile Include="MyLocker.cpp" />
     <ClCompile Include="MyNet.cpp" />
+    <ClCompile Include="MyTest.cpp" />
     <ClCompile Include="RequestConverterSyno.cpp" />
     <ClCompile Include="MyLog.cpp" />
     <ClCompile Include="MyString.cpp" />
@@ -250,6 +255,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Syno.cpp" />
+    <ClCompile Include="CommTest.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="UITest.cpp" />
     <ClCompile Include="UsbPort.cpp" />
   </ItemGroup>
   <ItemGroup>

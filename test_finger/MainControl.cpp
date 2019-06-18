@@ -157,6 +157,9 @@ void initMainControl(MainDialog* Dlg){
 
 // 向MainDialog的消息处理函数发送消息
 void sendMainDialogMessage(int Message){
+    if(test.isTest(test.UI)){
+        return;
+    }
     SendMessage(hwnd,Message,Message,0);
 }
 
@@ -174,6 +177,10 @@ int getComID(){
 }
 
 void setProgress(int percent){
+    if(test.isTest(test.UI)){
+        test.uiTest.UI_progress=percent;
+        return;
+    }
     if(percent<0){
         progress->SetPos(0);
     } else if(percent>100){

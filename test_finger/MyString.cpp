@@ -48,7 +48,7 @@ MyString::MyString(CString pCS){
     *this=MyString(pCS.GetBuffer(pCS.GetLength()));
 }
 
-MyString::MyString(MyString & other){
+MyString::MyString(const MyString & other){
     str=other.str;
     updateWstr();
 }
@@ -92,6 +92,10 @@ MyString::operator const wchar_t*(){
 
 MyString::operator CString(){
     return CString(str.c_str());
+}
+
+bool MyString::operator==(const MyString other) const{
+    return str==other.str;
 }
 
 // 重载关系操作符

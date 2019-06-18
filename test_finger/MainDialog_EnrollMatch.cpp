@@ -8,7 +8,7 @@ void MainDialog::OnBnClickedBtn(){
 
 // 注册按钮事件
 void MainDialog::OnBnClickedBtnEnroll(){
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         // 判空检查
         if(getText(editFingerId)==""){
             MyLog::user("编号不能为空");
@@ -201,7 +201,7 @@ void MainDialog::OnBnClickedBtnEnroll(){
 
 // 比对按钮点击事件
 void MainDialog::OnBnClickedBtnMatch(){
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         // 判空检查
         if(getText(editFingerId)==""){
             MyLog::user("编号不能为空");
@@ -290,7 +290,7 @@ void MainDialog::OnBnClickedBtnMatch(){
 
 // 查看所有注册指纹的ID的按钮点击事件
 void MainDialog::OnBnClickedBtnViewEnrollIDs(){
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         // 定义流程
         flow.clear();
         // 流程 0:发送<读取引索表>命令
@@ -316,7 +316,7 @@ void MainDialog::OnBnClickedBtnViewEnrollIDs(){
 
 // 删除模板的按钮点击事件
 void MainDialog::OnBnClickedBtnDeleteTemplate(){
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         // 判空检查
         if(getText(editFingerId)==""){
             MyLog::user("编号不能为空");

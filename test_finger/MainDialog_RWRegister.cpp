@@ -2,7 +2,7 @@
 
 // 读寄存器点击事件
 void MainDialog::OnBnClickedBtnReadReg(){
-    if(getText(cmbProtocolType)==GD32){
+    if(getProtocol()==GD32){
         // 定义流程
         flow.clear();
         // 流程 0:发送<读寄存器>指令
@@ -33,7 +33,7 @@ void MainDialog::OnBnClickedBtnReadReg(){
 
 // 写寄存器点击事件
 void MainDialog::OnBnClickedBtnWriteReg(){
-    if(getText(cmbProtocolType)==GD32){
+    if(getProtocol()==GD32){
         MainDialogCtrlValidity::Working();
         setProgress(50);
         MyLog::debug("开始写寄存器");

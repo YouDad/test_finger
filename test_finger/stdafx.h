@@ -68,6 +68,8 @@
 
 #include "resource.h"
 
+#include "Test.h"
+
 #include "MyLocker.h"
 #include "MyControl.h"
 #include "MyConfig.h"

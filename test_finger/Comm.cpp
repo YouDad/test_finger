@@ -12,10 +12,10 @@ Comm::Comm(){
     static uint8_t buffer[1<<16];
 
     // 访问dataQueue(Packet缓冲区)的锁
-    MyLocker dataQueueMutex;
+    static MyLocker dataQueueMutex;
 
     // Packet缓冲区
-    std::queue<DataPacket> dataQueue;
+    static std::queue<DataPacket> dataQueue;
 
     // 负责监听下位机的数据,是Packet的生产者
     this->listenThread=new MyThread(
@@ -112,6 +112,9 @@ void Comm::request(int cmdCode,DataPacket packet){
 
 // 返回设备是否打开
 bool Comm::isOpen(){
+    if(test.isTest(test.Comm)){
+        return true;
+    }
     if(this->id>0){
         return this->serial.IsOpen();
     } else{
@@ -122,6 +125,11 @@ bool Comm::isOpen(){
 // 向设备发送字节流
 void Comm::sendBytes(uint8_t * data,int len){
     if(!this->isOpen()){
+        return;
+    }
+    if(test.isTest(test.Comm)){
+        memcpy(test.commTest.Comm_send,data,len);
+        test.commTest.Comm_sendSize=len;
         return;
     }
     if(this->id==0){
@@ -137,6 +145,15 @@ bool Comm::readBytes(uint8_t* buffer,int blen,ULONG& cnt){
     if(!this->isOpen()){
         return false;
     }
+    if(test.isTest(test.Comm)){
+        if(test.commTest.Comm_receiveSize>0){
+            cnt=test.commTest.Comm_receiveSize;
+            memcpy(buffer,test.commTest.Comm_receive,cnt);
+            test.commTest.Comm_receiveSize=0;
+            return true;
+        }
+        return false;
+    }
     if(this->id==0){
         BYTE cdb_r[16]={0xef,0x02};
         return this->usb.USBSCSIRead(cdb_r,IOCTRL_CDB_LEN,buffer,blen,cnt,SCSI_TIMEOUT);
@@ -147,6 +164,11 @@ bool Comm::readBytes(uint8_t* buffer,int blen,ULONG& cnt){
 
 // 连接下位机
 bool Comm::connect(int id,int baud){
+    if(test.isTest(test.Comm)){
+        this->responseThread->start();
+        this->listenThread->start();
+        return true;
+    }
     // USB方式连接
     if(id==0){
         int ret=this->usb.InitUsbPort(COMM_USB_MASS,"UD");
@@ -184,6 +206,11 @@ bool Comm::connect(int id,int baud){
 
 // 断开与下位机的连接
 bool Comm::disconnect(){
+    if(test.isTest(test.Comm)){
+        this->responseThread->terminate();
+        this->listenThread->terminate();
+        return true;
+    }
     if(this->id<0){
         return true;
     }

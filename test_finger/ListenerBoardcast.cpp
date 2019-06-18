@@ -57,6 +57,6 @@ bool ICommListener::accept(){
     if(protocol==0){
         return true;
     } else{
-        return getText(cmbProtocolType)==protocol;
+        return getProtocol()==protocol;
     }
 }

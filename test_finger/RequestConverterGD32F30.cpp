@@ -6,7 +6,7 @@ uint16_t GetCRC16(const void*pSource,uint16_t len);
 
 // 确认是这个转换器的任务,就看协议选的是不是GD32
 bool RequestConverterGD32F30::checkProtocol(DataPacket dataPacket){
-    return getText(cmbProtocolType)==GD32;
+    return getProtocol()==GD32;
 }
 
 // 把软件内部指令转化为对应的命令码
@@ -67,7 +67,7 @@ std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * D
         }
 
         // CRC check
-        UINT16 crcValue=GetCRC16(&request,sizeof Request-interval+request.Length);
+        UINT16 crcValue=GetCRC16(&request,sizeof request-interval+request.Length-2);
         request.Sendbuf[request.Length]=crcValue&0xFF;
         request.Sendbuf[request.Length+1]=(crcValue>>8)&0xFF;
 

@@ -11,6 +11,9 @@ void reverse(uint8_t* p,int len){
 
 // 把长为w,宽为h的图片pData,存到当前目录的dirname目录下,文件名叫filename
 bool saveBmp(int w,int h,uint8_t* pData,MyString dirname,MyString filename){
+    if(test.isTest(test.UI)){
+        return true;
+    }
     BITMAPINFOHEADER bmpInfo;
     bmpInfo.biSize=sizeof bmpInfo;
     bmpInfo.biWidth=w;

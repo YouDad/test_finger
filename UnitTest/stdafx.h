@@ -13,3 +13,6 @@
 #define private public
 #include "../test_finger/stdafx.h"
 #undef private
+
+#include "CppUnitTest.h"
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;

@@ -17,9 +17,9 @@ vec Empty;
 
 // 根据协议类型,返回准备工作向量
 vec* getWorkedVec(){
-    if(getText(cmbProtocolType)==SYNO){
+    if(getProtocol()==SYNO){
         return &SynoVec;
-    } else if(getText(cmbProtocolType)==GD32){
+    } else if(getProtocol()==GD32){
         return &GD32F30Vec;
     } else{
         return &Empty;
