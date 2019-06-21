@@ -181,6 +181,8 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="SettingCommonPage.h" />
+    <ClInclude Include="SettingUpdatePage.h" />
     <ClInclude Include="MyImage.h" />
     <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="Comm.h" />
@@ -216,6 +218,8 @@
     <ClInclude Include="UsbPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SettingCommonPage.cpp" />
+    <ClCompile Include="SettingUpdatePage.cpp" />
     <ClCompile Include="MainDialog_Communication.cpp" />
     <ClCompile Include="MainDialog_ImageManager.cpp" />
     <ClCompile Include="MainDialog_Other.cpp" />

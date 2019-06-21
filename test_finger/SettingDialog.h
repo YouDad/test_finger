@@ -10,7 +10,7 @@ public:
 
 #ifdef AFX_DESIGN_TIME
     enum{
-        IDD=IDD_DIALOG1
+        IDD=IDD_SETTING_DIALOG
     };
 #endif
 
@@ -20,7 +20,5 @@ protected:
     
 public:
     virtual void OnOK();
-    afx_msg void OnBnClickedBtnCheckUpdate();
-    afx_msg void OnBnClickedBtnDownload();
-    afx_msg void OnBnClickedChkAutoCheck();
+    afx_msg void OnTcnSelchangeSettingTab(NMHDR *pNMHDR,LRESULT *pResult);
 };
