@@ -19,6 +19,16 @@ void setText(CWnd * pWnd,MyString str){
     pWnd->SetWindowText(str);
 }
 
+// 设置选项框的勾选状态
+void setCheck(CButton * pCheck,bool select){
+    pCheck->SetCheck(select?TRUE:FALSE);
+}
+
+// 获得选项框的勾选状态
+bool isChecked(CButton * pCheck){
+    return pCheck->GetCheck()==BST_CHECKED;
+}
+
 // 把控件中的内容当十进制解析返回一个整数
 int getInt(CWnd * pWnd){
     int ret;

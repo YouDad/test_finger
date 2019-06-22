@@ -4,10 +4,6 @@
 // 配置类
 class MyConfig{
 private:
-    const char* FILENAME="config";
-    static char buffer[1<<16];
-    static char key[1<<6];
-    static char val[1<<6];
     // 保存配置的地方
     std::map<std::string,std::string>m;
     // 默认配置
@@ -17,7 +13,8 @@ public:
     ~MyConfig();
     // 重载[]操作符
     std::string& operator[](std::string s);
-
+    // 提供字符串表示
+    static std::string Bool(bool b);
 };
 
 // 全局唯一配置

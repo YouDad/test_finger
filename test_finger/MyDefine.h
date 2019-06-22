@@ -22,3 +22,5 @@ typedef unsigned int   uint32_t;
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+#define Stringify(x) #x

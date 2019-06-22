@@ -32,18 +32,19 @@ void NetPost(MyString host,MyString ctrl,DataMap data,NetFunction_t func){
         dataStr.pop_back();
     }
 
-    // 发送Post请求
-    pfile->SendRequest(strHeaders,(LPVOID)dataStr.c_str(),dataStr.length());
-    pfile->QueryInfoStatusCode(dwStatusCode);
-    if(dwStatusCode==HTTP_STATUS_OK){
-        uint8_t data[1024];
-        int size=0;
-        while((size=pfile->Read(data,1024))>0){
-            // 使用回调函数处理数据
-            func(data,size);
+    try{
+        // 发送Post请求
+        pfile->SendRequest(strHeaders,(LPVOID)dataStr.c_str(),dataStr.length());
+        pfile->QueryInfoStatusCode(dwStatusCode);
+        if(dwStatusCode==HTTP_STATUS_OK){
+            uint8_t data[1024];
+            int size=0;
+            while((size=pfile->Read(data,1024))>0){
+                // 使用回调函数处理数据
+                func(data,size);
+            }
         }
-    }
-
+    } catch(...){}
     // 关闭连接
     pfile->Close();
     delete pfile;
@@ -56,7 +57,7 @@ int NetGetVersion(){
     int BigVersion=0,SmlVersion=0;
     NetPost(HostIP,"test_finger_version",DataMap(),[&](uint8_t* data,int size){
         MyString((char*)data,size).Parse("%d.%d",&BigVersion,&SmlVersion);
-    });
+        });
     if(SmlVersion<10){
         SmlVersion*=10;
     }
@@ -76,11 +77,11 @@ void NetDownload(int NetVersion,_Function_t(void,uint8_t* data,int size,int tota
     data["Version"]=(const char*)MyString::Format("%d.%d",BigVersion,SmlVersion);
     NetPost(HostIP,"test_finger_size",data,[&](uint8_t* data,int size)->void{
         MyString((char*)data,size).Parse("%d",&fileSize);
-    });
+        });
 
     NetPost(HostIP,"test_finger_get",data,[&](uint8_t* data,int size)->void{
         func(data,size,fileSize);
-    });
+        });
 }
 
 // 把Unicode转化成ANSI
@@ -113,7 +114,7 @@ MyString NetVersionInfo(int NetVersion){
     MyString ret;
     NetPost(HostIP,"test_finger_info",data,[&](uint8_t* data,int size){
         ret+=MyString((char*)data,size);
-    });
+        });
     // 遍历字符串用
     const char* p=ret;
     // 解码unicode时用到

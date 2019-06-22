@@ -44,10 +44,10 @@ public:
         time->Create(MyString::Time("%H:%M:%S"),WS_VISIBLE|WS_CHILD,CRect(textL,top+20,textR,top+40),parent);
         hint->Create(MyString(""),WS_VISIBLE|WS_CHILD,CRect(textL,top+40,textR,top+60),parent);
     }
-    void loadImage(MyString id){
+    void loadImage(){
         // 载入图像
-        ::loadImage(img,MyString("collectedTempImage/")+id+".bmp");
-        ::loadImage(histogram,MyString("collectedTempImage/Histogram")+id+".bmp");
+        ::loadImage(img,MyFile::TEMP_IMAGE_PATH+"0.bmp");
+        ::loadImage(histogram,MyFile::TEMP_IMAGE_PATH+"1.bmp");
     }
     void Destruction(){
         // 析构处理
@@ -81,10 +81,10 @@ BOOL AdvancedDebugDialog::OnInitDialog(){
 }
 
 // 追加一个直方图组件
-void AdvancedDebugDialog::append(int id,MyString name){
+void AdvancedDebugDialog::append(){
     if(this){
-        v.push_back(MyControls(id,v.size()+1,this));
-        v.back().loadImage(name);
+        v.push_back(MyControls(v.size()+1,v.size()+1,this));
+        v.back().loadImage();
         for(int i=0;i<v.size();i++){
             setText(v[i].hint,MyString::Format("(%d/%d)",i+1,v.size()));
         }

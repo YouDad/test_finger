@@ -8,6 +8,12 @@ MyString getText(CWnd* pWnd);
 // 设置控件的内容
 void setText(CWnd* pWnd,MyString str);
 
+// 设置选项框的勾选状态
+void setCheck(CButton* pCheck,bool select);
+
+// 获得选项框的勾选状态
+bool isChecked(CButton* pCheck);
+
 // 把控件中的内容当十进制解析返回一个整数
 int getInt(CWnd* pWnd);
 

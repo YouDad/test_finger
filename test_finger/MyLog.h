@@ -37,17 +37,7 @@ public:
     static void user(const char* format,...);
     // 输出开发日志
     static void DevelopLog();
-    // 清空日志框
-    static void ClearLog();
 private:
-    // 日志备份位置
-    static const char* LOG_FILE;
-    // 是否已经存在日志文件
-    static bool isExistLog();
-    // 删除日志文件
-    static void clearLog();
-    // 创造日志文件
-    static void createLog();
     // 追加日志内容
     static void appendLog(const char * text);
 };

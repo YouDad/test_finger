@@ -91,7 +91,7 @@ void initMainControl(MainDialog* Dlg){
     setText(editNow,MyString::Format("自动更新是否开启:%s\r\n",conf["AutoCheck"].c_str()));
 
     // 设置高级调试按钮可见性
-    if(conf["AdvDbg"]=="true"){
+    if(conf["AdvDbg"]==Stringify(true)){
         btnAdvDbg->ShowWindow(SW_SHOW);
     }
     advancedDebugDialog=0;
@@ -142,7 +142,7 @@ void initMainControl(MainDialog* Dlg){
     setProgress(90);
 
     //自动检查更新
-    if(conf["AutoCheck"]=="true"){
+    if(conf["AutoCheck"]==Stringify(true)){
         if(isConnectedNet()){
             if(NetGetVersion()>Version){
                 MyLog::user("有可更新版本,在设置中更新.");

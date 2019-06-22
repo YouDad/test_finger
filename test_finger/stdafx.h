@@ -79,6 +79,7 @@
 #include "MyString.h"
 #include "MyLog.h"
 #include "MyNet.h"
+#include "MyFile.h"
 
 #include "Serial.h"
 #include "enumcd.h"

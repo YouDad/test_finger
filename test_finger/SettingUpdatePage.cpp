@@ -14,7 +14,6 @@ SettingUpdatePage::~SettingUpdatePage(){}
 CButton* btnCheckUpdate;
 CButton* btnDownload;
 CStatic* UpdateInfo;
-CButton* chkAutoCheck;
 CStatic* DownloadDetail;
 CStatic* VersionInfo;
 CProgressCtrl* DownloadProgress;
@@ -25,19 +24,12 @@ BOOL SettingUpdatePage::OnInitDialog(){
     btnCheckUpdate=(CButton*)GetDlgItem(IDC_BTNCheckUpdate);
     btnDownload=(CButton*)GetDlgItem(IDC_BTNDownload);
     UpdateInfo=(CStatic*)GetDlgItem(IDC_UpdateInfo);
-    chkAutoCheck=(CButton*)GetDlgItem(IDC_CHKAutoCheck);
     DownloadDetail=(CStatic*)GetDlgItem(IDC_DownloadDetail);
     VersionInfo=(CStatic*)GetDlgItem(IDC_VersionInfo);
     DownloadProgress=(CProgressCtrl*)GetDlgItem(IDC_DownloadProgress);
 
-    DownloadProgress->SetPos(0);
     DownloadProgress->SetRange(0,100);
-
-    if(conf["AutoCheck"]=="true"){
-        chkAutoCheck->SetCheck(TRUE);
-    } else{
-        chkAutoCheck->SetCheck(FALSE);
-    }
+    DownloadProgress->SetPos(0);
     return 0;
 }
 
@@ -48,7 +40,6 @@ void SettingUpdatePage::OnOK(){}
 BEGIN_MESSAGE_MAP(SettingUpdatePage,CDialogEx)
     ON_BN_CLICKED(IDC_BTNCheckUpdate,&SettingUpdatePage::OnBnClickedBtnCheckUpdate)
     ON_BN_CLICKED(IDC_BTNDownload,&SettingUpdatePage::OnBnClickedBtnDownload)
-    ON_BN_CLICKED(IDC_CHKAutoCheck,&SettingUpdatePage::OnBnClickedChkAutoCheck)
 END_MESSAGE_MAP()
 
 
@@ -96,30 +87,20 @@ void SettingUpdatePage::OnBnClickedBtnDownload(){
         MessageBoxA(0,"当前版本和远程版本一样","不能下载",MB_ICONERROR|MB_OK|MB_SYSTEMMODAL);
         return;
     }
-    // 准备下载
-    int BigVersion,SmlVersion;
-    BigVersion=NetVersion/100;
-    SmlVersion=NetVersion%100;
-    FILE* fp=fopen(MyString::Format("test_fingerV%d.%d.release.exe",BigVersion,SmlVersion),"wb");
     int now=0;
-    // 下载,带上回调函数
-    NetDownload(NetVersion,[&](uint8_t* data,int size,int total)->void{
-        fwrite(data,1,size,fp);
-        now+=size;
-        DownloadProgress->SetPos(100*now/total);
-        MyString nowStr=description(now);
-        MyString sumStr=description(total);
-        setText(DownloadDetail,nowStr+"/"+sumStr);
-        });
-    fclose(fp);
+    MyFile::DownloadUpdate(NetVersion,
+        [&](FILE* fp){
+            NetDownload(NetVersion,
+                [&](uint8_t* data,int size,int total){
+                    fwrite(data,1,size,fp);
+                    now+=size;
+                    DownloadProgress->SetPos(100*now/total);
+                    MyString nowStr=description(now);
+                    MyString sumStr=description(total);
+                    setText(DownloadDetail,nowStr+"/"+sumStr);
+                }
+            );
+        }
+    );
     MessageBoxA(0,"下载完毕!","OK",MB_OK);
-}
-
-// 自动更新Check的点击事件
-void SettingUpdatePage::OnBnClickedChkAutoCheck(){
-    if(chkAutoCheck->GetCheck()){
-        conf["AutoCheck"]="true";
-    } else{
-        conf["AutoCheck"]="false";
-    }
 }

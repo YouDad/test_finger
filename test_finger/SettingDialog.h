@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "stdafx.h"
 
 class SettingDialog: public CDialogEx{
     DECLARE_DYNAMIC(SettingDialog)

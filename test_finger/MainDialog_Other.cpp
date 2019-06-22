@@ -2,20 +2,11 @@
 
 // 日志保存按钮点击事件
 void MainDialog::OnBnClickedBtnSaveLog(){
-    // 获取文件路径名
-    LPCTSTR filter=_T("文本文件(*.txt)|*.txt||");
-    CFileDialog dlgFileOpen(0,0,0,0,filter,0);
-    if(dlgFileOpen.DoModal()==IDOK){
-        MyString path=dlgFileOpen.GetPathName();
-        //添加后缀 .txt
-        if(path.find(".txt",path.length()-4)==-1){
-            path=path+".txt";
+    MyFile::LogSaveAs(
+        [&](FILE* fp){
+            fprintf_s(fp,"%s",(const char*)getText(editLog));
         }
-        //写到文件中
-        FILE* fp=fopen(path,"w");
-        fprintf_s(fp,"%s",(const char*)getText(editLog));
-        fclose(fp);
-    }
+    );
 }
 
 // 开发日志按钮点击事件
@@ -38,7 +29,7 @@ void MainDialog::OnCbnCloseupCmbLogLevel(){
                 secondTime=now;
             } else{
                 // 开启高级调试模式
-                conf["AdvDbg"]="true";
+                conf["AdvDbg"]=Stringify(true);
                 btnAdvDbg->ShowWindow(SW_SHOW);
             }
         }
@@ -79,7 +70,6 @@ void MainDialog::OnBnClickedBtnCancel(){
 
 // 清理日志框点击事件
 void MainDialog::OnBnClickedBtnClearLog(){
-    MyLog::ClearLog();
     setText(editLog,"");
 }
 

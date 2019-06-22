@@ -181,6 +181,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="MyFile.h" />
     <ClInclude Include="SettingCommonPage.h" />
     <ClInclude Include="SettingUpdatePage.h" />
     <ClInclude Include="MyImage.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="UsbPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MyFile.cpp" />
     <ClCompile Include="SettingCommonPage.cpp" />
     <ClCompile Include="SettingUpdatePage.cpp" />
     <ClCompile Include="MainDialog_Communication.cpp" />
@@ -231,7 +233,9 @@
     <ClCompile Include="GD32F30.cpp" />
     <ClCompile Include="LOG.cpp" />
     <ClCompile Include="Comm.cpp" />
-    <ClCompile Include="enumcd.cpp" />
+    <ClCompile Include="enumcd.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MyConfig.cpp" />
     <ClCompile Include="DataPacket.cpp" />
     <ClCompile Include="ListenerBoardcast.cpp" />
@@ -251,7 +255,9 @@
     <ClCompile Include="ResponseConverterGD32F30.cpp" />
     <ClCompile Include="ResponseConverterLOG.cpp" />
     <ClCompile Include="ResponseConverterSyno.cpp" />
-    <ClCompile Include="Serial.cpp" />
+    <ClCompile Include="Serial.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="SettingDialog.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="MainDialog.cpp" />
@@ -264,7 +270,9 @@
     </ClCompile>
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="UITest.cpp" />
-    <ClCompile Include="UsbPort.cpp" />
+    <ClCompile Include="UsbPort.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

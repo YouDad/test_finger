@@ -135,8 +135,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     }break;
     case WM_APPEND_CONTROLS:
     {
-        advancedDebugDialog->append(MyString::ParseInt(conf["id"]),conf["AdvDbg_ImgId"]);
-        conf["AdvDbg_ImgId"]=MyString::IntToMyString(MyString::ParseInt(conf["AdvDbg_ImgId"])+1);
+        advancedDebugDialog->append();
     }break;
     case WM_GET_CON_BKI:
     {

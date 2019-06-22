@@ -19,7 +19,7 @@ protected:
 
 public:
     virtual void OnOK();
-    void append(int id,MyString name);
+    void append();
     afx_msg void OnBnClickedBtnClearAll();
     afx_msg BOOL PreTranslateMessage(MSG* pMsg);
 };

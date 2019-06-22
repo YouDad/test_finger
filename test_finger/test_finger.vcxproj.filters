@@ -143,6 +143,9 @@
     <ClInclude Include="SettingUpdatePage.h">
       <Filter>UI\SettingDialog</Filter>
     </ClInclude>
+    <ClInclude Include="MyFile.h">
+      <Filter>My</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RequestConverterGD32F30.cpp">
@@ -273,6 +276,9 @@
     </ClCompile>
     <ClCompile Include="SettingUpdatePage.cpp">
       <Filter>UI\SettingDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFile.cpp">
+      <Filter>My</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

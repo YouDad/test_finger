@@ -1,34 +1,14 @@
 #include "stdafx.h"
 
-// 日志备份位置
-const char* MyLog::LOG_FILE="backup_log.txt";
-
-// 是否已经存在日志文件
-bool MyLog::isExistLog(){
-    FILE* fp=fopen(LOG_FILE,"r");
-    if(fp){
-        fclose(fp);
-    }
-    return fp!=NULL;
-}
-
-// 删除日志文件
-void MyLog::clearLog(){
-    if(isExistLog()){
-        remove(LOG_FILE);
-    }
-}
-
-// 创造日志文件
-void MyLog::createLog(){
-    fclose(fopen(LOG_FILE,"a+"));
-}
-
 // 追加日志内容
 void MyLog::appendLog(const char* text){
-    FILE* fp=fopen(LOG_FILE,"a+");
-    fprintf_s(fp,"%s",text);
-    fclose(fp);
+    if(conf["AutoLog"]==Stringify(true)){
+        MyFile::AppendLog(
+            [&](FILE* fp){
+                fprintf_s(fp,"%s",text);
+            }
+        );
+    }
 }
 
 // 输出level的info
@@ -50,18 +30,18 @@ void MyLog::print(LogLevel level,MyString info){
     }
 
     // 增加等级提示
-    const char* pLevel;
+    MyString pLevel;
     switch(level){
-        case LOGU:pLevel="U";break;
-        case LOGE:pLevel="E";break;
-        case LOGW:pLevel="W";break;
-        case LOGD:pLevel="D";break;
-        case LOGT:pLevel="T";break;
-        default:pLevel=" Unknown ";break;
+    case LOGU:pLevel="U";break;
+    case LOGE:pLevel="E";break;
+    case LOGW:pLevel="W";break;
+    case LOGD:pLevel="D";break;
+    case LOGT:pLevel="T";break;
+    default:pLevel=" Unknown ";break;
     }
 
     // 构造包装过后的信息
-    MyString content=MyString(pLevel)+MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
+    MyString content=pLevel+MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
 
     // 更新日志框
     static MyString last_info="";
@@ -135,10 +115,4 @@ void MyLog::DevelopLog(){
     user("V2.6 <2019年5月27日22:49:28>:优化日志框性能,适配设备信息命令");
     //user("V2.61<2019年5月29日16:29:31>:修复设备信息命令ChipVersion bug");
     user("V2.7 <2019年6月12日20:25:27>:增加USB连接方式,增强串口扫描功能,增强界面健壮性,优化代码结构");
-}
-
-// 清空日志文件
-void MyLog::ClearLog(){
-    clearLog();
-    createLog();
 }

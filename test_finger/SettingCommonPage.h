@@ -1,23 +1,30 @@
 ﻿#pragma once
 
-
-// dlg1 对话框
-
-class SettingCommonPage : public CDialogEx
-{
-	DECLARE_DYNAMIC(SettingCommonPage)
+class SettingCommonPage: public CDialogEx{
+    DECLARE_DYNAMIC(SettingCommonPage)
 
 public:
-	SettingCommonPage(CWnd* pParent = nullptr);   // 标准构造函数
-	virtual ~SettingCommonPage();
+    SettingCommonPage(CWnd* pParent=nullptr);
+    virtual ~SettingCommonPage();
 
-// 对话框数据
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_DIALOG1 };
+    enum{ 
+        IDD=IDD_SettingCommonPage
+    };
 #endif
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+    virtual BOOL OnInitDialog();
+    DECLARE_MESSAGE_MAP()
 
-	DECLARE_MESSAGE_MAP()
+public:
+    virtual void OnOK();
+    afx_msg void OnBnClickedBtnApply();
+    afx_msg void OnBnClickedBtnCancel();
+    afx_msg void OnBnClickedBtnQuitAdvDbg();
+    afx_msg void OnBnClickedChkSaveConf();
+    afx_msg void OnBnClickedChkautocheck();
+    afx_msg void OnBnClickedChkautolog();
+    afx_msg void OnBnClickedChkrembaud();
+    afx_msg void OnBnClickedChkremprotocol();
 };

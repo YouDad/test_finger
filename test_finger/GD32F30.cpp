@@ -11,7 +11,7 @@ __ILC(GD32F30,GetRawImage){
     if(response.size()==0){
         MyLog::user("接收数据超时");
     } else{
-        saveImage(_T("collectedImage"),response);
+        saveImage(response);
         setProgress(100);
         MyLog::trace("加载图片完成");
         MyLog::user("接收数据成功");
@@ -30,7 +30,7 @@ __ILC(GD32F30,GetTestImage){
     if(response.size()==0){
         MyLog::user("接收背景数据超时");
     } else{
-        saveImage(_T("collectedBGI"),response);
+        saveBGImg(response);
         setProgress(100);
         MyLog::trace("加载图片完成");
         MyLog::user("接收背景数据成功");
