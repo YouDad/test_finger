@@ -36,6 +36,12 @@
     <Filter Include="UI\SettingDialog">
       <UniqueIdentifier>{0f8444e9-7c02-4a54-9859-3ceb9afef15f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\AdvDbgDialog">
+      <UniqueIdentifier>{227d70a3-565c-41ac-aa7c-aef68fb6b102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\CustomCtrl">
+      <UniqueIdentifier>{c731a32d-188a-4a1e-b1d3-4af612c95937}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -69,9 +75,6 @@
       <Filter>Comm</Filter>
     </ClInclude>
     <ClInclude Include="App.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="AdvancedDebugDialog.h">
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="MyFlow.h">
@@ -134,9 +137,6 @@
     <ClInclude Include="UITest.h">
       <Filter>Test</Filter>
     </ClInclude>
-    <ClInclude Include="SettingDialog.h">
-      <Filter>UI\SettingDialog</Filter>
-    </ClInclude>
     <ClInclude Include="SettingCommonPage.h">
       <Filter>UI\SettingDialog</Filter>
     </ClInclude>
@@ -145,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="MyFile.h">
       <Filter>My</Filter>
+    </ClInclude>
+    <ClInclude Include="TabsDialog.h">
+      <Filter>UI\CustomCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedDebugDialog.h">
+      <Filter>UI\AdvDbgDialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +185,6 @@
       <Filter>Comm</Filter>
     </ClCompile>
     <ClCompile Include="App.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="AdvancedDebugDialog.cpp">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="RequestConverterSyno.cpp">
@@ -268,9 +271,6 @@
     <ClCompile Include="UITest.cpp">
       <Filter>Test</Filter>
     </ClCompile>
-    <ClCompile Include="SettingDialog.cpp">
-      <Filter>UI\SettingDialog</Filter>
-    </ClCompile>
     <ClCompile Include="SettingCommonPage.cpp">
       <Filter>UI\SettingDialog</Filter>
     </ClCompile>
@@ -279,6 +279,12 @@
     </ClCompile>
     <ClCompile Include="MyFile.cpp">
       <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="TabsDialog.cpp">
+      <Filter>UI\CustomCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvancedDebugDialog.cpp">
+      <Filter>UI\AdvDbgDialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

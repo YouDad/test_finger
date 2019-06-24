@@ -170,7 +170,7 @@ std::vector<int>* lastIdle=NULL;
 
 // 获得通信方式中选择的Com号,USB返回=0,串口返回>0
 int getComID(){
-    if(cmbWay->GetCurSel()){
+    if(!cmbWay->GetCurSel()){
         return 0;
     }
     return (*idle)[idle->size()-cmbWay->GetCurSel()];

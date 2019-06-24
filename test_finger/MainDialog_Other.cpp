@@ -75,11 +75,22 @@ void MainDialog::OnBnClickedBtnClearLog(){
 
 // 设置按钮点击事件
 void MainDialog::OnBnClickedBtnSetting(){
-    static SettingDialog* dialog;
+    static TabsDialog* dialog;
     if(dialog){
         delete dialog;
     }
-    dialog=new SettingDialog();
-    dialog->Create(IDD_SETTING_DIALOG,this);
-    dialog->ShowWindow(SW_SHOW);
+    std::vector<Tab>v;
+    Tab t;
+
+    t.dlg=new SettingCommonPage();
+    t.name="常规";
+    t.templateID=IDD_SettingCommonPage;
+    v.push_back(t);
+
+    t.dlg=new SettingUpdatePage();
+    t.name="更新";
+    t.templateID=IDD_SettingUpdatePage;
+    v.push_back(t);
+
+    dialog=new TabsDialog(v);
 }

@@ -181,11 +181,11 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="MyFile.h" />
     <ClInclude Include="SettingCommonPage.h" />
     <ClInclude Include="SettingUpdatePage.h" />
     <ClInclude Include="MyImage.h" />
-    <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="Comm.h" />
     <ClInclude Include="MainDialogCtrlValidity.h" />
     <ClInclude Include="DataPacket.h" />
@@ -207,7 +207,7 @@
     <ClInclude Include="MyLog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serial.h" />
-    <ClInclude Include="SettingDialog.h" />
+    <ClInclude Include="TabsDialog.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="strings.h" />
     <ClInclude Include="App.h" />
@@ -219,6 +219,7 @@
     <ClInclude Include="UsbPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdvancedDebugDialog.cpp" />
     <ClCompile Include="MyFile.cpp" />
     <ClCompile Include="SettingCommonPage.cpp" />
     <ClCompile Include="SettingUpdatePage.cpp" />
@@ -229,7 +230,6 @@
     <ClCompile Include="MainDialog_EnrollMatch.cpp" />
     <ClCompile Include="MainDialog_RWRegister.cpp" />
     <ClCompile Include="MyImage.cpp" />
-    <ClCompile Include="AdvancedDebugDialog.cpp" />
     <ClCompile Include="GD32F30.cpp" />
     <ClCompile Include="LOG.cpp" />
     <ClCompile Include="Comm.cpp" />
@@ -258,7 +258,7 @@
     <ClCompile Include="Serial.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SettingDialog.cpp" />
+    <ClCompile Include="TabsDialog.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="MainDialog.cpp" />
     <ClCompile Include="stdafx.cpp">

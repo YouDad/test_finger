@@ -50,11 +50,64 @@ void MainDialog::OnBnClickedBtnRawImage(){
         flow.start();
     }
     if(getProtocol()==GD32){
+//#define NoHardWare
+#ifdef NoHardWare
+        test.testBegin(test.Comm,GD32);
+        comm.disconnect();
+        comm.connect(0,0);
+        comm.request(SII(GetRawImage));
+        while(!test.commTest.Comm_sendSize);
+        uint8_t receiveData[]={0xEF,0x02,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x22,0x03,0x02,0x10,0x02,0x00,0x00};
+        int k=0;
+
+        uint8_t img[5][5];
+        for(int i=0;i<5;i++){
+            for(int j=0;j<5;j++){
+                img[i][j]=(i*5+j)*255/24;
+            }
+        }
+        uint8_t* bigImg=new uint8_t[160*160];
+        uint8_t* bigImg2=new uint8_t[160*160];
+        imgSizeX2(5,5,(uint8_t*)img,bigImg);
+        imgSizeX2(10,10,bigImg,bigImg2);
+        imgSizeX2(20,20,bigImg2,bigImg);
+        imgSizeX2(40,40,bigImg,bigImg2);
+        imgSizeX2(80,80,bigImg2,bigImg);
+
+        for(int i=0;i<25600;){
+            uint16_t* len=(uint16_t*)(receiveData+15);
+            if(25600-i<=528){
+                *len=25600-i;
+            }
+            memcpy(test.commTest.Comm_receive+k,receiveData,sizeof receiveData);
+            k+=sizeof receiveData;
+            for(int j=0;j<528&&i<25600;j++){
+                test.commTest.Comm_receive[k++]=bigImg[i++];
+            }
+            // TODO-When CRCVal be used
+            test.commTest.Comm_receive[k++]=0;
+            test.commTest.Comm_receive[k++]=0;
+        }
+        bool process=false;
+        flow.clear();
+        flow.add(0,
+            [&](int& result)->bool{
+                process=true;
+                flow.clear();
+                return false;
+            }
+        );
+        flow.jump(0);
+        test.commTest.Comm_receiveSize=k;
+
+        test.testEnd();
+#else
         MainDialogCtrlValidity::Working();
         // 发送<获取原始图像>命令
         comm.request(SII(GetRawImage));
         setProgress(30);
         MyLog::user("请放手指");
+#endif
     }
 }
 

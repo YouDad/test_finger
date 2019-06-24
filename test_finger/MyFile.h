@@ -4,6 +4,8 @@
 #include "MyString.h"
 
 class MyFile{
+public:
+    typedef std::function<void(FILE* fp)> FileFunction_t;
 private:
     static MyString CONF_PATH;
     static MyString DATA_DIR;
@@ -11,7 +13,6 @@ private:
     // 程序开始运行时间
     static MyString RUN_TIME;
     static MyString init();
-    typedef std::function<void(FILE* fp)> FileFunction_t;
     static bool OperateFile(MyString path,const char* mode,FileFunction_t f);
 public:
     static MyString IMAGE_DIR;

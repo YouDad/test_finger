@@ -9,14 +9,7 @@ MainDialog::MainDialog(CWnd* pParent /*=NULL*/)
 // 消息映射宏处理块
 BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_WM_PAINT()
-    ON_MESSAGE(WM_GET_RAW_IMAGE,serialResponse)
-    ON_MESSAGE(WM_GET_CON_IMAGE,serialResponse)
-    ON_MESSAGE(WM_STP_GET_IMAGE,serialResponse)
-    ON_MESSAGE(WM_READ_REGISTER,serialResponse)
-    ON_MESSAGE(WM_APPEND_CONTROLS,serialResponse)
-    ON_MESSAGE(WM_GET_TEST_IMAGE,serialResponse)
-    ON_MESSAGE(WM_GET_CON_BKI,serialResponse)
-    ON_MESSAGE(WM_STP_GET_BKI,serialResponse)
+    RESPONSE_USER_MESSAGE(serialResponse)
     ON_WM_QUERYDRAGICON()
     ON_WM_DEVICECHANGE()
     ON_BN_CLICKED(IDC_BTNConnect,&MainDialog::OnBnClickedBtnConnect)
@@ -109,11 +102,9 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
     static bool continueImage=false;
     switch(w){
     case WM_GET_CON_IMAGE:
-    {
         continueImage=true;
-    }// break; 没有break
+        // break; 没有break
     case WM_GET_RAW_IMAGE:
-    {
         if(continueImage){
             comm.request(SII(GetRawImage));
             setProgress(30);
@@ -121,41 +112,49 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
         } else{
             MainDialogCtrlValidity::Work();
         }
-    }break;
+        break;
     case WM_STP_GET_IMAGE:
-    {
         continueImage=false;
         MainDialogCtrlValidity::Work();
         setProgress(0);
-    }break;
+        break;
     case WM_READ_REGISTER:
-    {
         MainDialogCtrlValidity::Work();
         setProgress(100);
-    }break;
+        break;
     case WM_APPEND_CONTROLS:
-    {
         advancedDebugDialog->append();
-    }break;
+        break;
     case WM_GET_CON_BKI:
-    {
         continueImage=true;
-    }// break; 没有break
+        // break; 没有break
     case WM_GET_TEST_IMAGE:
-    {
         if(continueImage){
             comm.request(SII(GetTestImage));
             setProgress(30);
         } else{
             MainDialogCtrlValidity::Work();
         }
-    }break;
+        break;
     case WM_STP_GET_BKI:
-    {
         continueImage=false;
         MainDialogCtrlValidity::Work();
         setProgress(0);
+        break;
+    case WM_ADDLOG:
+    {
+        int len=editLog->GetWindowTextLength();
+        MyString old_content=getText(editNow);
+        editLog->SetSel(len,len,0);
+        editLog->ReplaceSel(old_content);
+        MyLog::appendLog(old_content);
     }break;
+    case WM_LOG:
+        if(getText(editNow)!=MyLog::content){
+            setText(editNow,MyLog::content);
+        }
+        MyLog::contentlocker.unlock();
+        break;
     }
     setProgress(0);
     return TRUE;

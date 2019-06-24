@@ -1,5 +1,6 @@
 #pragma once
 #include "MyString.h"
+#include "MyLocker.h"
 
 class MyLog{
 public:
@@ -37,7 +38,8 @@ public:
     static void user(const char* format,...);
     // 输出开发日志
     static void DevelopLog();
-private:
+    static MyString content;
+    static MyLocker contentlocker;
     // 追加日志内容
     static void appendLog(const char * text);
 };

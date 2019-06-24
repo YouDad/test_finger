@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+MyString MyLog::content;
+MyLocker MyLog::contentlocker=MyLocker(0,1);
+
 // 追加日志内容
 void MyLog::appendLog(const char* text){
     if(conf["AutoLog"]==Stringify(true)){
@@ -41,20 +44,14 @@ void MyLog::print(LogLevel level,MyString info){
     }
 
     // 构造包装过后的信息
-    MyString content=pLevel+MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
-
+    content=pLevel+MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
     // 更新日志框
     static MyString last_info="";
     if(info!=last_info){
-        int len=editLog->GetWindowTextLength();
-        MyString old_content=getText(editNow);
-        editLog->SetSel(len,len,0);
-        editLog->ReplaceSel(old_content);
-        appendLog(old_content);
+        sendMainDialogMessage(WM_ADDLOG);
     }
-    if(getText(editNow)!=content){
-        setText(editNow,content);
-    }
+    sendMainDialogMessage(WM_LOG);
+    contentlocker.lock();
     last_info=info;
 }
 

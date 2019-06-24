@@ -87,8 +87,10 @@
 
 #include "App.h"
 #include "MainDialog.h"
+#include "TabsDialog.h"
+#include "SettingCommonPage.h"
+#include "SettingUpdatePage.h"
 #include "AdvancedDebugDialog.h"
-#include "SettingDialog.h"
 
 #include "MainControl.h"
 #include "MainDialogCtrlValidity.h"
