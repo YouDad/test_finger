@@ -2,20 +2,12 @@
 
 // 打开图片文件夹点击事件
 void MainDialog::OnBnClickedBtnOpenImage(){
-    if(access("collectedImage",0)){
-        MyLog::user("图片文件夹不存在,请先采一张图片");
-    } else{
-        ShellExecuteA(NULL,"explore","collectedImage",NULL,NULL,SW_NORMAL);
-    }
+    ShellExecuteA(NULL,"explore",MyFile::IMAGE_DIR,NULL,NULL,SW_NORMAL);
 }
 
 // 打开背景文件夹点击事件
 void MainDialog::OnBnClickedBtnOpenBackgroundImage(){
-    if(access("collectedBGI",0)){
-        MyLog::user("背景文件夹不存在,请先采一张背景");
-    } else{
-        ShellExecuteA(NULL,"explore","collectedBGI",NULL,NULL,SW_NORMAL);
-    }
+    ShellExecuteA(NULL,"explore",MyFile::BACKGROUND_DIR,NULL,NULL,SW_NORMAL);
 }
 
 //原始图像的点击事件
@@ -31,7 +23,7 @@ void MainDialog::OnBnClickedBtnRawImage(){
             setProgress(100*flow.percent());
             flow.next();
             return false;
-        });
+            });
         // 流程 1:如果取到图,发送<上传图像>命令
         // 流程 1:如果没取到图,回到上一个流程
         flow.add(1,[](int& result){
@@ -45,7 +37,7 @@ void MainDialog::OnBnClickedBtnRawImage(){
                 flow.prev();
                 return true;
             }
-        });
+            });
         // 流程 2:获取图像结束,善后工作
         flow.add(2,[](int& result){
             setProgress(100*flow.percent());
@@ -53,7 +45,7 @@ void MainDialog::OnBnClickedBtnRawImage(){
             flow.clear();
             MainDialogCtrlValidity::Work();
             return false;
-        });
+            });
         // 开始执行流程
         flow.start();
     }
@@ -106,7 +98,7 @@ void MainDialog::OnBnClickedBtnContinueImage(){
             setProgress(100*flow.percent());
             flow.next();
             return false;
-        });
+            });
         // 流程 1:如果取图成功,发送<上传图像>命令
         // 流程 1:如果取图失败,回到上一个流程
         flow.add(1,[](int& result){
@@ -120,13 +112,13 @@ void MainDialog::OnBnClickedBtnContinueImage(){
                 flow.prev();
                 return true;
             }
-        });
+            });
         // 流程 2:回到流程 0
         flow.add(2,[](int& result){
             setProgress(100*flow.percent());
             flow.jump(0);
             return true;
-        });
+            });
         // 流程 3:连续取图结束,善后工作
         flow.add(3,[](int& result){
             setProgress(100*flow.percent());
@@ -134,7 +126,7 @@ void MainDialog::OnBnClickedBtnContinueImage(){
             flow.clear();
             MainDialogCtrlValidity::Work();
             return false;
-        });
+            });
         flow.start();
     }
     if(getProtocol()==GD32){
