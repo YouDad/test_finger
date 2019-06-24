@@ -3,6 +3,14 @@
 // 全局唯一配置
 MyConfig conf;
 
+void setDefault(std::map<std::string,std::string>& m,const char* key,const char* val,bool give,bool cond=true){
+    if(give||!m.count(key)){
+        if(cond){
+            m[key]=val;
+        }
+    }
+}
+
 // 默认配置
 void MyConfig::defaultConfig(){
     if(!m.count("SaveConf")){
@@ -11,31 +19,14 @@ void MyConfig::defaultConfig(){
     // 若SaveConf为false,则都用默认设置
     bool give=m["SaveConf"]==Stringify(false);
 
-    if(give||!m.count("AdvDbg")){
-        m["AdvDbg"]=Stringify(false);
-    }
-    if(give||!m.count("AutoCheck")){
-        m["AutoCheck"]=Stringify(true);
-    }
-    if(give||!m.count("AutoLog")){
-        m["AutoLog"]=Stringify(true);
-    }
-    if(give||!m.count("RemBaud")){
-        m["RemBaud"]=Stringify(true);
-    }
-    if(give||!m.count("RemProtocol")){
-        m["RemProtocol"]=Stringify(true);
-    }
-    if(give||!m.count("Baud")){
-        if(m["RemBaud"]==Stringify(true)){
-            m["Baud"]="2";
-        }
-    }
-    if(give||!m.count("ProtocolType")){
-        if(m["RemProtocol"]==Stringify(true)){
-            m["ProtocolType"]="0";
-        }
-    }
+    setDefault(m,"AdvDbg",Stringify(false),give);
+    setDefault(m,"AutoCheck",Stringify(true),give);
+    setDefault(m,"AutoLog",Stringify(true),give);
+    setDefault(m,"RemBaud",Stringify(true),give);
+    setDefault(m,"RemProtocol",Stringify(true),give);
+    setDefault(m,"Baud","2",give,m["RemBaud"]==Stringify(true));
+    setDefault(m,"ProtocolType","0",give,m["RemProtocol"]==Stringify(true));
+    setDefault(m,"ImgSize","160",give);
     return;
 }
 

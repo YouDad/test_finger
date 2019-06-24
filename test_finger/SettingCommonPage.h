@@ -27,4 +27,6 @@ public:
     afx_msg void OnBnClickedChkautolog();
     afx_msg void OnBnClickedChkrembaud();
     afx_msg void OnBnClickedChkremprotocol();
+    afx_msg void OnEnChangeEditimgsize();
+    afx_msg void OnNMCustomdrawSliderImgSize(NMHDR *pNMHDR,LRESULT *pResult);
 };

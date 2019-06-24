@@ -42,9 +42,9 @@ void ImageInit(int w,int h){
 }
 
 bool saveTempImage(int w,int h,uint8_t* pData,int id){
-    if(test.isTest(test.UI)){
+    /*if(test.isTest(test.UI)){
         return true;
-    }
+    }*/
     ImageInit(w,h);
     return MyFile::SaveTempImage(
         [&](FILE* fp){
@@ -52,7 +52,7 @@ bool saveTempImage(int w,int h,uint8_t* pData,int id){
             fwrite(&bmpInfo,sizeof bmpInfo,1,fp);
             fwrite(&bmfColorQuad,sizeof bmfColorQuad,1,fp);
             fwrite(pData,w*h,1,fp);
-        },0
+        },id
     );
 }
 
@@ -122,18 +122,28 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
                 }
             }
         }
+
+    goto_save:
         reverse(pData,w*h);
         for(int i=0;i<h;i++){
             reverse(pData+i*w,w);
         }
         save(w,h,pData,fileName);
+        {
+            int imgSize=MyString::ParseInt(conf["ImgSize"]);
+            uint8_t* bigImg=new uint8_t[imgSize*imgSize];
+            imgResize(w,h,pData,imgSize,imgSize,bigImg);
+            saveTempImage(imgSize,imgSize,bigImg,2);
+            loadImage(image,MyFile::TEMP_IMAGE_PATH+"2.bmp");
+            delete[] bigImg;
+        }
         break;
     case 192*192:
         MyLog::user("接收到192x192的图像");
         w=h=192;
-
-        save(w,h,dataPacket.getPointer(),fileName);
-        break;
+        pData=dataPacket.getPointer();
+        save(w,h,pData,fileName);
+        goto goto_save;
     default:
         MyLog::user("既不是160x160也不是192x192,没法渲染图像");
         break;
@@ -144,12 +154,10 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
     dataPacket.readData(dataPacket.size());
 }
 
-// 把dataPacket里的数据当做图片存到dir路径下
 void saveImage(DataPacket dataPacket){
     analysis(dataPacket,
         [&](int w,int h,uint8_t* pData,MyString fileName){
             saveImage(w,h,pData,fileName);
-            loadImage(image,MyFile::IMAGE_DIR+fileName);
         }
     );
 }
@@ -158,13 +166,12 @@ void saveBGImg(DataPacket dataPacket){
     analysis(dataPacket,
         [&](int w,int h,uint8_t* pData,MyString fileName){
             saveBGImg(w,h,pData,fileName);
-            loadImage(image,MyFile::BACKGROUND_DIR+fileName);
         }
     );
 }
 
 // 生成亮度直方图,输入为w*h的pData,输出为hw*hh的Histogram
-void generateHistogram(uint8_t* Histogram,int hw,int hh,uint8_t* pData,int w,int h){
+void generateHistogram(int w,int h,uint8_t* pData,int hw,int hh,uint8_t* Histogram){
     auto func=[&](int position,int height)->void{
         for(int i=0;i<hh;i++){
             if(i==height){
@@ -200,11 +207,60 @@ void generateHistogram(uint8_t* Histogram,int hw,int hh,uint8_t* pData,int w,int
 }
 
 // 把w*h的src的图片放大一倍,存到dest里
-void imgSizeX2(uint8_t * src,int w,int h,uint8_t * dest){
+void imgSizeX2(int w,int h,uint8_t * src,uint8_t * dest){
     int dw=w+w,dh=h+h;
     for(int i=0;i<dh;i++){
         for(int j=0;j<dw;j++){
             dest[i*dw+j]=src[i/2*w+j/2];
         }
     }
+}
+
+int ceil(int a,int b){
+    return (a%b!=0)+a/b;
+}
+
+void imgResize(int w,int h,uint8_t* src,int a,int b,uint8_t* dest){
+    if(w==a&&h==b){
+        memcpy(dest,src,a*b);
+        return;
+    }
+    double* arr=new double[a*b];
+    for(int i=0;i<a*b;i++){
+        arr[i]=0;
+    }
+
+    // 放大操作
+    for(int i=0;i<w;i++){
+        for(int j=0;j<h;j++){
+            int is=i*a/w;
+            int ie=ceil((i+1)*a,w);
+            int js=j*b/h;
+            int je=ceil((j+1)*b,h);
+            for(int ii=is;ii<ie;ii++){
+                for(int jj=js;jj<je;jj++){
+                    double il=max(ii,(i+0.0)*a/w);
+                    double jt=max(jj,(j+0.0)*b/h);
+                    double ir=min(ii+1,(i+1.0)*a/w);
+                    double jd=min(jj+1,(j+1.0)*b/h);
+                    arr[ii+jj*a]+=(ir-il)*(jd-jt)*src[i*h+j];
+                }
+            }
+        }
+    }
+
+    if(a==b){
+        // 向左旋转90°
+        for(int i=0;i<b;i++){
+            for(int j=0;j<a;j++){
+                dest[j*b+b-1-i]=(uint8_t)arr[(b-1-i)*a+j];
+            }
+        }
+    } else{
+        // 不是正方形不能旋转
+        for(int i=0;i<a*b;i++){
+            dest[i]=(uint8_t)arr[i];
+        }
+    }
+    delete[] arr;
 }

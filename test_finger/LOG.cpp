@@ -8,12 +8,12 @@ __ILC(LOG,AdvDbg_AdjImg){
 
     // 要放大获得的原始图像
     uint8_t bigImg[64*64];
-    imgSizeX2(response.getPointer(),32,32,bigImg);
+    imgSizeX2(32,32,response.getPointer(),bigImg);
     saveTempImage(64,64,bigImg,0);
 
     // 生成亮度直方图 Histogram是直方图
     uint8_t Histogram[256*64];
-    generateHistogram(Histogram,256,64,response.getPointer(),32,32);
+    generateHistogram(32,32,response.getPointer(),256,64,Histogram);
     saveTempImage(64,64,bigImg,1);
 
     // 向高级调试窗口追加一批控件

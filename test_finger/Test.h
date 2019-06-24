@@ -5,9 +5,12 @@
 #include "CommTest.h"
 
 class Test{
-public:
+private:
     MyLocker testLocker;
+    int type;
 
+
+public:
     const int Comm=1;
     const int UI=2;
     const int My=4;
@@ -15,8 +18,6 @@ public:
     CommTest commTest;
     UITest uiTest;
     MyTest myTest;
-
-    int type;
 
     Test();
     void testBegin(int type,const char* protocol=0);

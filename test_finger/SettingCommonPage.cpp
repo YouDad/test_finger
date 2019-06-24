@@ -18,7 +18,8 @@ CButton* chkRemBaud;
 CButton* chkRemProtocol;
 CButton* btnQuitAdvDbg;
 CButton* btnApply;
-
+CStatic* txtImgSize;
+CSliderCtrl* sliderImgSize;
 
 // 初始化事件
 BOOL SettingCommonPage::OnInitDialog(){
@@ -30,6 +31,13 @@ BOOL SettingCommonPage::OnInitDialog(){
     chkRemProtocol=(CButton*)GetDlgItem(IDC_CHKRemProtocol);
     btnQuitAdvDbg=(CButton*)GetDlgItem(IDC_BTNQuitAdvDbg);
     btnApply=(CButton*)GetDlgItem(IDC_BTNApply);
+    txtImgSize=(CStatic*)GetDlgItem(IDC_STATICimgSize);
+    sliderImgSize=(CSliderCtrl*)GetDlgItem(IDC_SLIDERimgSize);
+
+    sliderImgSize->SetRange(4,40);
+    sliderImgSize->SetLineSize(1);
+    sliderImgSize->SetPageSize(4);
+    sliderImgSize->SetTicFreq(4);
 
     OnBnClickedBtnCancel();
     OnBnClickedChkSaveConf();
@@ -51,6 +59,7 @@ BEGIN_MESSAGE_MAP(SettingCommonPage,CDialogEx)
     ON_BN_CLICKED(IDC_CHKAutoLog,&SettingCommonPage::OnBnClickedChkautolog)
     ON_BN_CLICKED(IDC_CHKRemBaud,&SettingCommonPage::OnBnClickedChkrembaud)
     ON_BN_CLICKED(IDC_CHKRemProtocol,&SettingCommonPage::OnBnClickedChkremprotocol)
+    ON_NOTIFY(NM_CUSTOMDRAW,IDC_SLIDERimgSize,&SettingCommonPage::OnNMCustomdrawSliderImgSize)
 END_MESSAGE_MAP()
 
 
@@ -61,6 +70,7 @@ void SettingCommonPage::OnBnClickedBtnApply(){
         conf["AutoLog"]=MyConfig::Bool(isChecked(chkAutoLog));
         conf["RemBaud"]=MyConfig::Bool(isChecked(chkRemBaud));
         conf["RemProtocol"]=MyConfig::Bool(isChecked(chkRemProtocol));
+        conf["ImgSize"]=MyString::IntToMyString(sliderImgSize->GetPos()*10);
     } else{
         MyFile::WriteConfig([](FILE* fp){});
     }
@@ -74,6 +84,9 @@ void SettingCommonPage::OnBnClickedBtnCancel(){
     setCheck(chkAutoLog,conf["AutoLog"]==Stringify(true));
     setCheck(chkRemBaud,conf["RemBaud"]==Stringify(true));
     setCheck(chkRemProtocol,conf["RemProtocol"]==Stringify(true));
+
+    sliderImgSize->SetPos(MyString::ParseInt(conf["ImgSize"])/10);
+
     OnBnClickedChkSaveConf();
 }
 
@@ -81,6 +94,7 @@ void SettingCommonPage::OnBnClickedBtnCancel(){
 void SettingCommonPage::OnBnClickedBtnQuitAdvDbg(){
     conf["AdvDbg"]=Stringify(false);
     btnAdvDbg->ShowWindow(SW_HIDE);
+    btnQuitAdvDbg->ShowWindow(SW_HIDE);
 }
 
 
@@ -89,6 +103,7 @@ void SettingCommonPage::OnBnClickedChkSaveConf(){
     chkAutoLog->EnableWindow(isChecked(chkSaveConf));
     chkRemBaud->EnableWindow(isChecked(chkSaveConf));
     chkRemProtocol->EnableWindow(isChecked(chkSaveConf));
+    sliderImgSize->EnableWindow(isChecked(chkSaveConf));
     btnApply->EnableWindow(TRUE);
 }
 
@@ -110,4 +125,19 @@ void SettingCommonPage::OnBnClickedChkrembaud(){
 
 void SettingCommonPage::OnBnClickedChkremprotocol(){
     btnApply->EnableWindow(TRUE);
+}
+
+
+void SettingCommonPage::OnNMCustomdrawSliderImgSize(NMHDR *pNMHDR,LRESULT *pResult){
+    LPNMCUSTOMDRAW pNMCD=reinterpret_cast<LPNMCUSTOMDRAW>(pNMHDR);
+    static int last=0;
+    int now=sliderImgSize->GetPos();
+    if(last!=now){
+        setText(txtImgSize,MyString::Format("%.2lf%% %d×%d",now/0.16,now*10,now*10));
+        if(last!=0){
+            btnApply->EnableWindow(TRUE);
+        }
+        last=now;
+    }
+    *pResult=0;
 }

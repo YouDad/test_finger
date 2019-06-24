@@ -9,6 +9,20 @@
 #define WM_GET_CON_BKI		WM_USER+10
 #define WM_STP_GET_BKI		WM_USER+11
 #define WM_GET_TEST_IMAGE	WM_USER+12
+#define WM_ADDLOG	        WM_USER+13
+#define WM_LOG	            WM_USER+14
+
+#define RESPONSE_USER_MESSAGE(serialResponse)   \
+ON_MESSAGE(WM_GET_RAW_IMAGE,serialResponse)     \
+ON_MESSAGE(WM_GET_CON_IMAGE,serialResponse)     \
+ON_MESSAGE(WM_STP_GET_IMAGE,serialResponse)     \
+ON_MESSAGE(WM_READ_REGISTER,serialResponse)     \
+ON_MESSAGE(WM_APPEND_CONTROLS,serialResponse)   \
+ON_MESSAGE(WM_GET_TEST_IMAGE,serialResponse)    \
+ON_MESSAGE(WM_GET_CON_BKI,serialResponse)       \
+ON_MESSAGE(WM_STP_GET_BKI,serialResponse)       \
+ON_MESSAGE(WM_ADDLOG,serialResponse)            \
+ON_MESSAGE(WM_LOG,serialResponse)               \
 
 // ¿‡–Õ
 typedef unsigned char  uint8_t;
