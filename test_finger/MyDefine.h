@@ -28,6 +28,7 @@ ON_MESSAGE(WM_LOG,serialResponse)               \
 typedef unsigned char  uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int   uint32_t;
+typedef unsigned int   uint;
 
 // ∫Í∂®“Â
 #define _Function_t(ReturnType,...) std::function<ReturnType(__VA_ARGS__)>

@@ -23,35 +23,40 @@ MyString MyFile::init(){
     TEMP_IMAGE_PATH=DATA_DIR+TEMP_IMAGE_PATH;
     CONF_PATH=DATA_DIR+CONF_PATH;
 
-    if(0!=access(DATA_DIR,0)){
+    if(0!=_access(DATA_DIR,0)){
         int x=CreateDirectory(DATA_DIR,0);
         int d=GetLastError();
         int y=0;
     }
-    if(0!=access(LOG_DIR,0)){
+    if(0!=_access(LOG_DIR,0)){
         CreateDirectory(LOG_DIR,0);
     }
-    if(0!=access(IMAGE_DIR,0)){
+    if(0!=_access(IMAGE_DIR,0)){
         CreateDirectory(IMAGE_DIR,0);
     }
-    if(0!=access(BACKGROUND_DIR,0)){
+    if(0!=_access(BACKGROUND_DIR,0)){
         CreateDirectory(BACKGROUND_DIR,0);
     }
-    if(0!=access(HISTOGRAM_DIR,0)){
+    if(0!=_access(HISTOGRAM_DIR,0)){
         CreateDirectory(HISTOGRAM_DIR,0);
     }
-    if(0!=access(TEMP_IMAGE_PATH,0)){
+    if(0!=_access(TEMP_IMAGE_PATH,0)){
         CreateDirectory(TEMP_IMAGE_PATH,0);
     }
     return MyString::Time();
 }
 
 bool MyFile::OperateFile(MyString path,const char * mode,FileFunction_t f){
-    FILE* fp=fopen(path,mode);
-    if(fp){
+    FILE* fp;
+    errno_t err=fopen_s(&fp,path,mode);
+    if(err==ERROR_SUCCESS){
         f(fp);
         fclose(fp);
         return true;
+    } else{
+        char buffer[1024];
+        strerror_s(buffer,err);
+        MyLog::error(buffer);
     }
     return false;
 }

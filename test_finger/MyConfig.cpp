@@ -42,7 +42,7 @@ MyConfig::MyConfig(){
             *--p=0;
             int n,c=0;
             while(buffer[c]){
-                sscanf(buffer+c,"%[^`]`%[^`]`%n",key,val,&n);
+                sscanf_s(buffer+c,"%[^`]`%[^`]`%n",key,sizeof key,val,sizeof val,&n);
                 c+=n;
                 m[key]=val;
             }

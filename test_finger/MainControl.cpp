@@ -235,7 +235,7 @@ BOOL EnumPortsWdm(){
         const char* str=friendlyName;
         for(str=str+strlen(str);*str!='(';str--);
         int COM=0;
-        sscanf(str,"(COM%d)",&COM);
+        sscanf_s(str,"(COM%d)",&COM);
 
         HANDLE hPort=::CreateFile(MyString::Format("\\\\.\\COM%d",COM),
             GENERIC_READ|GENERIC_WRITE,0,0,OPEN_EXISTING,0,0);
@@ -320,7 +320,7 @@ void autoConnect(){
             );//求idle-lastIdle
             if(diff.size()==1){ //差集应该只有一个元素
                 int needConnectId=diff[0];
-                for(int i=0;i<idle->size();i++){
+                for(uint i=0;i<idle->size();i++){
                     if((*idle)[i]==needConnectId){
                         cmbWay->SetCurSel(i+1);
                         bool ret=comm.connect(needConnectId,getInt(cmbBaud));
@@ -337,9 +337,7 @@ void autoConnect(){
                 {
                     MyString error="diff:";
                     for(std::vector<int>::iterator it=diff.begin();it!=diff.end();it++){
-                        char number[20];
-                        sprintf(number," %d",*it);
-                        error+=number;
+                        error+=MyString::IntToMyString(*it);
                     }
                     MyLog::error(error);
                 }
@@ -350,18 +348,14 @@ void autoConnect(){
             {
                 MyString error="idle:";
                 for(std::vector<int>::iterator it=idle->begin();it!=idle->end();it++){
-                    char number[20];
-                    sprintf(number," %d",*it);
-                    error+=number;
+                    error+=MyString::IntToMyString(*it);
                 }
                 MyLog::error(error);
             }
             {
                 MyString error="lastIdle:";
                 for(std::vector<int>::iterator it=lastIdle->begin();it!=lastIdle->end();it++){
-                    char number[20];
-                    sprintf(number," %d",*it);
-                    error+=number;
+                    error+=MyString::IntToMyString(*it);
                 }
                 MyLog::error(error);
             }
@@ -375,7 +369,7 @@ void autoDisconnect(){
     //自动断开仅当连接状态下
     if(id>0){
         bool needDisconnect=true;
-        for(int i=0;i<idle->size();i++){
+        for(uint i=0;i<idle->size();i++){
             if((*idle)[i]==id){
                 needDisconnect=false;
             }

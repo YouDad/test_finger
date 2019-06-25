@@ -85,7 +85,7 @@ void AdvancedDebugDialog::append(){
     if(this){
         v.push_back(MyControls(v.size()+1,v.size()+1,this));
         v.back().loadImage();
-        for(int i=0;i<v.size();i++){
+        for(uint i=0;i<v.size();i++){
             setText(v[i].hint,MyString::Format("(%d/%d)",i+1,v.size()));
         }
     }
@@ -115,7 +115,7 @@ void up(CWnd* c){
 
 // 向下滑动
 void down(CWnd* c){
-    if(position+6<v.size()){
+    if((uint)(position+6)<v.size()){
         position++;
         ScrollWindow(c->m_hWnd,0,-80,0,0);
     }
