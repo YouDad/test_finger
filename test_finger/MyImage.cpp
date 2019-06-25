@@ -42,9 +42,9 @@ void ImageInit(int w,int h){
 }
 
 bool saveTempImage(int w,int h,uint8_t* pData,int id){
-    /*if(test.isTest(test.UI)){
+    if(test.isTest(test.UI)){
         return true;
-    }*/
+    }
     ImageInit(w,h);
     return MyFile::SaveTempImage(
         [&](FILE* fp){
