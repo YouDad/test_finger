@@ -152,6 +152,9 @@
     <ClInclude Include="AdvancedDebugDialog.h">
       <Filter>UI\AdvDbgDialog</Filter>
     </ClInclude>
+    <ClInclude Include="MyMsgQueue.h">
+      <Filter>My</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RequestConverterGD32F30.cpp">
@@ -285,6 +288,9 @@
     </ClCompile>
     <ClCompile Include="AdvancedDebugDialog.cpp">
       <Filter>UI\AdvDbgDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MyMsgQueue.cpp">
+      <Filter>My</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

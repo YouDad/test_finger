@@ -71,6 +71,7 @@
 #include "Test.h"
 
 #include "MyLocker.h"
+#include "MyMsgQueue.h"
 #include "MyControl.h"
 #include "MyConfig.h"
 #include "strings.h"

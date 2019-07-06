@@ -79,6 +79,27 @@ void initMainControl(MainDialog* Dlg){
     image=(CStatic*)Dlg->GetDlgItem(IDC_IMAGE);
     hwnd=Dlg->m_hWnd;
 
+    (new MyThread(
+        [&](){
+            MyString last="";
+            while(1){
+                MyString log=MyLog::MsgQueue.pop();
+                MyString WithTime=log.Format<const char*>(
+                    MyString::Time("%Y-%m-%d %H:%M:%S"));
+                if(last!=log){
+                    int len=editLog->GetWindowTextLength();
+                    MyString old_content=getText(editNow);
+                    editLog->SetSel(len,len,0);
+                    editLog->ReplaceSel(old_content+"\r");
+                    MyLog::appendLog(old_content+"\n");
+                }
+                if(getText(editNow)!=WithTime){
+                    setText(editNow,WithTime);
+                }
+            }
+        }
+    ,true))->start();
+
     setProgress(20);
 
     //各控件访问权限
@@ -294,7 +315,7 @@ void updateCommunityWay(){
             CString name;
             name.Format(_T("COM%d"),(*idle)[i]);
             cmbWay->InsertString(i,name);
-        }
+}
     }
 #else
     EnumPortsWdm();

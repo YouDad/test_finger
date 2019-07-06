@@ -52,3 +52,7 @@ void MyLog::FuncName(const char * format,...){  \
                                                 \
     print(LogLevel,tmp);                        \
 }
+
+#define FastDeclearLogName(FuncName) \
+static void FuncName(MyString info);\
+static void FuncName(const char* format,...);
