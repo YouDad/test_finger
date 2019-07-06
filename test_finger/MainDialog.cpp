@@ -141,21 +141,6 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
         MainDialogCtrlValidity::Work();
         setProgress(0);
         break;
-    case WM_ADDLOG:
-    {
-        int len=editLog->GetWindowTextLength();
-        MyString old_content=getText(editNow);
-        editLog->SetSel(len,len,0);
-        editLog->ReplaceSel(old_content);
-        MyLog::appendLog(old_content);
-    }break;
-    case WM_LOG:
-        if(getText(editNow)!=MyLog::content){
-            setText(editNow,MyLog::content);
-        }
-        MyLog::contentlocker.unlock();
-        break;
     }
-    setProgress(0);
     return TRUE;
 }

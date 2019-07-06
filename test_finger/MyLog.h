@@ -1,6 +1,10 @@
 #pragma once
 #include "MyString.h"
-#include "MyLocker.h"
+#include "MyMsgQueue.h"
+
+#define FastDeclearLogName(FuncName) \
+static void FuncName(MyString info);\
+static void FuncName(const char* format,...);
 
 class MyLog{
 public:
@@ -16,32 +20,17 @@ public:
     static void print(LogLevel level,MyString info);
     // 输出level的info(printf的样子)
     static void print(LogLevel level,const char* format,...);
-    // LOGT的print
-    static void trace(MyString info);
-    // LOGT的print
-    static void trace(const char* format,...);
-    // LOGD的print
-    static void debug(MyString info);
-    // LOGD的print
-    static void debug(const char* format,...);
-    // LOGE的print
-    static void error(MyString info);
-    // LOGE的print
-    static void error(const char* format,...);
-    // LOGW的print
-    static void warn(MyString info);
-    // LOGW的print
-    static void warn(const char* format,...);
-    // LOGU的print
-    static void user(MyString info);
-    // LOGU的print
-    static void user(const char* format,...);
+    FastDeclearLogName(trace)
+    FastDeclearLogName(debug)
+    FastDeclearLogName(error)
+    FastDeclearLogName(warn)
+    FastDeclearLogName(user)
     // 输出开发日志
     static void DevelopLog();
-    static MyString content;
-    static MyLocker contentlocker;
     // 追加日志内容
     static void appendLog(const char * text);
+    // 消息队列
+    static MyMsgQueue<MyString> MsgQueue;
 };
 
 // 版本号270=2.7,271=2.7.1

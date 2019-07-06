@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
-MyString MyLog::content;
-MyLocker MyLog::contentlocker=MyLocker(0,1);
+MyMsgQueue<MyString> MyLog::MsgQueue(16);
 
 // 追加日志内容
 void MyLog::appendLog(const char* text){
@@ -35,24 +34,17 @@ void MyLog::print(LogLevel level,MyString info){
     // 增加等级提示
     MyString pLevel;
     switch(level){
-    case LOGU:pLevel="U";break;
-    case LOGE:pLevel="E";break;
-    case LOGW:pLevel="W";break;
-    case LOGD:pLevel="D";break;
-    case LOGT:pLevel="T";break;
-    default:pLevel=" Unknown ";break;
+    case LOGU:pLevel="[U]";break;
+    case LOGE:pLevel="[E]";break;
+    case LOGW:pLevel="[W]";break;
+    case LOGD:pLevel="[D]";break;
+    case LOGT:pLevel="[T]";break;
+    default:pLevel="[Unknown]";break;
     }
 
     // 构造包装过后的信息
-    content=pLevel+MyString::Time("%Y-%m-%d %H:%M:%S ")+info+"\r\n";
-    // 更新日志框
-    static MyString last_info="";
-    if(info!=last_info){
-        sendMainDialogMessage(WM_ADDLOG);
-    }
-    sendMainDialogMessage(WM_LOG);
-    contentlocker.lock();
-    last_info=info;
+    MyString content=pLevel+"%s "+info;
+    MsgQueue.push(content);
 }
 
 // 输出level的info(printf的样子)

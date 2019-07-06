@@ -183,6 +183,7 @@
   <ItemGroup>
     <ClInclude Include="AdvancedDebugDialog.h" />
     <ClInclude Include="MyFile.h" />
+    <ClInclude Include="MyMsgQueue.h" />
     <ClInclude Include="SettingCommonPage.h" />
     <ClInclude Include="SettingUpdatePage.h" />
     <ClInclude Include="MyImage.h" />
@@ -221,6 +222,7 @@
   <ItemGroup>
     <ClCompile Include="AdvancedDebugDialog.cpp" />
     <ClCompile Include="MyFile.cpp" />
+    <ClCompile Include="MyMsgQueue.cpp" />
     <ClCompile Include="SettingCommonPage.cpp" />
     <ClCompile Include="SettingUpdatePage.cpp" />
     <ClCompile Include="MainDialog_Communication.cpp" />
