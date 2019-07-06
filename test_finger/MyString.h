@@ -21,6 +21,9 @@ public:
 
     // 类似sprintf
     static MyString Format(const char* format,...);
+    // 如果字符串本身有%s,可以用Format来代入
+    template<class T>
+    MyString Format(T arg);
 
     // 类似sscanf
     void Parse(const char* format,...);
@@ -69,3 +72,10 @@ private:
     // 根据str更新wstr
     void updateWstr();
 };
+
+template<class T>
+inline MyString MyString::Format(T arg){
+    static char tmp[1<<16];
+    sprintf(tmp,*this,arg);
+    return tmp;
+}
