@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 // 共享资源计数
-MyLocker::MyLocker(int now,int sum){
-    mutex=CreateSemaphore(0,now,sum,0);
+MyLocker::MyLocker(int now,int max){
+    mutex=CreateSemaphore(0,now,max,0);
     this->now=now;
 }
 
