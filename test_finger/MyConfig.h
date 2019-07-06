@@ -9,7 +9,7 @@ private:
     // д╛хоеДжц
     void defaultConfig();
 public:
-    MyConfig();
+    void InitConfig();
     ~MyConfig();
     // жьть[]╡ывВ╥Ш
     std::string& operator[](std::string s);

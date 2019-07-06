@@ -49,4 +49,5 @@ public:
     afx_msg void OnCbnSelChangeCmbBaud();
     afx_msg void OnCbnSelChangeCmbProtocolType();
     afx_msg void OnCbnSelChangeCmbWay();
+    afx_msg void OnCbnSelchangeCmbloglevel();
 };

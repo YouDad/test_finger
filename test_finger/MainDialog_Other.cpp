@@ -94,3 +94,7 @@ void MainDialog::OnBnClickedBtnSetting(){
 
     dialog=new TabsDialog(v);
 }
+
+void MainDialog::OnCbnSelchangeCmbloglevel(){
+    MyLog::SetLimit((MyLog::LogLevel)cmbLogLevel->GetCurSel());
+}

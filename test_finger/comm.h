@@ -15,6 +15,8 @@ public:
     void request(int cmdCode,DataPacket packet=DataPacket());
     // 设置request的阻塞方式,阻塞的话,收到回应之后再继续发
     void setBlock(bool block);
+    // 阻塞队列
+    std::deque<std::pair<int,DataPacket>> blockQueue;
 private:
     // 串口数据成员
     CSerial serial;

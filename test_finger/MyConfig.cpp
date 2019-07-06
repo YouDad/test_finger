@@ -30,8 +30,8 @@ void MyConfig::defaultConfig(){
     return;
 }
 
-// 构造函数是从文件中读取配置
-MyConfig::MyConfig(){
+// 初始化函数是从文件中读取配置
+void MyConfig::InitConfig(){
     MyFile::ReadConfig(
         [&](FILE* fp){
             char buffer[1<<16],key[1<<6],val[1<<6];

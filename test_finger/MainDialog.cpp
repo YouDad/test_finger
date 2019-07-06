@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_CBN_SELCHANGE(IDC_CMBBaud,&MainDialog::OnCbnSelChangeCmbBaud)
     ON_CBN_SELCHANGE(IDC_CMBProtocolType,&MainDialog::OnCbnSelChangeCmbProtocolType)
     ON_CBN_SELCHANGE(IDC_CMBWay,&MainDialog::OnCbnSelChangeCmbWay)
+    ON_CBN_SELCHANGE(IDC_CMBLogLevel,&MainDialog::OnCbnSelchangeCmbloglevel)
 END_MESSAGE_MAP()
 
 // 重写Enter事件,阻止Enter默认行为:关闭窗口

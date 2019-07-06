@@ -1,21 +1,21 @@
 #include "stdafx.h"
 
-std::vector<MyThread*> blockQueue;
 int CommType;
 Comm comm;
+
+// 这个缓冲区基本上会一直用
+uint8_t buffer[1<<16];
+
+// 访问dataQueue(Packet缓冲区)的锁
+MyLocker dataQueueMutex(0,1);
+
+// Packet缓冲区
+std::queue<DataPacket> dataQueue;
 
 Comm::Comm(){
     this->block=false;
     this->id=CommType=-1;
 
-    // 这个缓冲区基本上会一直用,而且是单线程使用,所以是static的
-    static uint8_t buffer[1<<16];
-
-    // 访问dataQueue(Packet缓冲区)的锁
-    static MyLocker dataQueueMutex;
-
-    // Packet缓冲区
-    static std::queue<DataPacket> dataQueue;
 
     // 负责监听下位机的数据,是Packet的生产者
     this->listenThread=new MyThread(
@@ -63,6 +63,7 @@ Comm::Comm(){
                 }
                 dataPacket.Destruction();
                 if(this->block){
+                    this->blockQueue.pop_back();
                     this->blockLocker.unlock();
                 }
             }
@@ -82,8 +83,14 @@ void Comm::setBlock(bool block){
 
 // 向下位机发送命令(数据)
 void Comm::request(int cmdCode,DataPacket packet){
-    blockQueue.push_back(new MyThread(
-        [=](){
+    this->blockQueue.push_front(std::make_pair(cmdCode,packet));
+    (new MyThread(
+        [&](){
+            if(this->block){
+                this->blockLocker.lock();
+            }
+            int cmdCode=this->blockQueue.back().first;
+            DataPacket packet=this->blockQueue.back().second;
             // 把cmdCode和packet按照所选协议来转化为对应格式
             auto converter=converterBoardcast.RequestConvert();
             if(converter){
@@ -97,15 +104,6 @@ void Comm::request(int cmdCode,DataPacket packet){
                 // 找不到Converter?
                 ASF_ERROR(3);
             }
-        },true
-    ));
-    (new MyThread(
-        [=](){
-            if(this->block){
-                this->blockLocker.lock();
-            }
-            blockQueue.back()->start();
-            blockQueue.pop_back();
         },true
     ))->start();
 }
