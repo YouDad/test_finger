@@ -16,6 +16,7 @@ public:
         LOGT,// 临时级信息
         LOG_HIGHEST// 固有项,不要删
     };
+    static void SetLimit(LogLevel level);
     // 输出level的info
     static void print(LogLevel level,MyString info);
     // 输出level的info(printf的样子)
@@ -28,7 +29,7 @@ public:
     // 输出开发日志
     static void DevelopLog();
     // 追加日志内容
-    static void appendLog(const char * text);
+    static void AppendLog(const char * text);
     // 消息队列
     static MyMsgQueue<MyString> MsgQueue;
 };

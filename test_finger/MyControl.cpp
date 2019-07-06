@@ -7,6 +7,9 @@ MyString getText(CWnd * pWnd){
     }
     static CString ret;
     pWnd->GetWindowText(ret);
+    if(ret==""){
+        pWnd->GetWindowText(ret);
+    }
     return ret;
 }
 

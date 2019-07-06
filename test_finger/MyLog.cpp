@@ -1,9 +1,10 @@
 #include "stdafx.h"
 
 MyMsgQueue<MyString> MyLog::MsgQueue(16);
+MyLog::LogLevel limit;
 
 // 追加日志内容
-void MyLog::appendLog(const char* text){
+void MyLog::AppendLog(const char* text){
     if(conf["AutoLog"]==Stringify(true)){
         MyFile::AppendLog(
             [&](FILE* fp){
@@ -11,6 +12,10 @@ void MyLog::appendLog(const char* text){
             }
         );
     }
+}
+
+void MyLog::SetLimit(LogLevel level){
+    limit=level;
 }
 
 // 输出level的info
@@ -21,8 +26,8 @@ void MyLog::print(LogLevel level,MyString info){
         level=LOGD;
     }
 
-    // 空信息不输出
-    if(info==""){
+    // 越界信息或空信息不输出
+    if(level>limit||info==""){
         return;
     }
 

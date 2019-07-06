@@ -44,5 +44,5 @@ DataPacket ResponseConverterSyno::convert(DataPacket& data){
 
 // ·µ»ØÃüÁîÂë
 int ResponseConverterSyno::getCmdCode(DataPacket data){
-    return ((Response*)data.getPointer())->data[0];
+    return comm.blockQueue.back().first;
 }

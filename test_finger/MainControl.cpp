@@ -40,6 +40,7 @@ AdvancedDebugDialog* advancedDebugDialog;
 
 // 初始化MainDialog的控件指针,以及初始化一些控件设置
 void initMainControl(MainDialog* Dlg){
+    conf.InitConfig();
     progress=(CProgressCtrl*)Dlg->GetDlgItem(IDC_PROGRESS);
 
     //进度条设置
@@ -86,16 +87,17 @@ void initMainControl(MainDialog* Dlg){
                 MyString log=MyLog::MsgQueue.pop();
                 MyString WithTime=log.Format<const char*>(
                     MyString::Time("%Y-%m-%d %H:%M:%S"));
-                if(last!=log){
+                if(last!=""&&last!=log){
                     int len=editLog->GetWindowTextLength();
                     MyString old_content=getText(editNow);
                     editLog->SetSel(len,len,0);
-                    editLog->ReplaceSel(old_content+"\r");
-                    MyLog::appendLog(old_content+"\n");
+                    editLog->ReplaceSel(old_content+"\r\n");
+                    MyLog::AppendLog(old_content+"\n");
                 }
                 if(getText(editNow)!=WithTime){
                     setText(editNow,WithTime);
                 }
+                last=log;
             }
         }
     ,true))->start();
@@ -109,7 +111,7 @@ void initMainControl(MainDialog* Dlg){
 
     // 设置日志框
     editLog->SetLimitText(-1);
-    setText(editNow,MyString::Format("自动更新是否开启:%s\r\n",conf["AutoCheck"].c_str()));
+    setText(editNow,MyString::Format("自动更新是否开启:%s",conf["AutoCheck"].c_str()));
 
     // 设置高级调试按钮可见性
     if(conf["AdvDbg"]==Stringify(true)){
@@ -135,6 +137,13 @@ void initMainControl(MainDialog* Dlg){
     }
     //max是为了升级之后,兼容以前大于等于2的情况
     cmbProtocolType->SetCurSel(max(1,MyString::ParseInt(conf["ProtocolType"])));
+
+    // 设置串口阻塞态
+    if(getProtocol()==SYNO){
+        comm.setBlock(true);
+    } else{
+        comm.setBlock(false);
+    }
 
     setProgress(60);
 
@@ -315,7 +324,7 @@ void updateCommunityWay(){
             CString name;
             name.Format(_T("COM%d"),(*idle)[i]);
             cmbWay->InsertString(i,name);
-}
+        }
     }
 #else
     EnumPortsWdm();

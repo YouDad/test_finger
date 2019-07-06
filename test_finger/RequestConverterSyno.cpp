@@ -4,7 +4,8 @@ typedef struct DataPacketSyno Request;
 
 // 确认是这个转换器的任务,就看协议选的是不是SYNO
 bool RequestConverterSyno::checkProtocol(DataPacket dataPacket){
-    return getProtocol()==SYNO;
+    auto x=getProtocol();
+    return x==SYNO;
 }
 
 // Karl<2019年5月19日13:21:47>悟:
@@ -59,6 +60,10 @@ std::vector<DataPacket> RequestConverterSyno::convert(int cmdCode,uint8_t* data,
     std::vector<DataPacket> ret;
     try{
         cmdCode=ToSyno(cmdCode);
+        auto _=comm.blockQueue.back();
+        _.first=cmdCode;
+        comm.blockQueue.pop_back();
+        comm.blockQueue.push_back(_);
     } catch(...){
         return ret;
     }

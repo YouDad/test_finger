@@ -52,8 +52,9 @@ void MainDialogCtrlValidity::InitCtrl(){
 // 初始状态
 void MainDialogCtrlValidity::Init(vec except){
     vec Disable,Enable;
+    vec* GetWorkedVec=getWorkedVec();
     Merge(Disable,WorkedVec);
-    MergePtr(Disable,getWorkedVec());
+    MergePtr(Disable,GetWorkedVec);
     Merge(Disable,WorkingVec);
     Merge(Enable,InitVec);
     Merge(Enable,except);
@@ -63,8 +64,9 @@ void MainDialogCtrlValidity::Init(vec except){
 // 连接中状态
 void MainDialogCtrlValidity::Connecting(vec except){
     vec Disable,Enable;
+    vec* GetWorkedVec=getWorkedVec();
     Merge(Disable,WorkedVec);
-    MergePtr(Disable,getWorkedVec());
+    MergePtr(Disable,GetWorkedVec);
     Merge(Disable,WorkingVec);
     Merge(Disable,InitVec);
     Merge(Enable,except);
@@ -84,10 +86,11 @@ void MainDialogCtrlValidity::AfterConnect(vec except){
 // 准备态
 void MainDialogCtrlValidity::Work(vec except){
     vec Disable,Enable;
+    vec* GetWorkedVec=getWorkedVec();
     Merge(Disable,InitVec);
     Merge(Disable,WorkingVec);
     Merge(Disable,WorkedVec);
-    MergePtr(Enable,getWorkedVec());
+    MergePtr(Enable,GetWorkedVec);
     Merge(Enable,except);
     update(Disable,Enable);
 }
@@ -95,9 +98,10 @@ void MainDialogCtrlValidity::Work(vec except){
 // 工作态
 void MainDialogCtrlValidity::Working(vec except){
     vec Disable,Enable;
+    vec* GetWorkedVec=getWorkedVec();
     Merge(Disable,InitVec);
     Merge(Disable,WorkedVec);
-    MergePtr(Disable,getWorkedVec());
+    MergePtr(Disable,GetWorkedVec);
     Merge(Enable,WorkingVec);
     Merge(Enable,except);
     update(Disable,Enable);
