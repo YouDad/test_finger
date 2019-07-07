@@ -7,6 +7,7 @@
 class Test{
 private:
     MyLocker testLocker;
+    MyLocker typeLocker;
     int type;
 
 

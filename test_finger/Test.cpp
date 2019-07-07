@@ -14,6 +14,7 @@ Test::Test(){
 
 void Test::testBegin(int type,const char * protocol){
     testLocker.lock();
+    typeLocker.lock();
     this->type=type|UI;
     if(this->type&Comm){
         commTest.testBegin();
@@ -25,9 +26,11 @@ void Test::testBegin(int type,const char * protocol){
     if(this->type&My){
         myTest.testBegin();
     }
+    typeLocker.unlock();
 }
 
 void Test::testEnd(){
+    typeLocker.lock();
     if(this->type&My){
         myTest.testEnd();
     }
@@ -39,8 +42,12 @@ void Test::testEnd(){
     }
     type=0;
     testLocker.unlock();
+    typeLocker.unlock();
 }
 
 bool Test::isTest(int type){
-    return this->type&type;
+    typeLocker.lock();
+    int thisType=this->type;
+    typeLocker.unlock();
+    return thisType&type;
 }

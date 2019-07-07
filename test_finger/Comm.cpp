@@ -86,11 +86,16 @@ void Comm::request(int cmdCode,DataPacket packet){
     this->blockQueue.push_front(std::make_pair(cmdCode,packet));
     (new MyThread(
         [&](){
+            int cmdCode;
+            DataPacket packet;
             if(this->block){
                 this->blockLocker.lock();
+                cmdCode=this->blockQueue.back().first;
+                packet=this->blockQueue.back().second;
+            } else{
+                cmdCode=this->blockQueue.front().first;
+                packet=this->blockQueue.front().second;
             }
-            int cmdCode=this->blockQueue.back().first;
-            DataPacket packet=this->blockQueue.back().second;
             // 把cmdCode和packet按照所选协议来转化为对应格式
             auto converter=converterBoardcast.RequestConvert();
             if(converter){

@@ -14,8 +14,8 @@ void MyLocker::lock(){
 
 // V原语
 void MyLocker::unlock(){
-    ReleaseSemaphore(mutex,1,0);
     now++;
+    ReleaseSemaphore(mutex,1,0);
 }
 
 // 返回true代表该锁的资源被耗尽

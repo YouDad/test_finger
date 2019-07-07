@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Comm">
-      <UniqueIdentifier>{2c0186d3-17e3-4b8b-9ca7-1a38c93b2cb5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="功能点测试">
       <UniqueIdentifier>{1a8edd4d-98e7-4e93-b126-e0470b811664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="测试组件">
+      <UniqueIdentifier>{a8d6cf95-73a2-485b-8263-0e3eabbeaf61}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,15 +27,27 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="TestDataLoader.h">
+      <Filter>测试组件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="DataPacket.cpp">
-      <Filter>Comm</Filter>
-    </ClCompile>
     <ClCompile Include="GD32通信.cpp">
+      <Filter>功能点测试</Filter>
+    </ClCompile>
+    <ClCompile Include="DataPacket.cpp">
+      <Filter>功能点测试</Filter>
+    </ClCompile>
+    <ClCompile Include="TestDataLoaderTest.cpp">
+      <Filter>功能点测试</Filter>
+    </ClCompile>
+    <ClCompile Include="TestDataLoader.cpp">
+      <Filter>测试组件</Filter>
+    </ClCompile>
+    <ClCompile Include="Syno通信.cpp">
       <Filter>功能点测试</Filter>
     </ClCompile>
   </ItemGroup>

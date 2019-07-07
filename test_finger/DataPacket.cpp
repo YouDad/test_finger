@@ -8,6 +8,16 @@ DataPacket::DataPacket(const void * d,int l){
     memcpy(data,d,l);
 }
 
+DataPacket::DataPacket(std::vector<uint8_t>& v){
+    len=v.size();
+    data=new uint8_t[len];
+    memset(data,0,len);
+    read=0;
+    for(int i=0;i<len;i++){
+        data[i]=v[i];
+    }
+}
+
 DataPacket::DataPacket(){
     data=0;
     len=0;
