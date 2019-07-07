@@ -3,6 +3,7 @@
 class DataPacket{
 public:
     DataPacket(const void* d,int l);
+    DataPacket(std::vector<uint8_t>& v);
     DataPacket();
 
     // 用完之后调用

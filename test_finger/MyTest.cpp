@@ -7,6 +7,7 @@ MyTest::MyTest(){
 }
 
 void MyTest::testBegin(){
+    MyLog::SetLimit(MyLog::LOGT);
     testLocker.lock();
     isTest=true;
 }
