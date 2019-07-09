@@ -145,6 +145,16 @@ int MyString::find(MyString beFound,int startPosition){
     return str.find(beFound.str,startPosition);
 }
 
+// Ìæ»»º¯Êý
+void MyString::replace(char oldChar,char newChar){
+    for(int i=0;i<str.size();i++){
+        if(str[i]==oldChar){
+            str[i]=newChar;
+        }
+    }
+    updateWstr();
+}
+
 // int×ªMyString
 MyString MyString::IntToMyString(int i){
     CString x;

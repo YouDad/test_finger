@@ -56,6 +56,9 @@ public:
     // 查找函数
     int find(MyString beFound,int startPosition);
 
+    // 替换函数
+    void replace(char oldChar,char newChar);
+
     // int转MyString
     static MyString IntToMyString(int i);
 
@@ -64,6 +67,7 @@ public:
 
     // 构造时间字符串
     static MyString Time(const char* format="%Y_%m_%d_%H_%M_%S");
+
 private:
     // 实际存储内容的std::string
     std::string str;
