@@ -1,10 +1,14 @@
 #include "stdafx.h"
 
 TestDataLoader::TestDataLoader(const char * func){
-    FILE* fp=fopen(MyString("../TestData/")+func+".dat","r");
+    MyString path=MyString("../TestData/")+func+".dat";
+    path.replace(':','_');
+    FILE* fp=fopen(path,"r");
     char k[1024],v[1<<18];
     while(~fscanf_s(fp,"[%[^]]]\n%[^[]",k,1024,v,1<<18)){
         sections[k]=v;
+        memset(k,0,sizeof k);
+        memset(v,0,sizeof v);
     }
     fclose(fp);
 }
@@ -36,9 +40,9 @@ std::vector<MyString> TestDataLoader::ReadStrSection(const char * section){
     std::vector<MyString> ret;
     for(int i=0;i<v.size();i++){
         ret.push_back(s+v[i]);
-    }
-    if(ret.back()==""){
-        ret.pop_back();
+        if(ret.back()==""){
+            ret.pop_back();
+        }
     }
     return ret;
 }

@@ -6,7 +6,7 @@ namespace UnitTest{
 public:
     //≤‚ ‘DataLoader
     TEST_METHOD(TestDataLoaderTest1){
-        TestDataLoader loader(__func__);
+        TestDataLoader loader(__FUNCTION__);
 
         auto a=loader.ReadByteSection("TEST Send");
         Assert::AreEqual(1u,a.size());
