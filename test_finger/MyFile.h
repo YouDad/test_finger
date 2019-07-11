@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <functional>
 #include "MyString.h"
+#include "CommandDialog.h"
 
 class MyFile{
 public:
+    typedef std::function<bool(FILE* fp)> ReturnFileFunction_t;
     typedef std::function<void(FILE* fp)> FileFunction_t;
 private:
     static MyString CONF_PATH;
@@ -14,6 +16,7 @@ private:
     static MyString RUN_TIME;
     static MyString init();
     static bool OperateFile(MyString path,const char* mode,FileFunction_t f);
+    static bool OperateFile(MyString path,const char * mode,ReturnFileFunction_t f);
 public:
     static MyString IMAGE_DIR;
     static MyString BACKGROUND_DIR;
@@ -27,4 +30,6 @@ public:
     static bool SaveImage(MyString fileName,FileFunction_t f);
     static bool SaveBGImg(MyString fileName,FileFunction_t f);
     static bool SaveTempImage(FileFunction_t f,int id=0);
+    static bool HaveCommands(MyString path);
+    static bool ReadCommands(MyString path,MyString& TabName,std::vector<struct Command>& v);
 };

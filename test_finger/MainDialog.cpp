@@ -45,6 +45,7 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_CBN_SELCHANGE(IDC_CMBProtocolType,&MainDialog::OnCbnSelChangeCmbProtocolType)
     ON_CBN_SELCHANGE(IDC_CMBWay,&MainDialog::OnCbnSelChangeCmbWay)
     ON_CBN_SELCHANGE(IDC_CMBLogLevel,&MainDialog::OnCbnSelchangeCmbloglevel)
+    ON_BN_CLICKED(IDC_BTNTest,&MainDialog::OnBnClickedBtntest)
 END_MESSAGE_MAP()
 
 // 重写Enter事件,阻止Enter默认行为:关闭窗口
@@ -144,4 +145,29 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
         break;
     }
     return TRUE;
+}
+
+
+void MainDialog::OnBnClickedBtntest(){
+    static TabsDialog* dialog;
+    if(dialog){
+        delete dialog;
+    }
+    std::vector<Tab>v;
+    Tab t;
+
+    //t.dlg=new CommandDialog();
+    //t.name="常规";
+    //t.templateID=IDD_SettingCommonPage;
+    //v.push_back(t);
+
+    //FILE* fp=fopen("F:\\Custom.ini","r");
+
+
+    t.dlg=new CommandListDialog();
+    t.name="列表";
+    t.templateID=IDD_CommandListDialog;
+    v.push_back(t);
+
+    dialog=new TabsDialog(v);
 }

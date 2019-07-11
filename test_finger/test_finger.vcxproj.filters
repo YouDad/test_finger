@@ -42,6 +42,9 @@
     <Filter Include="UI\CustomCtrl">
       <UniqueIdentifier>{c731a32d-188a-4a1e-b1d3-4af612c95937}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\CommandDialog">
+      <UniqueIdentifier>{778f551f-ad9e-4418-b7be-a122af02e1b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -154,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="MyMsgQueue.h">
       <Filter>My</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandDialog.h">
+      <Filter>UI\CustomCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandListDialog.h">
+      <Filter>UI\CommandDialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +300,12 @@
     </ClCompile>
     <ClCompile Include="MyMsgQueue.cpp">
       <Filter>My</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandDialog.cpp">
+      <Filter>UI\CustomCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandListDialog.cpp">
+      <Filter>UI\CommandDialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
