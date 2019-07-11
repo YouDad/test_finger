@@ -61,6 +61,21 @@ bool MyFile::OperateFile(MyString path,const char * mode,FileFunction_t f){
     return false;
 }
 
+bool MyFile::OperateFile(MyString path,const char * mode,ReturnFileFunction_t f){
+    FILE* fp;
+    errno_t err=fopen_s(&fp,path,mode);
+    if(err==ERROR_SUCCESS){
+        bool ret=f(fp);
+        fclose(fp);
+        return ret;
+    } else{
+        char buffer[1024];
+        strerror_s(buffer,err);
+        MyLog::error(buffer);
+    }
+    return false;
+}
+
 bool MyFile::ReadConfig(FileFunction_t f){
     return OperateFile(CONF_PATH,"r",f);
 }
@@ -113,4 +128,67 @@ bool MyFile::SaveBGImg(MyString fileName,FileFunction_t f){
 
 bool MyFile::SaveTempImage(FileFunction_t f,int id){
     return OperateFile(TEMP_IMAGE_PATH+MyString::IntToMyString(id)+".bmp","wb",f);
+}
+
+bool MyFile::HaveCommands(MyString path){
+    return false;
+}
+
+bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Command>& v){
+    v.clear();
+    return OperateFile(path,"r",
+        (ReturnFileFunction_t)[&](FILE* fp)->bool{
+            char ch=0;
+            char key[1<<16],val[1<<16],section[1<<6];
+            std::map<std::string,std::map<std::string,std::string>> m;
+            while(ch!=EOF){
+                ch=fgetc(fp);
+                switch(ch){
+                case '#':
+                    scanf("%*[^\n]\n");
+                    break;
+                case '[':
+                    scanf("%[^]]]\n",section);
+                    break;
+                case EOF:
+                case ' ':
+                case '\t':
+                case '\n':
+                    break;
+                default:
+                    scanf("%[^=]=%[^\n]\n",key,val);
+                    m[section][key]=val;
+                }
+            }
+            if(m.count("Information")==0){
+                return false;
+            }
+            TabName=m["Information"]["Name"];
+            for(auto it=m.begin();it!=m.end();it++){
+                if(it->first=="Information"){
+                    continue;
+                }
+                struct Command c;
+                c.Name=it->first;
+                c.CmdCode=MyString::ParseInt(it->second["CmdCode"]);
+                for(auto jt=it->second.begin();jt!=it->second.end();it++){
+                    if(jt->first=="CmdCode"){
+                        continue;
+                    }
+                    enum CommandCtrlType ct;
+                    if(jt->second=="int8_t")ct=CommandCtrlType_int8_t;
+                    else if(jt->second=="int16_t")ct=CommandCtrlType_int16_t;
+                    else if(jt->second=="int32_t")ct=CommandCtrlType_int32_t;
+                    else if(jt->second=="hex8_t")ct=CommandCtrlType_hex8_t;
+                    else if(jt->second=="hex16_t")ct=CommandCtrlType_hex16_t;
+                    else if(jt->second=="hex32_t")ct=CommandCtrlType_hex32_t;
+                    else if(jt->second=="file_t")ct=CommandCtrlType_file_t;
+                    else{
+                        return false;
+                    }
+                    c.Type.push_back(std::make_pair(jt->first,ct));
+                }
+            }
+        }
+    );
 }

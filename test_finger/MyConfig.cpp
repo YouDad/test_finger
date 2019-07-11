@@ -19,6 +19,7 @@ void MyConfig::defaultConfig(){
     // 若SaveConf为false,则都用默认设置
     bool give=m["SaveConf"]==Stringify(false);
 
+    setDefault(m,"CustomCnt","0",give);
     setDefault(m,"AdvDbg",Stringify(false),give);
     setDefault(m,"AutoCheck",Stringify(true),give);
     setDefault(m,"AutoLog",Stringify(true),give);
@@ -57,6 +58,9 @@ MyConfig::~MyConfig(){
         MyFile::WriteConfig(
             [&](FILE* fp){
                 for(auto it=m.begin();it!=m.end();it++){
+                    if(it->second==""){
+                        continue;
+                    }
                     for(auto jt=it->first.c_str();*jt;jt++){
                         fputc(-*jt,fp);
                     }
