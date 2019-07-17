@@ -4,9 +4,9 @@ IMPLEMENT_DYNAMIC(CommandDialog,CDialogEx)
 
 // ¹¹Ôìº¯Êý
 CommandDialog::CommandDialog(std::vector<struct Command>& v,CWnd* pParent)
-    : CDialogEx(IDD_TabsDialog,pParent){
+    : CDialogEx(IDD_CommandDialog,pParent){
     commands=v;
-    Create(IDD_TabsDialog,this);
+    Create(IDD_CommandDialog,this);
     ShowWindow(SW_SHOW);
 }
 

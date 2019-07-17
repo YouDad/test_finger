@@ -75,11 +75,13 @@ void CommandListDialog::OnBnClickedBtnAddPlugin(){
 
 
 void CommandListDialog::OnBnClickedBtnRemovePlugin(){
-    int x=listCtrl->GetSelectedColumn();
-    int a=listCtrl->GetSelectionMark();
-    POSITION b=listCtrl->GetFirstSelectedItemPosition();
-    int c=listCtrl->GetNextSelectedItem(b);
-    int d=0;
+    int position=listCtrl->GetSelectionMark();
+    listCtrl->DeleteItem(position);
+    int CustomCnt=MyString::ParseInt(conf["CustomCnt"]);
+    for(int i=position;i<CustomCnt-1;i++){
+        conf[(std::string)MyString::Format("Custom%d",i)]=conf[(std::string)MyString::Format("Custom%d",i+1)];
+    }
+    conf[(std::string)MyString::Format("Custom%d",CustomCnt-1)]="";
 }
 
 
@@ -89,7 +91,11 @@ void CommandListDialog::OnBnClickedBtnSaveDefaultPlugin(){
 
 
 void CommandListDialog::OnBnClickedBtnOpenPluginFolder(){
-
+    int position=listCtrl->GetSelectionMark();
+    std::string path=conf[(std::string)MyString::Format("Custom%d",position)];
+    int end=path.rfind('\\');
+    MyString PATH=path.substr(0,end);
+    ShellExecuteA(NULL,"explore",PATH,NULL,NULL,SW_NORMAL);
 }
 
 
@@ -103,7 +109,7 @@ void CommandListDialog::OnBnClickedBtnFlush(){
     btnRemovePlugin->EnableWindow(conf["SaveConf"]==Stringify(true));
     btnOpenPluginFolder->EnableWindow(conf["SaveConf"]==Stringify(true));
     btnEditPlugin->EnableWindow(conf["SaveConf"]==Stringify(true));
-    //listCtrl->DeleteAllItems();
+    listCtrl->DeleteAllItems();
     if(conf["SaveConf"]==Stringify(true)){
         int CustomCnt=MyString::ParseInt(conf["CustomCnt"]);
         for(int i=0;i<CustomCnt;i++){

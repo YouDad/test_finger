@@ -11,7 +11,7 @@ public:
 
 #ifdef AFX_DESIGN_TIME
     enum{
-        IDD=IDD_CommandListDialog
+        IDD=IDD_CommandDialog
     };
 #endif
 
