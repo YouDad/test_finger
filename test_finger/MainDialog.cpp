@@ -156,18 +156,21 @@ void MainDialog::OnBnClickedBtntest(){
     std::vector<Tab>v;
     Tab t;
 
-    //t.dlg=new CommandDialog();
-    //t.name="常规";
-    //t.templateID=IDD_SettingCommonPage;
-    //v.push_back(t);
-
-    //FILE* fp=fopen("F:\\Custom.ini","r");
-
-
     t.dlg=new CommandListDialog();
     t.name="列表";
     t.templateID=IDD_CommandListDialog;
     v.push_back(t);
+
+    int CustomCnt=MyString::ParseInt(conf["CustomCnt"]);
+    for(int i=0;i<CustomCnt;i++){
+        MyString TabName;
+        std::vector<struct Command> commands;
+        MyFile::ReadCommands(conf[(std::string)MyString::Format("Custom%d",i)],TabName,commands);
+        t.dlg=new CommandDialog(commands);
+        t.name=TabName;
+        t.templateID=IDD_CommandDialog;
+        v.push_back(t);
+    }
 
     dialog=new TabsDialog(v);
 }

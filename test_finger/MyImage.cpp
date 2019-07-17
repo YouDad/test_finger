@@ -95,25 +95,28 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
     uint8_t* x2=nullptr;
     switch(dataSize){
     case 160*160/2:
-        w=h=160;
-        //把图像从4bit转化为8bit
-        pData=dataPacket.getPointer();
-        x2=new uint8_t[160*160+5];
-        for(int i=0;i<160;i++){
-            for(int j=0;j<80;j++){
-                x2[i*160+j*2]=pData[i*80+j]&0xF0;
-                x2[i*160+j*2+1]=(pData[i*80+j]&0x0F)<<4;
+    case 160*160:w=h=160;
+        break;
+    case 192*192/2:
+    case 192*192:w=h=192;
+        break;
+    default:
+        MyLog::user("既不是160x160也不是192x192,没法渲染图像");
+        goto _END_;
+    }
+
+    pData=dataPacket.getPointer();
+    if(w*h==dataSize/2){        
+        x2=new uint8_t[w*h];
+        for(int i=0;i<w;i++){
+            for(int j=0;j<h/2;j++){
+                x2[i*w+j*2+0]=(pData[i*h/2+j]&0xF0)<<0;
+                x2[i*w+j*2+1]=(pData[i*h/2+j]&0x0F)<<4;
             }
         }
         pData=x2;
-    case 160*160:
-        MyLog::user("接收到160x160的图像");
-        w=h=160;
-        // 为了提高代码复用度,如果pData为空指针说明是直接跳到160*160的
-        // 如果pData不为空,说明是从上一个case下来的
-        if(!pData){
-            pData=dataPacket.getPointer();
-        }
+    }
+    if(w==160&&h==160){
         //消除用于静电检测的竖线
         for(int i=0;i<h;i++){
             for(int j=0;j<w;j++){
@@ -122,32 +125,21 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
                 }
             }
         }
-
-    goto_save:
-        reverse(pData,w*h);
-        for(int i=0;i<h;i++){
-            reverse(pData+i*w,w);
-        }
-        save(w,h,pData,fileName);
-        {
-            int imgSize=MyString::ParseInt(conf["ImgSize"]);
-            uint8_t* bigImg=new uint8_t[imgSize*imgSize];
-            imgResize(w,h,pData,imgSize,imgSize,bigImg);
-            saveTempImage(imgSize,imgSize,bigImg,2);
-            loadImage(image,MyFile::TEMP_IMAGE_PATH+"2.bmp");
-            delete[] bigImg;
-        }
-        break;
-    case 192*192:
-        MyLog::user("接收到192x192的图像");
-        w=h=192;
-        pData=dataPacket.getPointer();
-        save(w,h,pData,fileName);
-        goto goto_save;
-    default:
-        MyLog::user("既不是160x160也不是192x192,没法渲染图像");
-        break;
     }
+    reverse(pData,w*h);
+    for(int i=0;i<h;i++){
+        reverse(pData+i*w,w);
+    }
+    save(w,h,pData,fileName);
+    {
+        int imgSize=MyString::ParseInt(conf["ImgSize"]);
+        uint8_t* bigImg=new uint8_t[imgSize*imgSize];
+        imgResize(w,h,pData,imgSize,imgSize,bigImg);
+        saveTempImage(imgSize,imgSize,bigImg,2);
+        loadImage(image,MyFile::TEMP_IMAGE_PATH+"2.bmp");
+        delete[] bigImg;
+    }
+    _END_:
     if(x2){
         delete[] x2;
     }
