@@ -75,7 +75,11 @@ void CommandListDialog::OnBnClickedBtnAddPlugin(){
 
 
 void CommandListDialog::OnBnClickedBtnRemovePlugin(){
-
+    int x=listCtrl->GetSelectedColumn();
+    int a=listCtrl->GetSelectionMark();
+    POSITION b=listCtrl->GetFirstSelectedItemPosition();
+    int c=listCtrl->GetNextSelectedItem(b);
+    int d=0;
 }
 
 
@@ -99,6 +103,7 @@ void CommandListDialog::OnBnClickedBtnFlush(){
     btnRemovePlugin->EnableWindow(conf["SaveConf"]==Stringify(true));
     btnOpenPluginFolder->EnableWindow(conf["SaveConf"]==Stringify(true));
     btnEditPlugin->EnableWindow(conf["SaveConf"]==Stringify(true));
+    //listCtrl->DeleteAllItems();
     if(conf["SaveConf"]==Stringify(true)){
         int CustomCnt=MyString::ParseInt(conf["CustomCnt"]);
         for(int i=0;i<CustomCnt;i++){

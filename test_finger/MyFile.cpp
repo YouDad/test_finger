@@ -134,6 +134,15 @@ bool MyFile::HaveCommands(MyString path){
     return false;
 }
 
+void fgetcUntil(FILE* fp,char* s,char delimeter){
+    for(char*c=s;;c++){
+        if(delimeter==(*c=fgetc(fp))){
+            *c=0;
+            break;
+        }
+    }
+}
+
 bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Command>& v){
     v.clear();
     return OperateFile(path,"r",
@@ -145,10 +154,10 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                 ch=fgetc(fp);
                 switch(ch){
                 case '#':
-                    scanf("%*[^\n]\n");
+                    while(fgetc(fp)!='\n');
                     break;
                 case '[':
-                    scanf("%[^]]]\n",section);
+                    fgetcUntil(fp,section,']');
                     break;
                 case EOF:
                 case ' ':
@@ -156,7 +165,9 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                 case '\n':
                     break;
                 default:
-                    scanf("%[^=]=%[^\n]\n",key,val);
+                    key[0]=ch;
+                    fgetcUntil(fp,key+1,'=');
+                    fgetcUntil(fp,val,'\n');
                     m[section][key]=val;
                 }
             }
@@ -170,9 +181,9 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                 }
                 struct Command c;
                 c.Name=it->first;
-                c.CmdCode=MyString::ParseInt(it->second["CmdCode"]);
-                for(auto jt=it->second.begin();jt!=it->second.end();it++){
+                for(auto jt=it->second.begin();jt!=it->second.end();jt++){
                     if(jt->first=="CmdCode"){
+                        MyString(jt->second).Parse("%x",&c.CmdCode);
                         continue;
                     }
                     enum CommandCtrlType ct;
@@ -188,7 +199,9 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                     }
                     c.Type.push_back(std::make_pair(jt->first,ct));
                 }
+                v.push_back(c);
             }
+            return true;
         }
     );
 }
