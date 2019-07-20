@@ -100,7 +100,7 @@ void Comm::request(int cmdCode,DataPacket packet){
             auto converter=converterBoardcast.RequestConvert();
             if(converter){
                 // 转化为输出用的Packet
-                auto dataPacket=converter->convert(cmdCode,packet.getPointer(),packet.size());
+                auto dataPacket=converter->convert(cmdCode,packet.getPointer(),packet.readSize());
                 for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
                     this->sendBytes(it->getPointer(),it->size());
                     it->Destruction();

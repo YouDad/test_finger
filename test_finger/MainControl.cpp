@@ -34,6 +34,8 @@ CButton* btnDeleteTemplate;
 CStatic* image;
 CProgressCtrl* progress;
 
+CFont* defaultFont;
+
 HWND hwnd;
 
 AdvancedDebugDialog* advancedDebugDialog;
@@ -79,6 +81,8 @@ void initMainControl(MainDialog* Dlg){
     btnDeleteTemplate=(CButton*)Dlg->GetDlgItem(IDC_BTNDeleteTemplate);
     image=(CStatic*)Dlg->GetDlgItem(IDC_IMAGE);
     hwnd=Dlg->m_hWnd;
+
+    defaultFont=btnAdvDbg->GetFont();
 
     (new MyThread(
         [&](){
