@@ -59,7 +59,7 @@ void CommandListDialog::OnBnClickedBtnAddPlugin(){
     OPENFILENAME openFilename={0};
     openFilename.lStructSize=sizeof(openFilename);
     openFilename.hwndOwner=m_hWnd;
-    openFilename.lpstrFilter=_T("Exe文件(*.exe)*.exe所有文件(*.*)*.*");
+    openFilename.lpstrFilter=_T("配合文件(*.ini)*.ini所有文件(*.*)*.*");
     openFilename.lpstrFile=szBuffer;
     openFilename.nMaxFile=sizeof(szBuffer)/sizeof(*szBuffer);
     openFilename.nFilterIndex=0;
@@ -82,11 +82,21 @@ void CommandListDialog::OnBnClickedBtnRemovePlugin(){
         conf[(std::string)MyString::Format("Custom%d",i)]=conf[(std::string)MyString::Format("Custom%d",i+1)];
     }
     conf[(std::string)MyString::Format("Custom%d",CustomCnt-1)]="";
+    conf["CustomCnt"]=MyString::IntToMyString(CustomCnt-1);
 }
 
 
 void CommandListDialog::OnBnClickedBtnSaveDefaultPlugin(){
-
+    CFileDialog fileDlg1(FALSE,MyString("ini"),MyString("第一个默认插件"),OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,MyString("配置文件(*.ini)|*.ini|所有文件(*.*)|*.*||"),this);
+    if(IDOK==fileDlg1.DoModal()){
+        MyString filepath=fileDlg1.GetPathName();
+        MyFile::SaveDefaultPlugin1(filepath);
+    }
+    CFileDialog fileDlg2(FALSE,MyString("ini"),MyString("第二个默认插件"),OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,MyString("配置文件(*.ini)|*.ini|所有文件(*.*)|*.*||"),this);
+    if(IDOK==fileDlg2.DoModal()){
+        MyString filepath=fileDlg2.GetPathName();
+        MyFile::SaveDefaultPlugin2(filepath);
+    }
 }
 
 
@@ -117,7 +127,7 @@ void CommandListDialog::OnBnClickedBtnFlush(){
             MyString TabName;
             std::vector<struct Command> v;
             bool have=MyFile::ReadCommands(conf[key],TabName,v);
-            int pos=listCtrl->InsertItem(0,TabName);
+            int pos=listCtrl->InsertItem(i,TabName);
             listCtrl->SetItemText(pos,1,have?L"有效":L"无效");
             listCtrl->SetItemText(pos,2,MyString(conf[key]));
         }

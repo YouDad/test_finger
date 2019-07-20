@@ -200,3 +200,93 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
         }
     );
 }
+
+bool MyFile::SaveDefaultPlugin1(MyString path){
+    char* str1="# 这个文件必须是ANSI格式的\n\
+# 井号用来注释\n\
+# 但是只能注释一行,不能行内注释,会解释出错\n\
+# Information节必须存在,而且必须有Name键值\n\
+# 每个命令节必须有CmdCode,而且值是一个十六进制表示的数字\n\
+# 后面一行跟默认值序列,必须是0~255或0x0~0xff\n\
+\n\
+[Information]\n\
+Name=自定义标签页名字\n\
+\n\
+[VfyPwd]\n\
+CmdCode=0x13\n\
+Params=0x00,0,0x0,0\n\
+\n\
+[SetPwd]\n\
+CmdCode=0x12\n\
+Params=0,0,0,0\n\
+\n\
+[GetRandomCode]\n\
+CmdCode=0x14\n\
+Params=\n\
+\n\
+[Search]\n\
+CmdCode=0x04\n\
+Params=1,0,0,0,0x87\n\
+\n\
+[UpImage]\n\
+CmdCode=0x0a\n\
+Params=\n\
+\n\
+[Empty]\n\
+CmdCode=0x0d\n\
+Params=\n\
+\n\
+[WriteReg]\n\
+CmdCode=0x0e\n\
+Params=4,6\n\
+\n\
+[ReadSysPara]\n\
+CmdCode=0x0f\n\
+Params=\n\
+\n\
+[SetChipAddr]\n\
+CmdCode=0x15\n\
+Params=0,0,0,0\n\
+\n\
+[ReadINFPage]\n\
+CmdCode=0x16\n\
+Params=\n\
+";
+    FILE* fp=fopen(path,"w");
+    fprintf(fp,"%s",str1);
+    fclose(fp);
+    return true;
+}
+
+bool MyFile::SaveDefaultPlugin2(MyString path){
+    char* str2="# 这个文件必须是ANSI格式的\n\
+# 井号用来注释\n\
+# 但是只能注释一行,不能行内注释,会解释出错\n\
+# Information节必须存在,而且必须有Name键值\n\
+# 每个命令节必须有CmdCode,而且值是一个十六进制表示的数字\n\
+# 后面一行跟默认值序列,必须是0~255或0x0~0xff\n\
+\n\
+[Information]\n\
+Name=自定义标签页名字2\n\
+\n\
+[ReadNotepad]\n\
+CmdCode=0x19\n\
+Params=15\n\
+\n\
+[ValidTempleteNum]\n\
+CmdCode=0x1d\n\
+Params=\n\
+\n\
+[ReadIndexTable]\n\
+CmdCode=0x1f\n\
+Params=3\n\
+\n\
+[ControlLED]\n\
+CmdCode=0x40\n\
+Params=15\n\
+";
+    FILE* fp=fopen(path,"w");
+    fprintf(fp,"%s",str2);
+    fclose(fp);
+    return true;
+}
