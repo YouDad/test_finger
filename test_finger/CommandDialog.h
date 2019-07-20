@@ -1,19 +1,9 @@
 #pragma once
 
-enum CommandCtrlType{
-    CommandCtrlType_int8_t,
-    CommandCtrlType_int16_t,
-    CommandCtrlType_int32_t,
-    CommandCtrlType_hex8_t,
-    CommandCtrlType_hex16_t,
-    CommandCtrlType_hex32_t,
-    CommandCtrlType_file_t,
-};
-
 struct Command{
     MyString Name;
     int CmdCode;
-    std::vector<std::pair<MyString,CommandCtrlType>> Type;
+    std::vector<uint8_t> DfaultValues;
 };
 
 class CommandDialog: public CDialogEx{
@@ -38,4 +28,6 @@ protected:
 
 public:
     virtual void OnOK();
+    afx_msg void OnClick();
 };
+extern int isFreeRequest;

@@ -136,7 +136,8 @@ bool MyFile::HaveCommands(MyString path){
 
 void fgetcUntil(FILE* fp,char* s,char delimeter){
     for(char*c=s;;c++){
-        if(delimeter==(*c=fgetc(fp))){
+        *c=fgetc(fp);
+        if(delimeter==*c||EOF==*c){
             *c=0;
             break;
         }
@@ -150,6 +151,7 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
             char ch=0;
             char key[1<<16],val[1<<16],section[1<<6];
             std::map<std::string,std::map<std::string,std::string>> m;
+            // 开始解析
             while(ch!=EOF){
                 ch=fgetc(fp);
                 switch(ch){
@@ -171,33 +173,26 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                     m[section][key]=val;
                 }
             }
+            // 防止为空
             if(m.count("Information")==0){
                 return false;
             }
             TabName=m["Information"]["Name"];
+            m.erase("Information");
+
             for(auto it=m.begin();it!=m.end();it++){
-                if(it->first=="Information"){
-                    continue;
-                }
+                // it->first是方括号的内容
                 struct Command c;
                 c.Name=it->first;
-                for(auto jt=it->second.begin();jt!=it->second.end();jt++){
-                    if(jt->first=="CmdCode"){
-                        MyString(jt->second).Parse("%x",&c.CmdCode);
-                        continue;
-                    }
-                    enum CommandCtrlType ct;
-                    if(jt->second=="int8_t")ct=CommandCtrlType_int8_t;
-                    else if(jt->second=="int16_t")ct=CommandCtrlType_int16_t;
-                    else if(jt->second=="int32_t")ct=CommandCtrlType_int32_t;
-                    else if(jt->second=="hex8_t")ct=CommandCtrlType_hex8_t;
-                    else if(jt->second=="hex16_t")ct=CommandCtrlType_hex16_t;
-                    else if(jt->second=="hex32_t")ct=CommandCtrlType_hex32_t;
-                    else if(jt->second=="file_t")ct=CommandCtrlType_file_t;
-                    else{
-                        return false;
-                    }
-                    c.Type.push_back(std::make_pair(jt->first,ct));
+                MyString(it->second["CmdCode"]).Parse("%x",&c.CmdCode);
+                MyString params=it->second["Params"];
+                std::vector<MyString> strs;
+                params.split(',',strs);
+                for(auto jt=strs.begin();jt!=strs.end();jt++){
+                    int a=-1,b=-1;
+                    jt->Parse("%d",&a);
+                    jt->Parse("%x",&b);
+                    c.DfaultValues.push_back(max(a,b));
                 }
                 v.push_back(c);
             }

@@ -155,6 +155,18 @@ void MyString::replace(char oldChar,char newChar){
     updateWstr();
 }
 
+void MyString::split(char ch,std::vector<MyString>& out){
+    out.clear();
+    for(int i=0,j;i<str.length();i=j+1){
+        j=str.find(ch,i);
+        if(j==-1){
+            out.push_back(MyString(str.c_str()+i));
+            return;
+        }
+        out.push_back(MyString((char*)str.c_str()+i,j-i));
+    }
+}
+
 // intתMyString
 MyString MyString::IntToMyString(int i){
     CString x;

@@ -17,6 +17,10 @@ bool RequestConverterSyno::checkProtocol(DataPacket dataPacket){
 
 // 把软件内部指令转化为对应的命令码
 int ToSyno(int cmdCode){
+    if(isFreeRequest){
+        isFreeRequest--;
+        return cmdCode;
+    }
     switch(cmdCode){
         case SII(GetRawImage):
             return __SCC(Syno,GetImage);

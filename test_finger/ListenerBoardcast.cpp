@@ -40,6 +40,16 @@ void ListenerBoardcast::attach(int event,ICommListener* listener){
 // 广播事件
 void ListenerBoardcast::boardcast(int event,DataPacket response){
     std::vector<ICommListener*>::iterator it;
+    if(isFreeRequest){
+        isFreeRequest--;
+        std::string str="data:";
+        uint8_t* ptr=response.getPointer();
+        for(int i=0;i<response.readSize();i++){
+            str+=MyString::Format("%02x,",(int)ptr[i]);
+        }
+        str.pop_back();
+        MyLog::user("收到CmdCode=%02x的数据,%s",event,str.c_str());
+    }
     for(it=m[event].begin();it!=m[event].end();it++){
         if((*it)->accept()){
             (*it)->listen(response);

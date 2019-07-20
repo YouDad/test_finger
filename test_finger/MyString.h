@@ -59,6 +59,9 @@ public:
     // Ìæ»»º¯Êý
     void replace(char oldChar,char newChar);
 
+    // splitº¯Êý
+    void split(char ch,std::vector<MyString>& out);
+
     // int×ªMyString
     static MyString IntToMyString(int i);
 

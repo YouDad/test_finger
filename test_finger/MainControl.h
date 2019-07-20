@@ -55,3 +55,6 @@ extern CButton* btnDeleteTemplate;
 extern CStatic* image;
 extern CProgressCtrl* progress;
 extern AdvancedDebugDialog* advancedDebugDialog;
+
+// font
+extern CFont* defaultFont;
