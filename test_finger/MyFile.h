@@ -32,4 +32,6 @@ public:
     static bool SaveTempImage(FileFunction_t f,int id=0);
     static bool HaveCommands(MyString path);
     static bool ReadCommands(MyString path,MyString& TabName,std::vector<struct Command>& v);
+    static bool SaveDefaultPlugin1(MyString path);
+    static bool SaveDefaultPlugin2(MyString path);
 };
