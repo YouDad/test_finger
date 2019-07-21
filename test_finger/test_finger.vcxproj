@@ -127,6 +127,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4996;4018</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -298,6 +299,7 @@
     <ClInclude Include="Test.h" />
     <ClInclude Include="UITest.h" />
     <ClInclude Include="UsbPort.h" />
+    <ClInclude Include="TempDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdvancedDebugDialog.cpp" />
@@ -363,6 +365,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TempDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />

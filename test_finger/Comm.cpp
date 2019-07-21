@@ -98,16 +98,12 @@ void Comm::request(int cmdCode,DataPacket packet){
             }
             // 把cmdCode和packet按照所选协议来转化为对应格式
             auto converter=converterBoardcast.RequestConvert();
-            if(converter){
-                // 转化为输出用的Packet
-                auto dataPacket=converter->convert(cmdCode,packet.getPointer(),packet.readSize());
-                for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
-                    this->sendBytes(it->getPointer(),it->size());
-                    it->Destruction();
-                }
-            } else{
-                // 找不到Converter?
-                ASF_ERROR(3);
+            while(!converter)converter=converterBoardcast.RequestConvert();
+            // 转化为输出用的Packet
+            auto dataPacket=converter->convert(cmdCode,packet.getPointer(),packet.readSize());
+            for(auto it=dataPacket.begin();it!=dataPacket.end();it++){
+                this->sendBytes(it->getPointer(),it->size());
+                it->Destruction();
             }
         },true
     ))->start();

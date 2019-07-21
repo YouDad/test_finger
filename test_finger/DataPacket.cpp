@@ -27,14 +27,14 @@ DataPacket::DataPacket(){
 // 用完之后调用
 void DataPacket::Destruction(){
     if(isValid()){
-        delete data;
+        delete[] data;
         len=0;
         read=0;
     }
 }
 
 // 是否有效
-bool DataPacket::isValid() const{
+bool DataPacket::isValid(){
     return len>read;
 }
 

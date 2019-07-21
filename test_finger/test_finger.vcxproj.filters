@@ -164,6 +164,9 @@
     <ClInclude Include="CommandListDialog.h">
       <Filter>UI\CommandDialog</Filter>
     </ClInclude>
+    <ClInclude Include="TempDialog.h">
+      <Filter>UI\CommandDialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RequestConverterGD32F30.cpp">
@@ -305,6 +308,9 @@
       <Filter>UI\CustomCtrl</Filter>
     </ClCompile>
     <ClCompile Include="CommandListDialog.cpp">
+      <Filter>UI\CommandDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="TempDialog.cpp">
       <Filter>UI\CommandDialog</Filter>
     </ClCompile>
   </ItemGroup>

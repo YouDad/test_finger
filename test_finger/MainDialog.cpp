@@ -46,6 +46,7 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_CBN_SELCHANGE(IDC_CMBWay,&MainDialog::OnCbnSelChangeCmbWay)
     ON_CBN_SELCHANGE(IDC_CMBLogLevel,&MainDialog::OnCbnSelchangeCmbloglevel)
     ON_BN_CLICKED(IDC_BTNTest,&MainDialog::OnBnClickedBtntest)
+    ON_EN_CHANGE(IDC_EDITAddress,&MainDialog::OnEnChangeEditaddress)
 END_MESSAGE_MAP()
 
 // 重写Enter事件,阻止Enter默认行为:关闭窗口
@@ -165,12 +166,43 @@ void MainDialog::OnBnClickedBtntest(){
     for(int i=0;i<CustomCnt;i++){
         MyString TabName;
         std::vector<struct Command> commands;
-        MyFile::ReadCommands(conf[(std::string)MyString::Format("Custom%d",i)],TabName,commands);
+        MyFile::ReadCommands(conf[MyString::Format("Custom%d",i)],TabName,commands);
         t.dlg=new CommandDialog(commands);
         t.name=TabName;
         t.templateID=IDD_CommandDialog;
         v.push_back(t);
     }
 
+    t.dlg=new TempDialog();
+    t.name="特殊";
+    t.templateID=IDD_TempDialog;
+    v.push_back(t);
+
     dialog=new TabsDialog(v);
+}
+
+
+void MainDialog::OnEnChangeEditaddress(){
+    static MyString last="ffffffff";
+    if(conf["RemAddress"]==Stringify(true)&&last!=conf["Address"]){
+        last=conf["Address"];
+        setText(editAddress,last);
+    }
+    MyString now=getText(editAddress);
+    if(now.length()>8){
+        setText(editAddress,last);
+        return;
+    }
+    for(const char* c=now.c_str();*c;c++){
+        if(('0'<=*c&&*c<='9')||('a'<=*c&&*c<='f')||('A'<=*c&&*c<='F')){
+            continue;
+        } else{
+            setText(editAddress,last);
+            return;
+        }
+    }
+    last=getText(editAddress);
+    if(conf["RemAddress"]==Stringify(true)){
+        conf["Address"]=last;
+    }
 }

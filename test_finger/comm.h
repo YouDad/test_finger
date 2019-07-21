@@ -34,7 +34,9 @@ private:
     // 负责监听下位机的数据,是Packet的生产者
     MyThread* listenThread;
     // 向设备发送字节流
+public:
     void sendBytes(uint8_t* data,int len);
+private:
     // 从设备中读取字节流,返回是否读到内容
     bool readBytes(uint8_t* buffer,int blen,ULONG& cnt);
     // 返回设备是否打开

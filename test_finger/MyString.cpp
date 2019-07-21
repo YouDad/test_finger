@@ -2,8 +2,13 @@
 
 // 析构函数
 MyString::~MyString(){
-    if(wstr)
-        delete[] wstr;
+    try{
+        if(wstr){
+            delete[] wstr;
+        }
+    } catch(...){
+
+    }
 }
 
 // 构造函数群
@@ -82,7 +87,7 @@ MyString::operator wchar_t*(){
     return wstr;
 }
 
-MyString::operator const char*(){
+MyString::operator const char*()const{
     return str.c_str();
 }
 
@@ -165,6 +170,10 @@ void MyString::split(char ch,std::vector<MyString>& out){
         }
         out.push_back(MyString((char*)str.c_str()+i,j-i));
     }
+}
+
+const char * MyString::c_str(){
+    return str.c_str();
 }
 
 // int转MyString

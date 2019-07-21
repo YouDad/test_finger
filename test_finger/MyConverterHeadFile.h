@@ -110,6 +110,7 @@ class RequestConverterSyno:public ICommProtocolRequestConverter{
 public:
     virtual bool checkProtocol(DataPacket dataPacket) override;
     virtual std::vector<DataPacket> convert(int CmdCode,uint8_t * Data,uint16_t Len) override;
+    static DataPacket convertData(DataPacket& data);
 };
 
 // Syno的回应转化器

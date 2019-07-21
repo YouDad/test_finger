@@ -31,6 +31,7 @@ void MainDialog::OnCbnCloseupCmbLogLevel(){
                 // 开启高级调试模式
                 conf["AdvDbg"]=Stringify(true);
                 btnAdvDbg->ShowWindow(SW_SHOW);
+                btnTest->ShowWindow(SW_SHOW);
             }
         }
     }
