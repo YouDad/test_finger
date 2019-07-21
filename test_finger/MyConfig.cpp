@@ -3,7 +3,7 @@
 // 全局唯一配置
 MyConfig conf;
 
-void setDefault(std::map<std::string,std::string>& m,const char* key,const char* val,bool give,bool cond=true){
+void setDefault(std::map<std::string,MyString>& m,const char* key,const char* val,bool give,bool cond=true){
     if(give||!m.count(key)){
         if(cond){
             m[key]=val;
@@ -28,6 +28,8 @@ void MyConfig::defaultConfig(){
     setDefault(m,"Baud","2",give,m["RemBaud"]==Stringify(true));
     setDefault(m,"ProtocolType","0",give,m["RemProtocol"]==Stringify(true));
     setDefault(m,"ImgSize","160",give);
+    setDefault(m,"RemAddress",Stringify(true),give);
+    setDefault(m,"Address","ffffffff",give,m["RemAddress"]==Stringify(true));
     return;
 }
 
@@ -35,7 +37,7 @@ void MyConfig::defaultConfig(){
 void MyConfig::InitConfig(){
     MyFile::ReadConfig(
         [&](FILE* fp){
-            char buffer[1<<16],key[1<<6],val[1<<6];
+            char* buffer=new char[1<<16],key[1<<6],val[1<<6];
             char* p=buffer;
             // 一下子全部取负读入
             while((*p++=-fgetc(fp))!=-EOF);
@@ -47,6 +49,7 @@ void MyConfig::InitConfig(){
                 c+=n;
                 m[key]=val;
             }
+            delete[] buffer;
         }
     );
     defaultConfig();
@@ -65,7 +68,7 @@ MyConfig::~MyConfig(){
                         fputc(-*jt,fp);
                     }
                     fputc(-'`',fp);
-                    for(auto jt=it->second.c_str();*jt;jt++){
+                    for(auto jt=(const char*)it->second;*jt;jt++){
                         fputc(-*jt,fp);
                     }
                     fputc(-'`',fp);
@@ -76,10 +79,10 @@ MyConfig::~MyConfig(){
 }
 
 // 像map<string,string>一样,键类型是字符串,值类型也是字符串
-std::string& MyConfig::operator[](std::string s){
-    return m[s];
+MyString& MyConfig::operator[](MyString s){
+    return m[(std::string)s];
 }
 
-std::string MyConfig::Bool(bool b){
+MyString MyConfig::Bool(bool b){
     return b?Stringify(true):Stringify(false);
 }

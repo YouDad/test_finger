@@ -31,6 +31,7 @@ CButton* btnViewEnrollIds;
 CButton* btnCancel;
 CButton* btnClearLog;
 CButton* btnDeleteTemplate;
+CButton* btnTest;
 CStatic* image;
 CProgressCtrl* progress;
 
@@ -78,11 +79,17 @@ void initMainControl(MainDialog* Dlg){
     btnViewEnrollIds=(CButton*)Dlg->GetDlgItem(IDC_BTNViewEnrollIds);
     btnCancel=(CButton*)Dlg->GetDlgItem(IDC_BTNCancel);
     btnClearLog=(CButton*)Dlg->GetDlgItem(IDC_BTNClearLog);
+    btnTest=(CButton*)Dlg->GetDlgItem(IDC_BTNTest);
     btnDeleteTemplate=(CButton*)Dlg->GetDlgItem(IDC_BTNDeleteTemplate);
     image=(CStatic*)Dlg->GetDlgItem(IDC_IMAGE);
     hwnd=Dlg->m_hWnd;
 
     defaultFont=btnAdvDbg->GetFont();
+    if(conf["RemAddress"]==Stringify(true)){
+        setText(editAddress,conf["Address"]);
+    } else{
+        setText(editAddress,"ffffffff");
+    }
 
     (new MyThread(
         [&](){
@@ -115,11 +122,12 @@ void initMainControl(MainDialog* Dlg){
 
     // 设置日志框
     editLog->SetLimitText(-1);
-    setText(editNow,MyString::Format("自动更新是否开启:%s",conf["AutoCheck"].c_str()));
+    setText(editNow,MyString("自动更新是否开启:")+conf["AutoCheck"]);
 
     // 设置高级调试按钮可见性
     if(conf["AdvDbg"]==Stringify(true)){
         btnAdvDbg->ShowWindow(SW_SHOW);
+        btnTest->ShowWindow(SW_SHOW);
     }
     advancedDebugDialog=0;
 

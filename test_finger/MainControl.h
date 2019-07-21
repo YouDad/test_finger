@@ -1,4 +1,5 @@
 #pragma once
+#include "AdvancedDebugDialog.h"
 #include"stdafx.h"
 
 // 初始化MainDialog的控件指针,以及初始化一些控件设置
@@ -52,6 +53,7 @@ extern CButton* btnViewEnrollIds;
 extern CButton* btnCancel;
 extern CButton* btnClearLog;
 extern CButton* btnDeleteTemplate;
+extern CButton* btnTest;
 extern CStatic* image;
 extern CProgressCtrl* progress;
 extern AdvancedDebugDialog* advancedDebugDialog;

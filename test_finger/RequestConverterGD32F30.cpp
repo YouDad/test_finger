@@ -41,6 +41,7 @@ std::vector<DataPacket> RequestConverterGD32F30::convert(int CmdCode,uint8_t * D
     Request request={};
     request.Head=0x02EF;
     request.CMD=CmdCode;
+    getText(editAddress).Parse("%x",&request.Addr);
 
     const int interval=sizeof request.Sendbuf-2;
     for(int i=0;true;i++){

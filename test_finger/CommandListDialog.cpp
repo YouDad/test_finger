@@ -55,19 +55,10 @@ BEGIN_MESSAGE_MAP(CommandListDialog,CDialogEx)
 END_MESSAGE_MAP()
 
 void CommandListDialog::OnBnClickedBtnAddPlugin(){
-    TCHAR szBuffer[MAX_PATH]={0};
-    OPENFILENAME openFilename={0};
-    openFilename.lStructSize=sizeof(openFilename);
-    openFilename.hwndOwner=m_hWnd;
-    openFilename.lpstrFilter=_T("配合文件(*.ini)*.ini所有文件(*.*)*.*");
-    openFilename.lpstrFile=szBuffer;
-    openFilename.nMaxFile=sizeof(szBuffer)/sizeof(*szBuffer);
-    openFilename.nFilterIndex=0;
-    openFilename.Flags=OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST|OFN_EXPLORER;
-    BOOL bSel=GetOpenFileName(&openFilename);
-    if(bSel){
+    MyString filepath;
+    if(MyFile::OpenFileDialog("ini",this,filepath)){
         int CustomCnt=MyString::ParseInt(conf["CustomCnt"]);
-        conf[(std::string)MyString::Format("Custom%d",CustomCnt)]=MyString(openFilename.lpstrFile);
+        conf[MyString::Format("Custom%d",CustomCnt)]=filepath;
         conf["CustomCnt"]=MyString::IntToMyString(CustomCnt+1);
         OnBnClickedBtnFlush();
     }
@@ -79,22 +70,19 @@ void CommandListDialog::OnBnClickedBtnRemovePlugin(){
     listCtrl->DeleteItem(position);
     int CustomCnt=MyString::ParseInt(conf["CustomCnt"]);
     for(int i=position;i<CustomCnt-1;i++){
-        conf[(std::string)MyString::Format("Custom%d",i)]=conf[(std::string)MyString::Format("Custom%d",i+1)];
+        conf[MyString::Format("Custom%d",i)]=conf[MyString::Format("Custom%d",i+1)];
     }
-    conf[(std::string)MyString::Format("Custom%d",CustomCnt-1)]="";
+    conf[MyString::Format("Custom%d",CustomCnt-1)]="";
     conf["CustomCnt"]=MyString::IntToMyString(CustomCnt-1);
 }
 
 
 void CommandListDialog::OnBnClickedBtnSaveDefaultPlugin(){
-    CFileDialog fileDlg1(FALSE,MyString("ini"),MyString("第一个默认插件"),OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,MyString("配置文件(*.ini)|*.ini|所有文件(*.*)|*.*||"),this);
-    if(IDOK==fileDlg1.DoModal()){
-        MyString filepath=fileDlg1.GetPathName();
+    MyString filepath;
+    if(MyFile::SaveAsDialog("DefaultPlugin1","ini",this,filepath)){
         MyFile::SaveDefaultPlugin1(filepath);
     }
-    CFileDialog fileDlg2(FALSE,MyString("ini"),MyString("第二个默认插件"),OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,MyString("配置文件(*.ini)|*.ini|所有文件(*.*)|*.*||"),this);
-    if(IDOK==fileDlg2.DoModal()){
-        MyString filepath=fileDlg2.GetPathName();
+    if(MyFile::SaveAsDialog("DefaultPlugin2","ini",this,filepath)){
         MyFile::SaveDefaultPlugin2(filepath);
     }
 }
@@ -102,7 +90,7 @@ void CommandListDialog::OnBnClickedBtnSaveDefaultPlugin(){
 
 void CommandListDialog::OnBnClickedBtnOpenPluginFolder(){
     int position=listCtrl->GetSelectionMark();
-    std::string path=conf[(std::string)MyString::Format("Custom%d",position)];
+    std::string path=conf[MyString::Format("Custom%d",position)];
     int end=path.rfind('\\');
     MyString PATH=path.substr(0,end);
     ShellExecuteA(NULL,"explore",PATH,NULL,NULL,SW_NORMAL);
@@ -129,7 +117,7 @@ void CommandListDialog::OnBnClickedBtnFlush(){
             bool have=MyFile::ReadCommands(conf[key],TabName,v);
             int pos=listCtrl->InsertItem(i,TabName);
             listCtrl->SetItemText(pos,1,have?L"有效":L"无效");
-            listCtrl->SetItemText(pos,2,MyString(conf[key]));
+            listCtrl->SetItemText(pos,2,conf[key]);
         }
     }
 }

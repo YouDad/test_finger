@@ -768,7 +768,7 @@ Return Value:
       None
 --*/
 {
-    UCHAR errorBuffer[80];
+    UCHAR errorBuffer[160];
     ULONG count;
 
     count=FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,

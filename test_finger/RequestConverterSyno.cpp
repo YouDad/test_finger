@@ -22,31 +22,31 @@ int ToSyno(int cmdCode){
         return cmdCode;
     }
     switch(cmdCode){
-        case SII(GetRawImage):
-            return __SCC(Syno,GetImage);
-        case SII(UpImage):
-            return __SCC(Syno,UpImage);
-        case SII(GenChar):
-            return __SCC(Syno,GenChar);
-        case SII(RegModel):
-            return __SCC(Syno,RegModel);
-        case SII(StoreChar):
-            return __SCC(Syno,StoreChar);
-        case SII(GetEnrollImage):
-            return __SCC(Syno,GetEnrollImage);
-        case SII(Search):
-            return __SCC(Syno,Search);
-        case SII(ReadIndexTable):
-            return __SCC(Syno,ReadIndexTable);
-        case SII(Match):
-            return __SCC(Syno,Match);
-        case SII(LoadChar):
-            return __SCC(Syno,LoadChar);
-        case SII(DeleteChar):
-            return __SCC(Syno,DeleteChar);
-        default:
-            ASF_ERROR(6);
-            throw 0;
+    case SII(GetRawImage):
+        return __SCC(Syno,GetImage);
+    case SII(UpImage):
+        return __SCC(Syno,UpImage);
+    case SII(GenChar):
+        return __SCC(Syno,GenChar);
+    case SII(RegModel):
+        return __SCC(Syno,RegModel);
+    case SII(StoreChar):
+        return __SCC(Syno,StoreChar);
+    case SII(GetEnrollImage):
+        return __SCC(Syno,GetEnrollImage);
+    case SII(Search):
+        return __SCC(Syno,Search);
+    case SII(ReadIndexTable):
+        return __SCC(Syno,ReadIndexTable);
+    case SII(Match):
+        return __SCC(Syno,Match);
+    case SII(LoadChar):
+        return __SCC(Syno,LoadChar);
+    case SII(DeleteChar):
+        return __SCC(Syno,DeleteChar);
+    default:
+        ASF_ERROR(6);
+        throw 0;
     }
 }
 
@@ -79,7 +79,7 @@ std::vector<DataPacket> RequestConverterSyno::convert(int cmdCode,uint8_t* data,
 
     // head & address
     memcpy(request.head,"\xEF\x01",2);
-    memset(&request.address,-1,sizeof(request.address));
+    getText(editAddress).Parse("%x",&request.address);
 
     // cmd_data = cmdCode + data
     uint8_t* cmd_data=new uint8_t[len+1];
@@ -111,6 +111,53 @@ std::vector<DataPacket> RequestConverterSyno::convert(int cmdCode,uint8_t* data,
         request.convert();
         ret.push_back(DataPacket(&request,headLength+before_len));
     } while(len>0);
+    delete[] cmd_data;
+    return ret;
+}
+
+DataPacket RequestConverterSyno::convertData(DataPacket& dataPacket){
+    Request request;
+    DataPacket ret;
+
+    int len=dataPacket.readSize();
+    uint8_t* data=dataPacket.getPointer();
+
+    const int headLength=sizeof(request)-sizeof(request.data);
+    const int dataLength=sizeof(request.data);
+
+    // head & address
+    memcpy(request.head,"\xEF\x01",2);
+    getText(editAddress).Parse("%x",&request.address);
+
+    // cmd_data = cmdCode + data
+    uint8_t* cmd_data=new uint8_t[dataLength];
+    memcpy(cmd_data,data,min(dataLength,len));
+
+    // len & sign
+    request.len=dataLength;
+    request.sign=SynoSign::NotEndData;
+
+    uint8_t* p=cmd_data;
+
+    // 如果len不够,就用剩余的len
+    if(len<=dataLength){
+        request.len=len;
+        request.sign=SynoSign::EndData;
+    }
+
+    // data
+    memcpy(request.data,p,request.len);
+    p+=request.len;
+    dataPacket.readData(request.len);
+
+    // sum
+    getSum(request);
+    int before_len=request.len;
+
+    // 大小端转化
+    request.convert();
+    ret=DataPacket(&request,headLength+before_len);
+
     delete[] cmd_data;
     return ret;
 }

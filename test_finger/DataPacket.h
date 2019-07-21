@@ -9,7 +9,7 @@ public:
     // 用完之后调用
     void Destruction();
     // 是否有效
-    bool isValid() const;
+    bool isValid();
     // 包内数据大小
     int size() const;
     // 包内还剩多少数据

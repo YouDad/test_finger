@@ -10,7 +10,7 @@ void reverse(uint8_t* p,int len){
 }
 
 BITMAPINFOHEADER bmpInfo;
-RGBQUAD bmfColorQuad[256];
+RGBQUAD bmpColorQuad[256];
 BITMAPFILEHEADER bmpFileInfo;
 bool isInit=false;
 
@@ -26,10 +26,10 @@ void ImageInit(int w,int h){
         bmpInfo.biClrUsed=256;
         bmpInfo.biClrImportant=256;
         for(int i=0;i<256;i++){
-            bmfColorQuad[i].rgbBlue=i;
-            bmfColorQuad[i].rgbGreen=i;
-            bmfColorQuad[i].rgbRed=i;
-            bmfColorQuad[i].rgbReserved=0;
+            bmpColorQuad[i].rgbBlue=i;
+            bmpColorQuad[i].rgbGreen=i;
+            bmpColorQuad[i].rgbRed=i;
+            bmpColorQuad[i].rgbReserved=0;
         }
         bmpFileInfo.bfType=0x4d42;//"BM"
         bmpFileInfo.bfReserved1=0;
@@ -50,7 +50,7 @@ bool saveTempImage(int w,int h,uint8_t* pData,int id){
         [&](FILE* fp){
             fwrite(&bmpFileInfo,sizeof bmpFileInfo,1,fp);
             fwrite(&bmpInfo,sizeof bmpInfo,1,fp);
-            fwrite(&bmfColorQuad,sizeof bmfColorQuad,1,fp);
+            fwrite(&bmpColorQuad,sizeof bmpColorQuad,1,fp);
             fwrite(pData,w*h,1,fp);
         },id
     );
@@ -61,14 +61,13 @@ bool saveImage(int w,int h,uint8_t* pData,MyString fileName){
         return true;
     }
     ImageInit(w,h);
-    return MyFile::SaveImage(
-        fileName,[&](FILE* fp){
-            fwrite(&bmpFileInfo,sizeof bmpFileInfo,1,fp);
-            fwrite(&bmpInfo,sizeof bmpInfo,1,fp);
-            fwrite(&bmfColorQuad,sizeof bmfColorQuad,1,fp);
-            fwrite(pData,w*h,1,fp);
-        }
-    );
+    auto funcImg=[&](FILE* fp){
+        fwrite(&bmpFileInfo,sizeof bmpFileInfo,1,fp);
+        fwrite(&bmpInfo,sizeof bmpInfo,1,fp);
+        fwrite(&bmpColorQuad,sizeof bmpColorQuad,1,fp);
+        fwrite(pData,w*h,1,fp);
+    };
+    return MyFile::SaveImage(fileName,funcImg);
 }
 
 bool saveBGImg(int w,int h,uint8_t* pData,MyString fileName){
@@ -76,14 +75,13 @@ bool saveBGImg(int w,int h,uint8_t* pData,MyString fileName){
         return true;
     }
     ImageInit(w,h);
-    return MyFile::SaveBGImg(
-        fileName,[&](FILE* fp){
-            fwrite(&bmpFileInfo,sizeof bmpFileInfo,1,fp);
-            fwrite(&bmpInfo,sizeof bmpInfo,1,fp);
-            fwrite(&bmfColorQuad,sizeof bmfColorQuad,1,fp);
-            fwrite(pData,w*h,1,fp);
-        }
-    );
+    auto funcImg=[&](FILE* fp){
+        fwrite(&bmpFileInfo,sizeof bmpFileInfo,1,fp);
+        fwrite(&bmpInfo,sizeof bmpInfo,1,fp);
+        fwrite(&bmpColorQuad,sizeof bmpColorQuad,1,fp);
+        fwrite(pData,w*h,1,fp);
+    };
+    return MyFile::SaveBGImg(fileName,funcImg);
 }
 
 // 分析数据包里的数据,然后用save函数保存图像
@@ -101,12 +99,12 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
     case 192*192:w=h=192;
         break;
     default:
-        MyLog::user("既不是160x160也不是192x192,没法渲染图像");
+        MyLog::error("既不是160x160也不是192x192,没法渲染图像,字节数:%d",dataSize);
         goto _END_;
     }
 
     pData=dataPacket.getPointer();
-    if(w*h==dataSize/2){        
+    if(w*h==dataSize*2){
         x2=new uint8_t[w*h];
         for(int i=0;i<w;i++){
             for(int j=0;j<h/2;j++){
@@ -139,7 +137,7 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
         loadImage(image,MyFile::TEMP_IMAGE_PATH+"2.bmp");
         delete[] bigImg;
     }
-    _END_:
+_END_:
     if(x2){
         delete[] x2;
     }
@@ -233,8 +231,8 @@ void imgResize(int w,int h,uint8_t* src,int a,int b,uint8_t* dest){
                 for(int jj=js;jj<je;jj++){
                     double il=max(ii,(i+0.0)*a/w);
                     double jt=max(jj,(j+0.0)*b/h);
-                    double ir=min(ii+1,(i+1.0)*a/w);
-                    double jd=min(jj+1,(j+1.0)*b/h);
+                    double ir=min(ii+1.0,(i+1.0)*a/w);
+                    double jd=min(jj+1.0,(j+1.0)*b/h);
                     arr[ii+jj*a]+=(ir-il)*(jd-jt)*src[i*h+j];
                 }
             }

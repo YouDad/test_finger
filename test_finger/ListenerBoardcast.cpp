@@ -37,18 +37,39 @@ void ListenerBoardcast::attach(int event,ICommListener* listener){
     m[event].push_back(listener);
 }
 
+DataPacket tempCommDataPacket;
+
 // 广播事件
 void ListenerBoardcast::boardcast(int event,DataPacket response){
     std::vector<ICommListener*>::iterator it;
     if(isFreeRequest){
-        isFreeRequest--;
-        std::string str="data:";
-        uint8_t* ptr=response.getPointer();
-        for(int i=0;i<response.readSize();i++){
-            str+=MyString::Format("%02x,",(int)ptr[i]);
+        if(tempCommDataPacket.isValid()){
+            while(tempCommDataPacket.isValid()){
+                DataPacket data=RequestConverterSyno::convertData(tempCommDataPacket);
+                comm.sendBytes(data.getPointer(),data.readSize());
+            }
+        } else{
+            isFreeRequest--;
+            if(response.readSize()>1000){
+                for(it=m[event].begin();it!=m[event].end();it++){
+                    if((*it)->accept()){
+                        (*it)->listen(response);
+                    }
+                }
+                return;
+            }
+            MyString str="data:";
+            uint8_t* ptr=response.getPointer();
+            for(int i=0;i<response.readSize();i++){
+                str+=MyString::Format("%02x ",(int)ptr[i]);
+            }
+            MyLog::user("收到CmdCode=%02x的数据,%s",event,str.c_str());
+            const char* SynoFormatMessage(int errorCode);
+            if(MyString("")!=SynoFormatMessage(ptr[0])){
+                MyLog::error(SynoFormatMessage(ptr[0]));
+            }
         }
-        str.pop_back();
-        MyLog::user("收到CmdCode=%02x的数据,%s",event,str.c_str());
+        return;
     }
     for(it=m[event].begin();it!=m[event].end();it++){
         if((*it)->accept()){

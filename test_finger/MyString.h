@@ -30,7 +30,7 @@ public:
 
     // 转化操作符
     operator wchar_t*();
-    operator const char*();
+    operator const char*()const;
     operator const wchar_t*();
     operator CString();
 
@@ -62,6 +62,8 @@ public:
     // split函数
     void split(char ch,std::vector<MyString>& out);
 
+    const char* c_str();
+    
     // int转MyString
     static MyString IntToMyString(int i);
 
@@ -83,6 +85,6 @@ private:
 template<class T>
 inline MyString MyString::Format(T arg){
     static char tmp[1<<16];
-    sprintf(tmp,*this,arg);
+    sprintf_s(tmp,*this,arg);
     return tmp;
 }

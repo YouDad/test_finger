@@ -23,10 +23,11 @@ public:
     afx_msg void OnBnClickedBtnCancel();
     afx_msg void OnBnClickedBtnQuitAdvDbg();
     afx_msg void OnBnClickedChkSaveConf();
-    afx_msg void OnBnClickedChkautocheck();
-    afx_msg void OnBnClickedChkautolog();
-    afx_msg void OnBnClickedChkrembaud();
-    afx_msg void OnBnClickedChkremprotocol();
+    afx_msg void OnBnClickedChkAutoCheck();
+    afx_msg void OnBnClickedChkAutoLog();
+    afx_msg void OnBnClickedChkRemBaud();
+    afx_msg void OnBnClickedChkRemProtocol();
     afx_msg void OnEnChangeEditimgsize();
     afx_msg void OnNMCustomdrawSliderImgSize(NMHDR *pNMHDR,LRESULT *pResult);
+    afx_msg void OnBnClickedChkRemAddress();
 };

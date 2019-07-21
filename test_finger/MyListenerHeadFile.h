@@ -28,7 +28,7 @@ CmdCode##Protocol##_##Message
 #define __DLC(Protocol,Message) \
 class ___SCN(Protocol,Message):public ICommListener{\
 public:\
-    void listen(DataPacket response);\
+    void listen(DataPacket& response);\
     ___SCN(Protocol,Message)(const char* protocol):ICommListener(protocol){}\
 }
 
@@ -38,7 +38,7 @@ attach(__SCC(Protocol,Message),new ___SCN(Protocol,Message)(ProtocolName))
 
 //__ILC===Implement Listener Class,快速实现监听器类的宏
 #define __ILC(Protocol,Message) \
-void ___SCN(Protocol,Message)::listen(DataPacket response)
+void ___SCN(Protocol,Message)::listen(DataPacket& response)
 
 //SII===Software Inner Instruction,软件内部指令
 #define SII(Name) \

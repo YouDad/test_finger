@@ -51,4 +51,5 @@ public:
     afx_msg void OnCbnSelChangeCmbWay();
     afx_msg void OnCbnSelchangeCmbloglevel();
     afx_msg void OnBnClickedBtntest();
+    afx_msg void OnEnChangeEditaddress();
 };

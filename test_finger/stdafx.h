@@ -89,6 +89,7 @@
 #include "App.h"
 #include "MainDialog.h"
 #include "TabsDialog.h"
+#include "TempDialog.h"
 #include "CommandDialog.h"
 #include "CommandListDialog.h"
 #include "SettingCommonPage.h"

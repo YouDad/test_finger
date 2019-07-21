@@ -9,7 +9,7 @@ public:
     // 如果可以监听,返回真
     bool accept();
     // 监听实际逻辑
-    virtual void listen(DataPacket response)=0;
+    virtual void listen(DataPacket& response)=0;
 private:
     // 协议字符串
     const char* protocol;
@@ -31,3 +31,5 @@ private:
 
 // 全局唯一监听器广播对象
 extern ListenerBoardcast listenerBoardcast;
+
+extern DataPacket tempCommDataPacket;

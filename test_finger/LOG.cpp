@@ -7,12 +7,12 @@ __ILC(LOG,AdvDbg_AdjImg){
     response.readData(response.size()-32*32);
 
     // 要放大获得的原始图像
-    uint8_t bigImg[64*64];
+    uint8_t* bigImg=new uint8_t[64*64];
     imgSizeX2(32,32,response.getPointer(),bigImg);
     saveTempImage(64,64,bigImg,0);
 
     // 生成亮度直方图 Histogram是直方图
-    uint8_t Histogram[256*64];
+    uint8_t* Histogram=new uint8_t[256*64];
     generateHistogram(32,32,response.getPointer(),256,64,Histogram);
     saveTempImage(64,64,bigImg,1);
 
@@ -21,6 +21,8 @@ __ILC(LOG,AdvDbg_AdjImg){
 
     // 处理结束
     response.readData(32*32);
+    delete[] bigImg;
+    delete[] Histogram;
 }
 
 // Log一下下位机的Info

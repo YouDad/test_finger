@@ -6,6 +6,7 @@ MyString MyFile::IMAGE_DIR="image\\";
 MyString MyFile::BACKGROUND_DIR="bgimg\\";
 MyString MyFile::HISTOGRAM_DIR="histogram\\";
 MyString MyFile::TEMP_IMAGE_PATH="tempImage\\";
+MyString MyFile::TESTIMG_DIR="testImg\\";
 MyString MyFile::CONF_PATH="config";
 MyString MyFile::RUN_TIME=init();
 
@@ -21,6 +22,7 @@ MyString MyFile::init(){
     BACKGROUND_DIR=DATA_DIR+BACKGROUND_DIR;
     HISTOGRAM_DIR=DATA_DIR+HISTOGRAM_DIR;
     TEMP_IMAGE_PATH=DATA_DIR+TEMP_IMAGE_PATH;
+    TESTIMG_DIR=DATA_DIR+TESTIMG_DIR;
     CONF_PATH=DATA_DIR+CONF_PATH;
 
     if(0!=_access(DATA_DIR,0)){
@@ -43,13 +45,16 @@ MyString MyFile::init(){
     if(0!=_access(TEMP_IMAGE_PATH,0)){
         CreateDirectory(TEMP_IMAGE_PATH,0);
     }
+    if(0!=_access(TESTIMG_DIR,0)){
+        CreateDirectory(TESTIMG_DIR,0);
+    }
     return MyString::Time();
 }
 
 bool MyFile::OperateFile(MyString path,const char * mode,FileFunction_t f){
     FILE* fp;
     errno_t err=fopen_s(&fp,path,mode);
-    if(err==ERROR_SUCCESS){
+    if(err==ERROR_SUCCESS&&fp!=0){
         f(fp);
         fclose(fp);
         return true;
@@ -74,6 +79,14 @@ bool MyFile::OperateFile(MyString path,const char * mode,ReturnFileFunction_t f)
         MyLog::error(buffer);
     }
     return false;
+}
+
+bool MyFile::Read(MyString fileName,ReturnFileFunction_t f){
+    return OperateFile(fileName,"r",f);
+}
+
+bool MyFile::Write(MyString fileName,ReturnFileFunction_t f){
+    return OperateFile(fileName,"w",f);
 }
 
 bool MyFile::ReadConfig(FileFunction_t f){
@@ -130,10 +143,6 @@ bool MyFile::SaveTempImage(FileFunction_t f,int id){
     return OperateFile(TEMP_IMAGE_PATH+MyString::IntToMyString(id)+".bmp","wb",f);
 }
 
-bool MyFile::HaveCommands(MyString path){
-    return false;
-}
-
 void fgetcUntil(FILE* fp,char* s,char delimeter){
     for(char*c=s;;c++){
         *c=fgetc(fp);
@@ -149,7 +158,9 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
     return OperateFile(path,"r",
         (ReturnFileFunction_t)[&](FILE* fp)->bool{
             char ch=0;
-            char key[1<<16],val[1<<16],section[1<<6];
+            char* key=new char[1<<16];
+            char* val=new char[1<<16];
+            char section[1<<6]={};
             std::map<std::string,std::map<std::string,std::string>> m;
             // 开始解析
             while(ch!=EOF){
@@ -196,6 +207,8 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                 }
                 v.push_back(c);
             }
+            delete[] key;
+            delete[] val;
             return true;
         }
     );
@@ -252,10 +265,7 @@ Params=0,0,0,0\n\
 CmdCode=0x16\n\
 Params=\n\
 ";
-    FILE* fp=fopen(path,"w");
-    fprintf(fp,"%s",str1);
-    fclose(fp);
-    return true;
+    return OperateFile(path,"w",[&](FILE* fp){fprintf(fp,"%s",str1);});
 }
 
 bool MyFile::SaveDefaultPlugin2(MyString path){
@@ -285,8 +295,58 @@ Params=3\n\
 CmdCode=0x40\n\
 Params=15\n\
 ";
-    FILE* fp=fopen(path,"w");
-    fprintf(fp,"%s",str2);
-    fclose(fp);
-    return true;
+    return OperateFile(path,"w",[&](FILE* fp){fprintf(fp,"%s",str2);});
+}
+
+bool MyFile::SaveAsDialog(MyString defaultName,MyString extName,CWnd* parent,MyString & path){
+    MyString Filter=extName+"文件(*."+extName+")|*."+extName+"|所有文件(*.*)|*.*||";
+    CFileDialog fileDialog(FALSE,extName,defaultName,OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT,Filter,parent);
+    if(IDOK==fileDialog.DoModal()){
+        path=fileDialog.GetPathName();
+        return true;
+    }
+    return false;
+}
+
+bool MyFile::OpenFileDialog(MyString extName,CWnd * parent,MyString & path){
+    MyString Filter=extName+"文件(*."+extName+")|*."+extName+"|所有文件(*.*)|*.*||";
+    CFileDialog fileDialog(TRUE,extName,L"",OFN_HIDEREADONLY|OFN_OVERWRITEPROMPT|OFN_FILEMUSTEXIST,Filter,parent);
+    if(IDOK==fileDialog.DoModal()){
+        path=fileDialog.GetPathName();
+        return true;
+    }
+    return false;
+}
+
+bool MyFile::ReadImage(MyString imagePath,DataPacket& data){
+    ReturnFileFunction_t f=[&](FILE* fp)->bool{
+        int w,h;
+        //跳过位图文件头结构BITMAPFILEHEADER
+        fseek(fp,sizeof(BITMAPFILEHEADER),SEEK_SET);
+        //定义位图信息头结构变量，读取位图信息头进内存，存放在变量head中
+        BITMAPINFOHEADER head;
+        fread(&head,sizeof(BITMAPINFOHEADER),1,fp); //获取图像宽、高、每像素所占位数等信息
+        w=head.biWidth;
+        h=head.biHeight;
+        if(head.biBitCount!=8){
+            return false;
+        }
+        fseek(fp,256*sizeof(RGBQUAD),SEEK_CUR);
+        //申请位图数据所需要的空间，读位图数据进内存
+        uint8_t* p=new uint8_t[w*h];
+        fread(p,1,w*h,fp);
+        uint8_t* divBy2=new uint8_t[w*h/2];
+        for(int i=0;i<h;i++){
+            for(int j=0;j<w;j++){
+                if(j%2==0){
+                    divBy2[(i*w+j)/2]=p[i*w+j];
+                } else{
+                    divBy2[(i*w+j)/2]|=(p[i*w+j]&0xF0)>>4;
+                }
+            }
+        }
+        data=DataPacket(divBy2,w*h/2);
+        return true;
+    };
+    return OperateFile(imagePath,"rb",f);
 }
