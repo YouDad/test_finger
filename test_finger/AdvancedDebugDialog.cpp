@@ -27,10 +27,15 @@ public:
     CStatic* hint;
     MyControls(int text,int i,CWnd* parent){
         // new出来
+        NEW_INFO;
         img=new CStatic();
+        NEW_INFO;
         histogram=new CStatic();
+        NEW_INFO;
         id=new CStatic();
+        NEW_INFO;
         time=new CStatic();
+        NEW_INFO;
         hint=new CStatic();
         // 计算位置
         int top=10+80*i;
@@ -52,18 +57,23 @@ public:
     void Destruction(){
         // 析构处理
         img->DestroyWindow();
+        DEL_INFO;
         delete img;
         img=0;
         histogram->DestroyWindow();
+        DEL_INFO;
         delete histogram;
         histogram=0;
         id->DestroyWindow();
+        DEL_INFO;
         delete id;
         id=0;
         time->DestroyWindow();
+        DEL_INFO;
         delete time;
         time=0;
         hint->DestroyWindow();
+        DEL_INFO;
         delete hint;
         hint=0;
     }

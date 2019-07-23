@@ -13,6 +13,7 @@ TabsDialog::TabsDialog(std::vector<Tab>& v,CWnd* pParent)
 // 析构函数
 TabsDialog::~TabsDialog(){
     for(auto it=TabPages.begin();it!=TabPages.end();it++){
+        DEL_INFO;
         delete it->dlg;
     }
 }

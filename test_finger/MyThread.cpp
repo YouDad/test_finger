@@ -76,6 +76,7 @@ DWORD WINAPI MyThread::temporaryRun(LPVOID params){
     int size=*(int*)params;
     getSize.unlock();
     TPVec[size].pf();
+    DEL_INFO;
     delete TPVec[size].beDelete;
     TPVec[size].beDelete=0;
     return 0;

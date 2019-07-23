@@ -47,8 +47,10 @@ void NetPost(MyString host,MyString ctrl,DataMap data,NetFunction_t func){
     } catch(...){}
     // 关闭连接
     pfile->Close();
+    DEL_INFO;
     delete pfile;
     pserver->Close();
+    DEL_INFO;
     delete pserver;
 }
 
@@ -119,6 +121,7 @@ MyString NetVersionInfo(int NetVersion){
     const char* p=ret;
     // 解码unicode时用到
     char tmp_str[7]={};
+    NEWA_INFO;
     WCHAR* tmp=new WCHAR[ret.length()+1];
     int tmp_i;
     for(tmp_i=0;*p;tmp_i++){
@@ -136,7 +139,10 @@ MyString NetVersionInfo(int NetVersion){
     }
     // --和+1为了去掉一定存在的双引号
     tmp[--tmp_i]=0;
-    return MyString(tmp+1);
+    MyString rett(tmp+1);
+    DELA_INFO;
+    delete[] tmp;
+    return rett;
 }
 
 // 返回是否连接网络

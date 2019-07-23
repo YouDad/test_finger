@@ -26,6 +26,10 @@ void MyLog::print(LogLevel level,MyString info){
         level=LOGD;
     }
 
+    if(level==LOGI){
+        MyFile::InfoLog(MyString::Time("%Y%m%d %H%M%S:")+info+"\n");
+    }
+
     // 越界信息或空信息不输出
     if(level>=limit||info==""){
         return;
@@ -44,6 +48,7 @@ void MyLog::print(LogLevel level,MyString info){
     case LOGW:pLevel="[W]";break;
     case LOGD:pLevel="[D]";break;
     case LOGT:pLevel="[T]";break;
+    case LOGI:pLevel="[I]";break;
     default:pLevel="[Unknown]";break;
     }
 
@@ -78,6 +83,7 @@ void MyLog::FuncName(const char * format,...){  \
     print(LogLevel,MyString(tmp));              \
 }
 
+FastDefineLogName(info,LOGI)
 FastDefineLogName(trace,LOGT)
 FastDefineLogName(debug,LOGD)
 FastDefineLogName(warn,LOGW)

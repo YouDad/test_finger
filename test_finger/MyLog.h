@@ -14,6 +14,7 @@ public:
         LOGW,// 警告级信息
         LOGD,// 调试级信息
         LOGT,// 临时级信息
+        LOGI,// 信息级信息
         LOG_HIGHEST// 固有项,不要删
     };
     static void SetLimit(LogLevel level);
@@ -21,6 +22,7 @@ public:
     static void print(LogLevel level,MyString info);
     // 输出level的info(printf的样子)
     static void print(LogLevel level,const char* format,...);
+    FastDeclearLogName(info)
     FastDeclearLogName(trace)
     FastDeclearLogName(debug)
     FastDeclearLogName(error)

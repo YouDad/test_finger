@@ -23,7 +23,7 @@ public:
     static MyString BACKGROUND_DIR;
     static MyString HISTOGRAM_DIR;
     static MyString TEMP_IMAGE_PATH;
-    static MyString TESTIMG_DIR;
+    static MyString INFOLOG_DIR;
     static bool Read(MyString fileName,ReturnFileFunction_t f);
     static bool Write(MyString fileName,ReturnFileFunction_t f);
     static bool ReadConfig(FileFunction_t f);
@@ -40,4 +40,5 @@ public:
     static bool SaveAsDialog(MyString defaultName,MyString extName,CWnd* parent,MyString & path);
     static bool OpenFileDialog(MyString extName,CWnd* parent,MyString& path);
     static bool ReadImage(MyString imagePath,DataPacket& data);
+    static bool InfoLog(MyString& info);
 };

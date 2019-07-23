@@ -18,6 +18,7 @@ Comm::Comm(){
 
 
     // 负责监听下位机的数据,是Packet的生产者
+    NEW_INFO;
     this->listenThread=new MyThread(
         [&](){
             while(this->isOpen()){
@@ -33,6 +34,7 @@ Comm::Comm(){
     );
 
     // 负责分发Packet给对应的Listener,是Packet的消费者
+    NEW_INFO;
     this->responseThread=new MyThread(
         [&](){
             DataPacket dataPacket;

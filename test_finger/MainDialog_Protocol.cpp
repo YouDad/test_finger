@@ -17,9 +17,11 @@ void MainDialog::OnCbnSelChangeCmbProtocolType(){
 // 高级调试模式点击事件
 void MainDialog::OnBnClickedBtnAdvDbg(){
     if(advancedDebugDialog){
+        DEL_INFO;
         delete advancedDebugDialog;
         advancedDebugDialog=0;
     } else{
+        NEW_INFO;
         advancedDebugDialog=new AdvancedDebugDialog();
         advancedDebugDialog->Create(IDD_ADVANCED_DEBUG_DIALOG,this);
         advancedDebugDialog->ShowWindow(SW_SHOW);

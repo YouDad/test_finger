@@ -31,6 +31,7 @@ BOOL App::InitInstance(){
 
     // 创建 shell 管理器，以防对话框包含
     // 任何 shell 树视图控件或 shell 列表视图控件。
+    NEW_INFO;
     CShellManager *pShellManager=new CShellManager;
 
     MainDialog dlg;
@@ -46,6 +47,7 @@ BOOL App::InitInstance(){
 
     // 删除上面创建的 shell 管理器。
     if(pShellManager!=NULL){
+        DEL_INFO;
         delete pShellManager;
     }
 

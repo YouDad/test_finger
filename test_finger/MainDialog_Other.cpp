@@ -78,21 +78,25 @@ void MainDialog::OnBnClickedBtnClearLog(){
 void MainDialog::OnBnClickedBtnSetting(){
     static TabsDialog* dialog;
     if(dialog){
+        DEL_INFO;
         delete dialog;
     }
     std::vector<Tab>v;
     Tab t;
 
+    NEW_INFO;
     t.dlg=new SettingCommonPage();
     t.name="常规";
     t.templateID=IDD_SettingCommonPage;
     v.push_back(t);
 
+    NEW_INFO;
     t.dlg=new SettingUpdatePage();
     t.name="更新";
     t.templateID=IDD_SettingUpdatePage;
     v.push_back(t);
 
+    NEW_INFO;
     dialog=new TabsDialog(v);
 }
 

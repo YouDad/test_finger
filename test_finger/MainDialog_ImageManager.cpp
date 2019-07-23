@@ -66,7 +66,9 @@ void MainDialog::OnBnClickedBtnRawImage(){
                 img[i][j]=(i*5+j)*255/24;
             }
         }
+        NEWA_INFO;
         uint8_t* bigImg=new uint8_t[160*160];
+        NEWA_INFO;
         uint8_t* bigImg2=new uint8_t[160*160];
         imgSizeX2(5,5,(uint8_t*)img,bigImg);
         imgSizeX2(10,10,bigImg,bigImg2);
@@ -101,6 +103,10 @@ void MainDialog::OnBnClickedBtnRawImage(){
         test.commTest.Comm_receiveSize=k;
 
         test.testEnd();
+        DELA_INFO;
+        delete[] bigImg;
+        DELA_INFO;
+        delete[] bigImg2;
 #else
         MainDialogCtrlValidity::Working();
         // 发送<获取原始图像>命令

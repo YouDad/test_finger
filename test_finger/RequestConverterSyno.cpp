@@ -82,6 +82,7 @@ std::vector<DataPacket> RequestConverterSyno::convert(int cmdCode,uint8_t* data,
     getText(editAddress).Parse("%x",&request.address);
 
     // cmd_data = cmdCode + data
+    NEWA_INFO;
     uint8_t* cmd_data=new uint8_t[len+1];
     cmd_data[0]=cmdCode;
     memcpy(cmd_data+1,data,len);
@@ -111,6 +112,7 @@ std::vector<DataPacket> RequestConverterSyno::convert(int cmdCode,uint8_t* data,
         request.convert();
         ret.push_back(DataPacket(&request,headLength+before_len));
     } while(len>0);
+    DELA_INFO;
     delete[] cmd_data;
     return ret;
 }
@@ -130,6 +132,7 @@ DataPacket RequestConverterSyno::convertData(DataPacket& dataPacket){
     getText(editAddress).Parse("%x",&request.address);
 
     // cmd_data = cmdCode + data
+    NEWA_INFO;
     uint8_t* cmd_data=new uint8_t[dataLength];
     memcpy(cmd_data,data,min(dataLength,len));
 
@@ -158,6 +161,7 @@ DataPacket RequestConverterSyno::convertData(DataPacket& dataPacket){
     request.convert();
     ret=DataPacket(&request,headLength+before_len);
 
+    DELA_INFO;
     delete[] cmd_data;
     return ret;
 }

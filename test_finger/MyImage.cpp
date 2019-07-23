@@ -105,6 +105,7 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
 
     pData=dataPacket.getPointer();
     if(w*h==dataSize*2){
+        NEWA_INFO;
         x2=new uint8_t[w*h];
         for(int i=0;i<w;i++){
             for(int j=0;j<h/2;j++){
@@ -131,14 +132,17 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
     save(w,h,pData,fileName);
     {
         int imgSize=MyString::ParseInt(conf["ImgSize"]);
+        NEWA_INFO;
         uint8_t* bigImg=new uint8_t[imgSize*imgSize];
         imgResize(w,h,pData,imgSize,imgSize,bigImg);
         saveTempImage(imgSize,imgSize,bigImg,2);
         loadImage(image,MyFile::TEMP_IMAGE_PATH+"2.bmp");
+        DELA_INFO;
         delete[] bigImg;
     }
 _END_:
     if(x2){
+        DELA_INFO;
         delete[] x2;
     }
     dataPacket.readData(dataPacket.size());
@@ -179,6 +183,7 @@ void generateHistogram(int w,int h,uint8_t* pData,int hw,int hh,uint8_t* Histogr
             }
         }
     };
+    NEWA_INFO;
     int* count=new int[hw];
     memset(count,0,hw*4);
     for(int i=0;i<w*h;i++){
@@ -193,6 +198,7 @@ void generateHistogram(int w,int h,uint8_t* pData,int hw,int hh,uint8_t* Histogr
     for(int i=0;i<hw;i++){
         func(i,count[i]*hh/max);
     }
+    DELA_INFO;
     delete[] count;
 }
 
@@ -215,6 +221,7 @@ void imgResize(int w,int h,uint8_t* src,int a,int b,uint8_t* dest){
         memcpy(dest,src,a*b);
         return;
     }
+    NEWA_INFO;
     double* arr=new double[a*b];
     for(int i=0;i<a*b;i++){
         arr[i]=0;
@@ -252,5 +259,6 @@ void imgResize(int w,int h,uint8_t* src,int a,int b,uint8_t* dest){
             dest[i]=(uint8_t)arr[i];
         }
     }
+    DELA_INFO;
     delete[] arr;
 }

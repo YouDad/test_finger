@@ -26,6 +26,7 @@ BOOL CommandDialog::OnInitDialog(){
 
     memset(cc,0,sizeof cc);
     for(int i=0;i<min(10,commands.size());i++){
+        NEW_INFO;
         cc[i]=new CommandControl(5+i*30,commands[i],this);
     }
     return 0;

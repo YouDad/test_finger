@@ -18,6 +18,7 @@ DataPacket ResponseConverterSyno::convert(DataPacket& data){
     memcpy(&response,data.getPointer(),sizeof(response));
 
     // …Í«Îª∫≥Â«¯
+    NEWA_INFO;
     uint8_t* arr=new uint8_t[data.readSize()];
     const int header=sizeof(Response)-sizeof(response.data)-sizeof(response.sum);
     int len=0;
@@ -38,6 +39,7 @@ DataPacket ResponseConverterSyno::convert(DataPacket& data){
         memcpy(&response,data.getPointer(),sizeof(response));
     }
     DataPacket ret(arr,len);
+    DELA_INFO;
     delete[] arr;
     return ret;
 }

@@ -24,3 +24,8 @@
 //CONST STRING
 #define SYNO "Syno"
 #define GD32 "GD32F30"
+
+#define NEW_INFO  MyLog::info("new   at %s(%d)<%s>",__FILE__,__LINE__,__FUNCTION__)
+#define DEL_INFO  MyLog::info("del   at %s(%d)<%s>",__FILE__,__LINE__,__FUNCTION__)
+#define NEWA_INFO MyLog::info("new[] at %s(%d)<%s>",__FILE__,__LINE__,__FUNCTION__)
+#define DELA_INFO MyLog::info("del[] at %s(%d)<%s>",__FILE__,__LINE__,__FUNCTION__)

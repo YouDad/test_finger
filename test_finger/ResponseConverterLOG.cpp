@@ -15,6 +15,7 @@ bool ResponseConverterLOG::checkProtocol(DataPacket dataPacket){
 DataPacket ResponseConverterLOG::convert(DataPacket& data){
     const int size=Response::Header+Response::Checker;
     int totalLength=0;
+    NEWA_INFO;
     uint8_t* tmpArray=new uint8_t[data.readSize()];
     auto pData=(Response*)data.getPointer();
     while(checkProtocol(data)){
@@ -27,6 +28,7 @@ DataPacket ResponseConverterLOG::convert(DataPacket& data){
         pData=(Response*)data.getPointer();
     }
     DataPacket ret(tmpArray,totalLength);
+    DELA_INFO;
     delete[] tmpArray;
     return ret;
 }

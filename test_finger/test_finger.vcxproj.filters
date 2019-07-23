@@ -56,9 +56,6 @@
     <ClInclude Include="MyLog.h">
       <Filter>My</Filter>
     </ClInclude>
-    <ClInclude Include="MyString.h">
-      <Filter>My</Filter>
-    </ClInclude>
     <ClInclude Include="MyThread.h">
       <Filter>My</Filter>
     </ClInclude>
@@ -167,6 +164,9 @@
     <ClInclude Include="TempDialog.h">
       <Filter>UI\CommandDialog</Filter>
     </ClInclude>
+    <ClInclude Include="MyString.h">
+      <Filter>My</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RequestConverterGD32F30.cpp">
@@ -179,9 +179,6 @@
       <Filter>Comm</Filter>
     </ClCompile>
     <ClCompile Include="MyLog.cpp">
-      <Filter>My</Filter>
-    </ClCompile>
-    <ClCompile Include="MyThread.cpp">
       <Filter>My</Filter>
     </ClCompile>
     <ClCompile Include="MyString.cpp">
@@ -312,6 +309,9 @@
     </ClCompile>
     <ClCompile Include="TempDialog.cpp">
       <Filter>UI\CommandDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="MyThread.cpp">
+      <Filter>My</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -299,9 +299,11 @@ BOOL EnumPortsWdm(){
 // 更新通信方式组合框
 void updateCommunityWay(){
     if(lastIdle){
+        DEL_INFO;
         delete lastIdle;
     }
     lastIdle=idle;
+    NEW_INFO;
     idle=new std::vector<int>();
 
     //清除串口数组内容

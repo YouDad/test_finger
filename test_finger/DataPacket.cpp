@@ -1,6 +1,7 @@
 #include"stdafx.h"
 
 DataPacket::DataPacket(const void * d,int l){
+    NEWA_INFO;
     data=new uint8_t[l+1];
     memset(data,0,l+1);
     len=l;
@@ -10,6 +11,7 @@ DataPacket::DataPacket(const void * d,int l){
 
 DataPacket::DataPacket(std::vector<uint8_t>& v){
     len=v.size();
+    NEWA_INFO;
     data=new uint8_t[len];
     memset(data,0,len);
     read=0;
@@ -27,6 +29,7 @@ DataPacket::DataPacket(){
 // 用完之后调用
 void DataPacket::Destruction(){
     if(isValid()){
+        DELA_INFO;
         delete[] data;
         len=0;
         read=0;

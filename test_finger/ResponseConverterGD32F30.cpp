@@ -17,6 +17,7 @@ DataPacket ResponseConverterGD32F30::convert(DataPacket& data){
     int tmpLength=0;
 
     // …Í«Îª∫≥Â«¯
+    NEWA_INFO;
     uint8_t* tmpArray=new uint8_t[data.readSize()];
     Response* pData=(Response*)data.getPointer();
     while(checkProtocol(data)){
@@ -27,6 +28,7 @@ DataPacket ResponseConverterGD32F30::convert(DataPacket& data){
         pData=(Response*)data.getPointer();
     }
     DataPacket ret(tmpArray,tmpLength);
+    DELA_INFO;
     delete[] tmpArray;
     return ret;
 }

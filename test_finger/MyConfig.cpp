@@ -37,6 +37,7 @@ void MyConfig::defaultConfig(){
 void MyConfig::InitConfig(){
     MyFile::ReadConfig(
         [&](FILE* fp){
+            NEWA_INFO;
             char* buffer=new char[1<<16],key[1<<6],val[1<<6];
             char* p=buffer;
             // 一下子全部取负读入
@@ -49,6 +50,7 @@ void MyConfig::InitConfig(){
                 c+=n;
                 m[key]=val;
             }
+            DELA_INFO;
             delete[] buffer;
         }
     );

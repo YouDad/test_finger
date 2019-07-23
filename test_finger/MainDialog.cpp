@@ -152,11 +152,13 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
 void MainDialog::OnBnClickedBtntest(){
     static TabsDialog* dialog;
     if(dialog){
+        DEL_INFO;
         delete dialog;
     }
     std::vector<Tab>v;
     Tab t;
 
+    NEW_INFO;
     t.dlg=new CommandListDialog();
     t.name="¡–±Ì";
     t.templateID=IDD_CommandListDialog;
@@ -167,17 +169,20 @@ void MainDialog::OnBnClickedBtntest(){
         MyString TabName;
         std::vector<struct Command> commands;
         MyFile::ReadCommands(conf[MyString::Format("Custom%d",i)],TabName,commands);
+        NEW_INFO;
         t.dlg=new CommandDialog(commands);
         t.name=TabName;
         t.templateID=IDD_CommandDialog;
         v.push_back(t);
     }
 
+    NEW_INFO;
     t.dlg=new TempDialog();
     t.name="Ãÿ ‚";
     t.templateID=IDD_TempDialog;
     v.push_back(t);
 
+    NEW_INFO;
     dialog=new TabsDialog(v);
 }
 

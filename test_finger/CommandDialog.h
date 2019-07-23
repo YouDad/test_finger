@@ -13,11 +13,13 @@ class CommandControl{
 public:
     CommandControl(int height,struct Command c,CWnd* parent){
         CmdCode=c.CmdCode;
+        NEW_INFO;
         btn=new CButton();
         btn->Create(c.Name,0,CRect(5,height,125,height+25),parent,nID);
         btn->SetFont(defaultFont);
         btn->ShowWindow(SW_SHOW);
         for(int i=0;i<c.DfaultValues.size();i++){
+            NEW_INFO;
             edt.push_back(new CEdit());
             edt[i]->Create(WS_BORDER,CRect(130+45*i,height,170+45*i,height+25),parent,nID*10+i);
             edt[i]->SetFont(defaultFont);
@@ -25,6 +27,14 @@ public:
             setText(edt[i],MyString::IntToMyString(c.DfaultValues[i]));
         }
         nID++;
+    }
+    ~CommandControl(){
+        DEL_INFO;
+        delete btn;
+        for(int i=0;i<edt.size();i++){
+            DEL_INFO;
+            delete edt[i];
+        }
     }
     DataPacket Click(){
         std::vector<uint8_t> v;

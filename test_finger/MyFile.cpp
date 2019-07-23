@@ -6,7 +6,7 @@ MyString MyFile::IMAGE_DIR="image\\";
 MyString MyFile::BACKGROUND_DIR="bgimg\\";
 MyString MyFile::HISTOGRAM_DIR="histogram\\";
 MyString MyFile::TEMP_IMAGE_PATH="tempImage\\";
-MyString MyFile::TESTIMG_DIR="testImg\\";
+MyString MyFile::INFOLOG_DIR="infolog\\";
 MyString MyFile::CONF_PATH="config";
 MyString MyFile::RUN_TIME=init();
 
@@ -22,7 +22,7 @@ MyString MyFile::init(){
     BACKGROUND_DIR=DATA_DIR+BACKGROUND_DIR;
     HISTOGRAM_DIR=DATA_DIR+HISTOGRAM_DIR;
     TEMP_IMAGE_PATH=DATA_DIR+TEMP_IMAGE_PATH;
-    TESTIMG_DIR=DATA_DIR+TESTIMG_DIR;
+    INFOLOG_DIR=DATA_DIR+INFOLOG_DIR;
     CONF_PATH=DATA_DIR+CONF_PATH;
 
     if(0!=_access(DATA_DIR,0)){
@@ -45,8 +45,8 @@ MyString MyFile::init(){
     if(0!=_access(TEMP_IMAGE_PATH,0)){
         CreateDirectory(TEMP_IMAGE_PATH,0);
     }
-    if(0!=_access(TESTIMG_DIR,0)){
-        CreateDirectory(TESTIMG_DIR,0);
+    if(0!=_access(INFOLOG_DIR,0)){
+        CreateDirectory(INFOLOG_DIR,0);
     }
     return MyString::Time();
 }
@@ -158,7 +158,9 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
     return OperateFile(path,"r",
         (ReturnFileFunction_t)[&](FILE* fp)->bool{
             char ch=0;
+            NEWA_INFO;
             char* key=new char[1<<16];
+            NEWA_INFO;
             char* val=new char[1<<16];
             char section[1<<6]={};
             std::map<std::string,std::map<std::string,std::string>> m;
@@ -207,7 +209,9 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                 }
                 v.push_back(c);
             }
+            DELA_INFO;
             delete[] key;
+            DELA_INFO;
             delete[] val;
             return true;
         }
@@ -333,8 +337,10 @@ bool MyFile::ReadImage(MyString imagePath,DataPacket& data){
         }
         fseek(fp,256*sizeof(RGBQUAD),SEEK_CUR);
         //申请位图数据所需要的空间，读位图数据进内存
+        NEWA_INFO;
         uint8_t* p=new uint8_t[w*h];
         fread(p,1,w*h,fp);
+        NEWA_INFO;
         uint8_t* divBy2=new uint8_t[w*h/2];
         for(int i=0;i<h;i++){
             for(int j=0;j<w;j++){
@@ -346,7 +352,15 @@ bool MyFile::ReadImage(MyString imagePath,DataPacket& data){
             }
         }
         data=DataPacket(divBy2,w*h/2);
+        DELA_INFO;
+        delete[] p;
+        DELA_INFO;
+        delete[] divBy2;
         return true;
     };
     return OperateFile(imagePath,"rb",f);
+}
+
+bool MyFile::InfoLog(MyString& info){
+    return OperateFile(INFOLOG_DIR+RUN_TIME+".log","a",[&](FILE* fp){fputs(info,fp);});
 }
