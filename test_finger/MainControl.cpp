@@ -219,6 +219,7 @@ int getComID(){
 }
 
 void setProgress(int percent){
+    MyLog::info("setProgress(%d);",percent);
     if(test.isTest(test.UI)){
         test.uiTest.UI_progress=percent;
         return;

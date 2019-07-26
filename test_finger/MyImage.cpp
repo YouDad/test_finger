@@ -87,6 +87,7 @@ bool saveBGImg(int w,int h,uint8_t* pData,MyString fileName){
 // 分析数据包里的数据,然后用save函数保存图像
 void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pData,MyString fileName)> save){
     MyString fileName=MyString::Time()+".bmp";
+    MyLog::info("IMAGE filename=%s",fileName.c_str());
 
     int w,h,dataSize=dataPacket.readSize();
     uint8_t* pData=nullptr;
@@ -102,6 +103,7 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
         MyLog::error("既不是160x160也不是192x192,没法渲染图像,字节数:%d",dataSize);
         goto _END_;
     }
+    MyLog::info("IMAGE after switch w=h=%d",w);
 
     pData=dataPacket.getPointer();
     if(w*h==dataSize*2){
@@ -129,13 +131,17 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
     for(int i=0;i<h;i++){
         reverse(pData+i*w,w);
     }
+    MyLog::info("IMAGE after reverse");
     save(w,h,pData,fileName);
+    MyLog::info("IMAGE after save");
     {
         int imgSize=MyString::ParseInt(conf["ImgSize"]);
         NEWA_INFO;
         uint8_t* bigImg=new uint8_t[imgSize*imgSize];
         imgResize(w,h,pData,imgSize,imgSize,bigImg);
+        MyLog::info("IMAGE after resize");
         saveTempImage(imgSize,imgSize,bigImg,2);
+        MyLog::info("IMAGE after save temp image");
         loadImage(image,MyFile::TEMP_IMAGE_PATH+"2.bmp");
         DELA_INFO;
         delete[] bigImg;
@@ -145,6 +151,7 @@ _END_:
         DELA_INFO;
         delete[] x2;
     }
+    MyLog::info("IMAGE after delete[] x2");
     dataPacket.readData(dataPacket.size());
 }
 
