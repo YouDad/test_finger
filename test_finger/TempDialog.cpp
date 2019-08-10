@@ -2,10 +2,6 @@
 
 IMPLEMENT_DYNAMIC(TempDialog,CDialogEx)
 
-CButton* btnSelectImage;
-CButton* btnSelectNotepad;
-CEdit* editNotepadID;
-
 // 构造函数
 TempDialog::TempDialog(CWnd* pParent)
     : CDialogEx(IDD_TempDialog,pParent){}
@@ -16,18 +12,13 @@ TempDialog::~TempDialog(){
 }
 
 LRESULT TempDialog::response(WPARAM w,LPARAM l){
-
     return TRUE;
 }
 
 // 初始化事件
 BOOL TempDialog::OnInitDialog(){
     CDialogEx::OnInitDialog();
-
-    btnSelectImage=(CButton*)GetDlgItem(IDC_BTNSelectImage);
-    btnSelectNotepad=(CButton*)GetDlgItem(IDC_BTNSelectNotepad);
-    editNotepadID=(CEdit*)GetDlgItem(IDC_EDITNotepadID);
-
+    setText(GetDlgItem(IDC_EDITBufferID),"1");
     return 0;
 }
 
@@ -39,54 +30,39 @@ BEGIN_MESSAGE_MAP(TempDialog,CDialogEx)
     RESPONSE_USER_MESSAGE(response)
     ON_BN_CLICKED(IDC_BTNDownImage,&TempDialog::OnBnClickedBtnDownImage)
     ON_BN_CLICKED(IDC_BTNWriteNotepad,&TempDialog::OnBnClickedBtnWriteNotepad)
-    ON_BN_CLICKED(IDC_BTNSelectImage,&TempDialog::OnBnClickedBtnSelectImage)
-    ON_BN_CLICKED(IDC_BTNSelectNotepad,&TempDialog::OnBnClickedBtnSelectNotepad)
+    ON_BN_CLICKED(IDC_BTNDownChar,&TempDialog::OnBnClickedBtnDownChar)
 END_MESSAGE_MAP()
 
-
-MyString SelectedImagePath="";
-MyString SelectedNotepadPath="";
-
-void Refresh(){
-    if(SelectedImagePath==""){
-        setText(btnSelectImage,"Select Image");
-    } else{
-        setText(btnSelectImage,"Selected!");
-    }
-    if(SelectedNotepadPath==""){
-        setText(btnSelectNotepad,"Select Notepad");
-    } else{
-        setText(btnSelectNotepad,"Selected!");
-    }
-}
-
 void TempDialog::OnBnClickedBtnDownImage(){
-    if(SelectedImagePath!=""){
-        if(MyFile::ReadImage(SelectedImagePath,tempCommDataPacket)){
-            isFreeRequest=2;
-            comm.request(0x0b);
-        } else{
-            MyLog::error("所选图像不能用于发送");
-        }
-
-        SelectedImagePath="";
-        Refresh();
-    } else{
+    MyString SelectedImagePath;
+    if(!MyFile::OpenFileDialog("bmp",this,SelectedImagePath)){
         MyLog::error("未选择图片");
+        return;
+    }
+
+    if(MyFile::ReadImage(SelectedImagePath,tempCommDataPacket)){
+        isFreeRequest=2;
+        comm.request(0x0b);
+        MyLog::user("发送图像成功!");
+    } else{
+        MyLog::error("所选图像不能用于发送");
     }
 }
 
 
 void TempDialog::OnBnClickedBtnWriteNotepad(){
-    if(SelectedNotepadPath==""){
+    MyString SelectedNotepadPath;
+    if(!MyFile::OpenFileDialog("txt",this,SelectedNotepadPath)){
         MyLog::error("未选择记事本");
         return;
     }
-    int NotepadID=MyString::ParseInt(getText(editNotepadID));
-    if(NotepadID<0||15<NotepadID){
+
+    int NotepadID=MyString::AutoParseInt(getText(GetDlgItem(IDC_EDITNotepadID)));
+    if(0>NotepadID||NotepadID>15){
         MyLog::error("NotepadID只能在[0,15]的范围内");
         return;
     }
+
     DataPacket data;
     MyString msg="";
     auto f=[&](FILE* fp)->bool{
@@ -114,25 +90,31 @@ void TempDialog::OnBnClickedBtnWriteNotepad(){
             return true;
         }
     };
+
     if(MyFile::Read(SelectedNotepadPath,f)){
         isFreeRequest=2;
         comm.request(0x18,data);
+        MyLog::user("发送Notepad成功!");
     } else{
         MyLog::error("该记事本格式不正确:%s",(const char*)msg);
     }
-
-    SelectedNotepadPath="";
-    Refresh();
 }
 
+void TempDialog::OnBnClickedBtnDownChar(){
+    MyString SelectedCharPath;
+    if(!MyFile::OpenFileDialog("char",this,SelectedCharPath)){
+        MyLog::error("未选择特征文件");
+        return;
+    }
 
-void TempDialog::OnBnClickedBtnSelectImage(){
-    MyFile::OpenFileDialog("bmp",this,SelectedImagePath);
-    Refresh();
-}
+    uint8_t BufferID=MyString::AutoParseInt(getText(GetDlgItem(IDC_EDITBufferID)));
+    DataPacket data(&BufferID,1);
 
-
-void TempDialog::OnBnClickedBtnSelectNotepad(){
-    MyFile::OpenFileDialog("txt",this,SelectedNotepadPath);
-    Refresh();
+    if(MyFile::LoadCharFile(SelectedCharPath,tempCommDataPacket)){
+        isFreeRequest=2;
+        comm.request(0x09,data);
+        MyLog::user("发送特征文件成功!");
+    } else{
+        MyLog::error("所选特征文件不能用于发送");
+    }
 }

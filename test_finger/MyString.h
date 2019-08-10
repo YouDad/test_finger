@@ -50,6 +50,8 @@ public:
     // 重载加等操作符
     MyString& operator+=(MyString other);
 
+    const char operator[](int index);
+
     // 返回长度
     int length();
 
@@ -69,6 +71,7 @@ public:
 
     // MyString转int
     static int ParseInt(MyString s);
+    static int AutoParseInt(MyString s);
 
     // 构造时间字符串
     static MyString Time(const char* format="%Y_%m_%d_%H_%M_%S");

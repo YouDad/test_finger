@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="GD32SerialComm">
+      <UniqueIdentifier>{f5e98267-ecdd-40e2-96dc-cb27cc669ecf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{9bcbe73a-9bea-46de-adfe-89cf7b4e605f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)GD32SerialComm.h">
+      <Filter>GD32SerialComm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ICommunication.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)DataPacket.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)DataPacket.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

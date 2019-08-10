@@ -6,7 +6,7 @@ MyString MyFile::IMAGE_DIR="image\\";
 MyString MyFile::BACKGROUND_DIR="bgimg\\";
 MyString MyFile::HISTOGRAM_DIR="histogram\\";
 MyString MyFile::TEMP_IMAGE_PATH="tempImage\\";
-MyString MyFile::TESTIMG_DIR="testImg\\";
+MyString MyFile::CHAR_DIR="char\\";
 MyString MyFile::CONF_PATH="config";
 MyString MyFile::RUN_TIME=init();
 
@@ -22,7 +22,7 @@ MyString MyFile::init(){
     BACKGROUND_DIR=DATA_DIR+BACKGROUND_DIR;
     HISTOGRAM_DIR=DATA_DIR+HISTOGRAM_DIR;
     TEMP_IMAGE_PATH=DATA_DIR+TEMP_IMAGE_PATH;
-    TESTIMG_DIR=DATA_DIR+TESTIMG_DIR;
+    CHAR_DIR=DATA_DIR+CHAR_DIR;
     CONF_PATH=DATA_DIR+CONF_PATH;
 
     if(0!=_access(DATA_DIR,0)){
@@ -45,8 +45,8 @@ MyString MyFile::init(){
     if(0!=_access(TEMP_IMAGE_PATH,0)){
         CreateDirectory(TEMP_IMAGE_PATH,0);
     }
-    if(0!=_access(TESTIMG_DIR,0)){
-        CreateDirectory(TESTIMG_DIR,0);
+    if(0!=_access(CHAR_DIR,0)){
+        CreateDirectory(CHAR_DIR,0);
     }
     return MyString::Time();
 }
@@ -203,7 +203,7 @@ bool MyFile::ReadCommands(MyString path,MyString & TabName,std::vector<struct Co
                     int a=-1,b=-1;
                     jt->Parse("%d",&a);
                     jt->Parse("%x",&b);
-                    c.DfaultValues.push_back(max(a,b));
+                    c.DefaultValues.push_back(max(a,b));
                 }
                 v.push_back(c);
             }
@@ -294,6 +294,10 @@ Params=3\n\
 [ControlLED]\n\
 CmdCode=0x40\n\
 Params=15\n\
+\n\
+[UpChar]\n\
+CmdCode=0x08\n\
+Params=1\n\
 ";
     return OperateFile(path,"w",[&](FILE* fp){fprintf(fp,"%s",str2);});
 }
@@ -349,4 +353,20 @@ bool MyFile::ReadImage(MyString imagePath,DataPacket& data){
         return true;
     };
     return OperateFile(imagePath,"rb",f);
+}
+
+bool MyFile::SaveCharFile(MyString charPath,DataPacket data){
+    FileFunction_t f=[&](FILE* fp){
+        fwrite(data.getPointer(),1,data.readSize(),fp);
+    };
+    return OperateFile(charPath,"wb",f);
+}
+
+bool MyFile::LoadCharFile(MyString charPath,DataPacket& dataPacket){
+    FileFunction_t f=[&](FILE* fp){
+        uint8_t data[1536];
+        fread(data,1,1536,fp);
+        dataPacket=DataPacket(data,1536);
+    };
+    return OperateFile(charPath,"rb",f);
 }

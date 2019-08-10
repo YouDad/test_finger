@@ -17,7 +17,7 @@ void MainDialog::OnBnClickedBtnEnroll(){
         // static 防止被释放
         static uint8_t BufferID=1;
         // 获得指纹号
-        uint8_t FingerID=MyString::ParseInt(getText(editFingerId));
+        uint8_t FingerID=MyString::AutoParseInt(getText(editFingerId));
         static const int EnrollCount=3;
         // 定义流程
         flow.clear();
@@ -208,13 +208,13 @@ void MainDialog::OnBnClickedBtnMatch(){
             return;
         }
         // 获得指纹号
-        uint8_t FingerID=MyString::ParseInt(getText(editFingerId));
+        uint8_t FingerID=MyString::AutoParseInt(getText(editFingerId));
         // 定义流程
         flow.clear();
         // 流程 0:发送<载入特征>命令
         flow.add(0,[FingerID](int& result)->bool{
             MainDialogCtrlValidity::Working();
-            uint8_t data[]={02,00,FingerID};
+            uint8_t data[]={01,00,FingerID};
             comm.request(SII(LoadChar),DataPacket(data,sizeof data));
             flow.next();
             MyLog::user("读出指纹模板中...");
@@ -238,7 +238,7 @@ void MainDialog::OnBnClickedBtnMatch(){
         flow.add(2,[](int& result)->bool{
             if(result==0x00){
                 MyLog::user("取指纹图成功");
-                uint8_t data[]={02};
+                uint8_t data[]={01};
                 comm.request(SII(GenChar),DataPacket(data,sizeof data));
                 setProgress(100*flow.percent());
                 flow.next();
@@ -323,7 +323,7 @@ void MainDialog::OnBnClickedBtnDeleteTemplate(){
             return;
         }
         // 获得指纹号
-        uint8_t FingerID=MyString::ParseInt(getText(editFingerId));
+        uint8_t FingerID=MyString::AutoParseInt(getText(editFingerId));
         // 定义流程
         flow.clear();
         // 流程 0:发送<删除模板>命令

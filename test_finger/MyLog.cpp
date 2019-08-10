@@ -27,7 +27,7 @@ void MyLog::print(LogLevel level,MyString info){
     }
 
     // 越界信息或空信息不输出
-    if(level>=limit||info==""){
+    if(level>limit||info==""){
         return;
     }
 
@@ -85,7 +85,7 @@ FastDefineLogName(error,LOGE)
 FastDefineLogName(user,LOGU)
 
 // 当前版本
-int Version=290;
+int Version=291;
 // 开发日志,非最新大版本的小版本和非最新级大版本加以注释
 void MyLog::DevelopLog(){
     //user("V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
@@ -112,4 +112,5 @@ void MyLog::DevelopLog(){
     user("V2.8 <2019年06月25日09:09:29>:把配置剥离了出来,让用户可以配置.增加图像调整大小的功能");
     //user("V2.81<2019年07月09日20:52:42>:修复了Syno通信方面的bug");
     user("V2.9 <2019年07月21日20:59:21>:增加Test自定义插件功能,大大增强测试简单指令能力");
+    user("V2.91<2019年08月10日11:25:25>:修复了一些已知bug,增加DownChar功能");
 }

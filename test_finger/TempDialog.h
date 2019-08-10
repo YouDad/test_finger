@@ -25,5 +25,6 @@ public:
     afx_msg void OnBnClickedBtnWriteNotepad();
     afx_msg void OnBnClickedBtnSelectImage();
     afx_msg void OnBnClickedBtnSelectNotepad();
+    afx_msg void OnBnClickedBtnDownChar();
 };
 extern int isFreeRequest;

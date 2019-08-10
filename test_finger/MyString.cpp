@@ -140,6 +140,10 @@ MyString & MyString::operator+=(MyString other){
     return *this=*this+other;
 }
 
+const char MyString::operator[](int index){
+    return str[index];
+}
+
 // 返回长度
 int MyString::length(){
     return str.length();
@@ -185,8 +189,19 @@ MyString MyString::IntToMyString(int i){
 
 // MyString转int
 int MyString::ParseInt(MyString s){
-    int ret;
+    int ret=0;
     sscanf(s,"%d",&ret);
+    return ret;
+}
+
+int MyString::AutoParseInt(MyString s){
+    int ret=0;
+    if( (s[0]=='0'&&(s[1]=='x'||s[1]=='X')) ||
+        (('a'<=(s[0]|32)&&(s[0]|32)<='f')) ){
+        sscanf(s,"%x",&ret);
+    } else{
+        sscanf(s,"%d",&ret);
+    }
     return ret;
 }
 

@@ -27,6 +27,7 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(SYNO,Syno,Match);
     __BCL(SYNO,Syno,LoadChar);
     __BCL(SYNO,Syno,DeleteChar);
+    __BCL(SYNO,Syno,UpChar);
 }
 
 // 增加事件码对应的监听器

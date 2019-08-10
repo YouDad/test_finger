@@ -170,3 +170,24 @@ __ILC(Syno,ReadIndexTable){
 __ILC(Syno,GetEnrollImage){
     standardProcessResponse(response);
 }
+
+// 上传特征文件
+__ILC(Syno,UpChar){
+    int retVal=response.getPointer()[0];
+    MyLog::user(SynoFormatMessage(retVal));
+    if(retVal==0x00){// 成功
+        response.readData(1);
+        // 数据长度一定是32个字节
+        if(response.readSize()!=1536){
+            MyLog::user("接受特征文件长度有误:%d",response.readSize());
+        } else{
+            MyString filename=MyFile::CHAR_DIR+MyString::Time()+".char";
+            if(MyFile::SaveCharFile(filename,response)){
+                MyLog::user(filename+" 保存成功");
+            } else{
+                MyLog::error(filename+" 保存失败");
+            }
+        }
+    }
+    flow.execRef(retVal);
+}

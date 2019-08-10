@@ -63,6 +63,7 @@ enum CmdCode{
     SII(LoadChar),              //从flash指纹库中读取一个模板到特征缓冲区
     SII(DeleteChar),            //删除flash指纹库中的一个特征文件
     SII(DeviceInfo),            //获取设备信息
+    SII(UpChar),                //上传特征文件
 };
 
 #pragma region Syno协议区
@@ -78,6 +79,7 @@ __DLC(Syno,ReadIndexTable);
 __DLC(Syno,Match);
 __DLC(Syno,LoadChar);
 __DLC(Syno,DeleteChar);
+__DLC(Syno,UpChar);
 
 /*
 写命令前,先查文档,给枚举赋值,就代表实现了对应监听器
@@ -130,7 +132,7 @@ enum CmdCodeSyno{
     __SCC(Syno,RegModel)=0x05,
     __SCC(Syno,StoreChar)=0x06,
     __SCC(Syno,LoadChar)=0x07,
-    __SCC(Syno,UpChar),
+    __SCC(Syno,UpChar)=0x08,
     __SCC(Syno,DownChar),
     __SCC(Syno,UpImage)=0x0a,
     __SCC(Syno,DownImage),

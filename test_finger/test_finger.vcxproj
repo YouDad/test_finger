@@ -300,6 +300,7 @@
     <ClInclude Include="UITest.h" />
     <ClInclude Include="UsbPort.h" />
     <ClInclude Include="TempDialog.h" />
+    <ClInclude Include="CommandControl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdvancedDebugDialog.cpp" />
@@ -366,6 +367,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Test|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TempDialog.cpp" />
+    <ClCompile Include="CommandControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\test_finger.ico" />
