@@ -45,8 +45,13 @@ BEGIN_MESSAGE_MAP(MainDialog,CDialogEx)
     ON_CBN_SELCHANGE(IDC_CMBProtocolType,&MainDialog::OnCbnSelChangeCmbProtocolType)
     ON_CBN_SELCHANGE(IDC_CMBWay,&MainDialog::OnCbnSelChangeCmbWay)
     ON_CBN_SELCHANGE(IDC_CMBLogLevel,&MainDialog::OnCbnSelchangeCmbloglevel)
-    ON_BN_CLICKED(IDC_BTNTest,&MainDialog::OnBnClickedBtntest)
-    ON_EN_CHANGE(IDC_EDITAddress,&MainDialog::OnEnChangeEditaddress)
+    ON_BN_CLICKED(IDC_BTNTest,&MainDialog::OnBnClickedBtnTest)
+    ON_EN_CHANGE(IDC_EDITAddress,&MainDialog::OnEnChangeEditAddress)
+    ON_BN_CLICKED(IDC_BTNSearch,&MainDialog::OnBnClickedBtnSearch)
+    ON_BN_CLICKED(IDC_CHKLED1,&MainDialog::OnBnClickedChkLED)
+    ON_BN_CLICKED(IDC_CHKLED2,&MainDialog::OnBnClickedChkLED)
+    ON_BN_CLICKED(IDC_CHKLED3,&MainDialog::OnBnClickedChkLED)
+    ON_BN_CLICKED(IDC_CHKLED4,&MainDialog::OnBnClickedChkLED)
 END_MESSAGE_MAP()
 
 // 重写Enter事件,阻止Enter默认行为:关闭窗口
@@ -149,7 +154,7 @@ LRESULT MainDialog::serialResponse(WPARAM w,LPARAM l){
 }
 
 
-void MainDialog::OnBnClickedBtntest(){
+void MainDialog::OnBnClickedBtnTest(){
     static TabsDialog* dialog;
     if(dialog){
         delete dialog;
@@ -182,7 +187,7 @@ void MainDialog::OnBnClickedBtntest(){
 }
 
 
-void MainDialog::OnEnChangeEditaddress(){
+void MainDialog::OnEnChangeEditAddress(){
     static MyString last="ffffffff";
     if(conf["RemAddress"]==Stringify(true)&&last!=conf["Address"]){
         last=conf["Address"];
@@ -205,4 +210,13 @@ void MainDialog::OnEnChangeEditaddress(){
     if(conf["RemAddress"]==Stringify(true)){
         conf["Address"]=last;
     }
+}
+
+void MainDialog::OnBnClickedChkLED(){
+    uint8_t data=0x0f;
+    data^=isChecked(chkLED1)*1;
+    data^=isChecked(chkLED2)*2;
+    data^=isChecked(chkLED3)*4;
+    data^=isChecked(chkLED4)*8;
+    comm.request(SII(ControlLED),DataPacket(&data,1));
 }

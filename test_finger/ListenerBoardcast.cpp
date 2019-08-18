@@ -28,6 +28,8 @@ ListenerBoardcast::ListenerBoardcast(){
     __BCL(SYNO,Syno,LoadChar);
     __BCL(SYNO,Syno,DeleteChar);
     __BCL(SYNO,Syno,UpChar);
+    __BCL(SYNO,Syno,ReadINFPage);
+    __BCL(SYNO,Syno,ControlLED);
 }
 
 // 增加事件码对应的监听器

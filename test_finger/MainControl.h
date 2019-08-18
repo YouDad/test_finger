@@ -54,7 +54,18 @@ extern CButton* btnCancel;
 extern CButton* btnClearLog;
 extern CButton* btnDeleteTemplate;
 extern CButton* btnTest;
+extern CButton* btnSearch;
+extern CButton* chkLED1;
+extern CButton* chkLED2;
+extern CButton* chkLED3;
+extern CButton* chkLED4;
 extern CStatic* image;
+extern CStatic* staticDBSize;
+extern CStatic* staticSecLvl;
+extern CStatic* staticDevAddr;
+extern CStatic* staticProductSN;
+extern CStatic* staticSoftwareVersion;
+extern CStatic* staticSensorName;
 extern CProgressCtrl* progress;
 extern AdvancedDebugDialog* advancedDebugDialog;
 

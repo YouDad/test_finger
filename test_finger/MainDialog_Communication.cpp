@@ -17,6 +17,7 @@ void MainDialog::OnBnClickedBtnConnect(){
         if(ret){
             setText(btnConnect,"¶Ï¿ªÁ¬½Ó");
             MainDialogCtrlValidity::AfterConnect();
+            OnBnClickedBtnDeviceInfo();
         } else{
             MainDialogCtrlValidity::BeforeConnect();
         }

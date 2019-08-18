@@ -350,3 +350,88 @@ void MainDialog::OnBnClickedBtnDeleteTemplate(){
         flow.start();
     }
 }
+
+void MainDialog::OnBnClickedBtnSearch(){
+    // 定义流程
+    flow.clear();
+    // 流程 0:发送<获取注册图像>命令
+    flow.add(0,
+        [](int& result)->bool{
+            MainDialogCtrlValidity::Working();
+            comm.request(SII(GetEnrollImage));
+            setProgress(100*flow.percent());
+            flow.next();
+            return false;
+        }
+    );
+    // 流程 1:如果取到图像,发送<上传图像>命令
+    // 流程 1:如果没取到图像,回到流程 0
+    flow.add(1,
+        [](int& result)->bool{
+            if(result==0x00){
+                // 取到图像
+                MyLog::debug("取到指纹图像");
+                comm.request(SII(UpImage));//上传图像
+                setProgress(100*flow.percent());
+                flow.next();
+                return false;
+            } else{//没取到图像
+                flow.prev();
+                return true;
+            }
+        }
+    );
+    // 流程 2:如果上传图像成功,发送<生成特征>命令
+    // 流程 2:如果上传图像失败,就注册失败了
+    flow.add(2,
+        [](int& result)->bool{
+            if(result==0x00){
+                // 上传图像成功
+                uint8_t t=1;
+                comm.request(SII(GenChar),DataPacket(&t,1));
+                setProgress(100*flow.percent());
+                flow.next();
+                return false;
+            } else{
+                // 上传图像失败
+                MyLog::debug("上传图像失败");
+                MyLog::user("搜索失败");
+                flow.terminate();
+                return false;
+            }
+        }
+    );
+    // 流程 3:如果生成特征成功,发送<搜索指纹>命令
+    // 流程 3:如果生成特征失败,从头开始采指纹
+    flow.add(3,
+        [](int& result)->bool{
+            if(result==0x00){
+                // 生成特征成功
+                MyLog::debug("生成特征成功");
+
+                uint8_t x[]={1,0,0,0,0x87};
+                comm.request(SII(Search),DataPacket(x,sizeof x));
+                setProgress(100*flow.percent());
+                flow.next();
+                return false;
+            } else{
+                // 生成特征失败
+                flow.jump(0);
+                return true;
+            }
+        }
+    );
+    // 流程 4:如果没有搜索到指纹,发送<获得指纹>命令
+    // 流程 4:如果搜索到了指纹,代表已经注册过了,就注册失败了
+    flow.add(4,
+        [](int& result)->bool{
+            setProgress(100*flow.percent());
+            MyLog::user("搜索结束");
+            flow.clear();
+            MainDialogCtrlValidity::Work();
+            return false;
+        }
+    );
+    // 开始执行流程
+    flow.start();
+}
