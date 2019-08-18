@@ -32,7 +32,18 @@ CButton* btnCancel;
 CButton* btnClearLog;
 CButton* btnDeleteTemplate;
 CButton* btnTest;
+CButton* btnSearch;
+CButton* chkLED1;
+CButton* chkLED2;
+CButton* chkLED3;
+CButton* chkLED4;
 CStatic* image;
+CStatic* staticDBSize;
+CStatic* staticSecLvl;
+CStatic* staticDevAddr;
+CStatic* staticProductSN;
+CStatic* staticSoftwareVersion;
+CStatic* staticSensorName;
 CProgressCtrl* progress;
 
 CFont* defaultFont;
@@ -80,8 +91,19 @@ void initMainControl(MainDialog* Dlg){
     btnCancel=(CButton*)Dlg->GetDlgItem(IDC_BTNCancel);
     btnClearLog=(CButton*)Dlg->GetDlgItem(IDC_BTNClearLog);
     btnTest=(CButton*)Dlg->GetDlgItem(IDC_BTNTest);
+    btnSearch=(CButton*)Dlg->GetDlgItem(IDC_BTNSearch);
     btnDeleteTemplate=(CButton*)Dlg->GetDlgItem(IDC_BTNDeleteTemplate);
     image=(CStatic*)Dlg->GetDlgItem(IDC_IMAGE);
+    staticDBSize=(CStatic*)Dlg->GetDlgItem(IDC_STATICDBSize);
+    staticSecLvl=(CStatic*)Dlg->GetDlgItem(IDC_STATICSecLvl);
+    staticDevAddr=(CStatic*)Dlg->GetDlgItem(IDC_STATICDevAddr);
+    staticProductSN=(CStatic*)Dlg->GetDlgItem(IDC_STATICProductSN);
+    staticSoftwareVersion=(CStatic*)Dlg->GetDlgItem(IDC_STATICSoftwareVersion);
+    staticSensorName=(CStatic*)Dlg->GetDlgItem(IDC_STATICSensorName);
+    chkLED1=(CButton*)Dlg->GetDlgItem(IDC_CHKLED1);
+    chkLED2=(CButton*)Dlg->GetDlgItem(IDC_CHKLED2);
+    chkLED3=(CButton*)Dlg->GetDlgItem(IDC_CHKLED3);
+    chkLED4=(CButton*)Dlg->GetDlgItem(IDC_CHKLED4);
     hwnd=Dlg->m_hWnd;
 
     defaultFont=btnAdvDbg->GetFont();

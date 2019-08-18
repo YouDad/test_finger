@@ -68,15 +68,19 @@ void standardProcessResponse(DataPacket& response){
     flow.execRef(retVal);
 }
 
-// 从传感器上读入图像存于图像缓冲区
-__ILC(Syno,GetImage){
-    standardProcessResponse(response);
+#define StandardProcess(Command)        \
+__ILC(Syno,Command){                    \
+    standardProcessResponse(response);  \
 }
 
-// 根据原始图像生成指纹特征存于特征文件缓冲区
-__ILC(Syno,GenChar){
-    standardProcessResponse(response);
-}
+StandardProcess(GetImage);              // 从传感器上读入图像存于图像缓冲区
+StandardProcess(GenChar);               // 根据原始图像生成指纹特征存于特征文件缓冲区
+StandardProcess(RegModel);              // 将特征文件合并生成模板存于特征文件缓冲区
+StandardProcess(StoreChar);             // 将特征缓冲区中的文件储存到flash指纹库中
+StandardProcess(LoadChar);              // 从flash指纹库中读取一个模板到特征缓冲区
+StandardProcess(DeleteChar);            // 删除flash指纹库中的一个特征文件
+StandardProcess(GetEnrollImage);        // 注册用获取图像
+StandardProcess(ControlLED);            // 控制LED灯
 
 // 精确比对特征文件缓冲区中的特征文件
 __ILC(Syno,Match){
@@ -88,26 +92,6 @@ __ILC(Syno,Match){
         MyLog::user("指纹匹配成功,得分:%d",ptr[0]*256+ptr[1]);
     }
     flow.execRef(retVal);
-}
-
-// 以特征文件缓冲区中的特征文件搜索整个或部分指纹库
-__ILC(Syno,Search){
-    standardProcessResponse(response);
-}
-
-// 将特征文件合并生成模板存于特征文件缓冲区
-__ILC(Syno,RegModel){
-    standardProcessResponse(response);
-}
-
-// 将特征缓冲区中的文件储存到flash指纹库中
-__ILC(Syno,StoreChar){
-    standardProcessResponse(response);
-}
-
-// 从flash指纹库中读取一个模板到特征缓冲区
-__ILC(Syno,LoadChar){
-    standardProcessResponse(response);
 }
 
 // 上传原始图像
@@ -128,11 +112,6 @@ __ILC(Syno,UpImage){
         MyLog::user("接收数据成功");
     }
     flow.execRef(retVal);
-}
-
-// 删除flash指纹库中的一个特征文件
-__ILC(Syno,DeleteChar){
-    standardProcessResponse(response);
 }
 
 // 读索引表
@@ -166,11 +145,6 @@ __ILC(Syno,ReadIndexTable){
     flow.execRef(retVal);
 }
 
-// 注册用获取图像
-__ILC(Syno,GetEnrollImage){
-    standardProcessResponse(response);
-}
-
 // 上传特征文件
 __ILC(Syno,UpChar){
     int retVal=response.getPointer()[0];
@@ -188,6 +162,63 @@ __ILC(Syno,UpChar){
                 MyLog::error(filename+" 保存失败");
             }
         }
+    }
+    flow.execRef(retVal);
+}
+
+// 读flash信息页
+__ILC(Syno,ReadINFPage){
+    int retVal=response.getPointer()[0];
+    MyLog::user(SynoFormatMessage(retVal));
+    if(retVal==0x00){// 成功
+        response.readData(1);
+        uint32_t DBSize,SecLvl,DevAddr;
+        char ProductSN[9]={};
+        char SoftwareVersion[9]={};
+        char SensorName[9]={};
+
+		auto rev=[](uint8_t* p,int len){
+			uint8_t t;
+			for(int i=0;i<(len+1)/2;i++){
+				t=p[i];
+				p[i]=p[len-i-1];
+				p[len-i-1]=t;
+			}
+		};
+
+		uint8_t* p=response.getPointer();
+		rev(p+4,2);
+		rev(p+6,2);
+		rev(p+8,4);
+		DBSize=*(uint16_t*)(p+4);
+		SecLvl=*(uint16_t*)(p+6);
+		DevAddr=*(uint32_t*)(p+8);
+		
+		memcpy(ProductSN,p+28,8);
+		memcpy(SoftwareVersion,p+36,8);
+		memcpy(SensorName,p+52,8);
+
+		setText(staticDBSize,MyString::IntToMyString(DBSize));
+		setText(staticSecLvl,MyString::IntToMyString(SecLvl));
+		setText(staticDevAddr,MyString::Format("%X",DevAddr));
+		setText(staticProductSN,ProductSN);
+		setText(staticSoftwareVersion,SoftwareVersion);
+		setText(staticSensorName,SensorName);
+    }
+    flow.execRef(retVal);
+}
+
+// 以特征文件缓冲区中的特征文件搜索整个或部分指纹库
+__ILC(Syno,Search){
+    int retVal=response.getPointer()[0];
+    MyLog::user(SynoFormatMessage(retVal));
+    int fingerID,score;
+    if(retVal==0x00){// 成功
+        response.readData(1);
+        uint8_t* p=response.getPointer();
+        fingerID=p[0]*256+p[1];
+        score=p[2]*256+p[3];
+        MyLog::user("搜索成功,匹配%d号,得分:%d",fingerID,score);
     }
     flow.execRef(retVal);
 }

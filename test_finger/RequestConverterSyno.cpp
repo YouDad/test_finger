@@ -46,6 +46,10 @@ int ToSyno(int cmdCode){
         return __SCC(Syno,DeleteChar);
     case SII(UpChar):
         return __SCC(Syno,UpChar);
+    case SII(ReadINFPage):
+        return __SCC(Syno,ReadINFPage);
+    case SII(ControlLED):
+        return __SCC(Syno,ControlLED);
     default:
         ASF_ERROR(6);
         throw 0;

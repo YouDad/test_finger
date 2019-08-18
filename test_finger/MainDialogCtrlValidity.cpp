@@ -28,17 +28,17 @@ vec* getWorkedVec(){
 
 // 初始化控件
 void MainDialogCtrlValidity::InitCtrl(){
-    InitVec=vec{cmbBaud,cmbWay,btnConnect,editPassword};
+    InitVec=vec{cmbBaud,cmbWay,btnConnect,editPassword,cmbProtocolType};
     // 协议对应按钮可用性在这里设置,如果在Vec里出现那对应协议就可以点
     SynoVec=vec{editFingerId,cmbProtocolType,btnConnect,btnAdvDbg,
-        btnRawImage,btnContinueImage,btnEnroll,btnMatch,btnTest,
-        btnViewEnrollIds,btnDeleteTemplate};
+        btnRawImage,btnContinueImage,btnEnroll,btnMatch,btnTest,btnSearch,
+        btnViewEnrollIds,btnDeleteTemplate,btnDeviceInfo};
     GD32F30Vec=vec{cmbProtocolType,btnConnect,btnAdvDbg,btnTest,
         btnRawImage,btnTestImage,btnContinueImage,btnContinueBGImg,
         btnReadReg,btnWriteReg,btnDeviceInfo};
     WorkedVec=vec{editFingerId,cmbProtocolType,btnConnect,btnAdvDbg,
         btnRawImage,btnTestImage,btnContinueImage,btnContinueBGImg,
-        btnReadReg,btnWriteReg,btnEnroll,btnMatch,btnTest,
+        btnReadReg,btnWriteReg,btnEnroll,btnMatch,btnTest,btnSearch,
         btnDeviceInfo,btnViewEnrollIds,btnDeleteTemplate};
     WorkingVec=vec{btnCancel};
     Empty=vec{};

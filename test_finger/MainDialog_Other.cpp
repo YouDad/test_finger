@@ -39,26 +39,49 @@ void MainDialog::OnCbnCloseupCmbLogLevel(){
 
 // 设备信息按钮点击事件
 void MainDialog::OnBnClickedBtnDeviceInfo(){
-    // 定义流程
-    flow.clear();
-    // 流程 0:发送<获得设备信息>命令
-    flow.add(0,[](int& result){
-        MainDialogCtrlValidity::Working();
-        comm.request(SII(DeviceInfo));
-        setProgress(100*flow.percent());
-        flow.next();
-        return false;
-    });
-    // 流程 1:获得设备信息结束,善后工作
-    flow.add(1,[](int& result){
-        setProgress(100*flow.percent());
-        MyLog::user("获取设备信息结束");
+    if(getProtocol()==GD32){
+        // 定义流程
         flow.clear();
-        MainDialogCtrlValidity::Work();
-        return false;
-    });
-    // 开始执行流程
-    flow.start();
+        // 流程 0:发送<获得设备信息>命令
+        flow.add(0,[](int& result){
+            MainDialogCtrlValidity::Working();
+            comm.request(SII(DeviceInfo));
+            setProgress(100*flow.percent());
+            flow.next();
+            return false;
+            });
+        // 流程 1:获得设备信息结束,善后工作
+        flow.add(1,[](int& result){
+            setProgress(100*flow.percent());
+            MyLog::user("获取设备信息结束");
+            flow.clear();
+            MainDialogCtrlValidity::Work();
+            return false;
+            });
+        // 开始执行流程
+        flow.start();
+    } else{
+        // 定义流程
+        flow.clear();
+        // 流程 0:发送<读flash信息页>命令
+        flow.add(0,[](int& result){
+            MainDialogCtrlValidity::Working();
+            comm.request(SII(ReadINFPage));
+            setProgress(100*flow.percent());
+            flow.next();
+            return false;
+            });
+        // 流程 1:获得设备信息结束,善后工作
+        flow.add(1,[](int& result){
+            setProgress(100*flow.percent());
+            MyLog::user("获取设备信息结束");
+            flow.clear();
+            MainDialogCtrlValidity::Work();
+            return false;
+            });
+        // 开始执行流程
+        flow.start();
+    }
 }
 
 // 撤销操作点击事件

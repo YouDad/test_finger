@@ -64,6 +64,8 @@ enum CmdCode{
     SII(DeleteChar),            //删除flash指纹库中的一个特征文件
     SII(DeviceInfo),            //获取设备信息
     SII(UpChar),                //上传特征文件
+    SII(ReadINFPage),           //获得配置页
+    SII(ControlLED),            //控制LED
 };
 
 #pragma region Syno协议区
@@ -80,6 +82,8 @@ __DLC(Syno,Match);
 __DLC(Syno,LoadChar);
 __DLC(Syno,DeleteChar);
 __DLC(Syno,UpChar);
+__DLC(Syno,ReadINFPage);
+__DLC(Syno,ControlLED);
 
 /*
 写命令前,先查文档,给枚举赋值,就代表实现了对应监听器
@@ -105,7 +109,7 @@ __DLC(Syno,UpChar);
     17	|VfyPwd				|13H	|验证设备握手口令
     18	|GetRandomCode		|14H	|采样随机数
     19	|SetChipAddr		|15H	|设置芯片地址
-    20	|ReadINFpage		|16H	|读取FLASH Information Page内容
+    20	|ReadINFPage		|16H	|读取FLASH Information Page内容
     21	|Port_Control		|17H	|通讯端口（UART/USB）开关控制
     22	|WriteNotepad		|18H	|写记事本
     23	|ReadNotepad		|19H	|读记事本
@@ -144,7 +148,7 @@ enum CmdCodeSyno{
     __SCC(Syno,VfyPwd),
     __SCC(Syno,GetRandomCode),
     __SCC(Syno,SetChipAddr),
-    __SCC(Syno,ReadINFpage),
+    __SCC(Syno,ReadINFPage)=0x16,
     __SCC(Syno,Port_Control),
     __SCC(Syno,WriteNotepad),
     __SCC(Syno,ReadNotepad),
@@ -164,7 +168,7 @@ enum CmdCodeSyno{
     __SCC(Syno,获取模组唯一序列号),
     __SCC(Syno,获取指纹算法库版本号),
     __SCC(Syno,获取固件库版本号),
-    __SCC(Syno,ControlLED),
+    __SCC(Syno,ControlLED)=0x40,
     __SCC(Syno,控制三色LED),
 };
 

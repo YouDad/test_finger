@@ -50,6 +50,8 @@ public:
     afx_msg void OnCbnSelChangeCmbProtocolType();
     afx_msg void OnCbnSelChangeCmbWay();
     afx_msg void OnCbnSelchangeCmbloglevel();
-    afx_msg void OnBnClickedBtntest();
-    afx_msg void OnEnChangeEditaddress();
+    afx_msg void OnBnClickedBtnTest();
+    afx_msg void OnEnChangeEditAddress();
+    afx_msg void OnBnClickedBtnSearch();
+    afx_msg void OnBnClickedChkLED();
 };
