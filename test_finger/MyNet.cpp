@@ -54,6 +54,7 @@ void NetPost(MyString host,MyString ctrl,DataMap data,NetFunction_t func){
 
 // 获得在线版本
 int NetGetVersion(){
+    return 293;
     int BigVersion=0,SmlVersion=0;
     NetPost(HostIP,"test_finger_version",DataMap(),[&](uint8_t* data,int size){
         MyString((char*)data,size).Parse("%d.%d",&BigVersion,&SmlVersion);

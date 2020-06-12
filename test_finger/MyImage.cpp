@@ -114,16 +114,6 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
         }
         pData=x2;
     }
-    if(w==160&&h==160){
-        //消除用于静电检测的竖线
-        for(int i=0;i<h;i++){
-            for(int j=0;j<w;j++){
-                if(j==47||j==99||j==151){
-                    pData[i*w+j]=(pData[i*w+j+1]+pData[i*w+j-1])/2;
-                }
-            }
-        }
-    }
     reverse(pData,w*h);
     for(int i=0;i<h;i++){
         reverse(pData+i*w,w);

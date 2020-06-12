@@ -85,7 +85,7 @@ FastDefineLogName(error,LOGE)
 FastDefineLogName(user,LOGU)
 
 // 当前版本
-int Version=292;
+int Version=293;
 // 开发日志,非最新大版本的小版本和非最新级大版本加以注释
 void MyLog::DevelopLog(){
     //user("V0.9 <时间未知>:完成了串口连接和图片显示,完成了日志功能的建设");
@@ -114,4 +114,5 @@ void MyLog::DevelopLog(){
     user("V2.9 <2019年07月21日20:59:21>:增加Test自定义插件功能,大大增强测试简单指令能力");
     user("V2.91<2019年08月10日11:25:25>:修复了一些已知bug,增加DownChar功能");
     user("V2.92<2019年08月18日16:48:55>:增加自动获得DevInfo功能,增加Search,ControlLED功能");
+    user("V2.93<2020年06月11日18:07:11>:删除3根ESD线修正");
 }
