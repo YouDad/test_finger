@@ -92,6 +92,11 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
     uint8_t* pData=nullptr;
     uint8_t* x2=nullptr;
     switch(dataSize){
+    case 88*112/2:
+    case 88*112:
+        w = 88;
+        h = 112;
+        break;
     case 160*160/2:
     case 160*160:w=h=160;
         break;
@@ -106,10 +111,10 @@ void analysis(DataPacket dataPacket,std::function<void(int w,int h,uint8_t* pDat
     pData=dataPacket.getPointer();
     if(w*h==dataSize*2){
         x2=new uint8_t[w*h];
-        for(int i=0;i<w;i++){
-            for(int j=0;j<h/2;j++){
-                x2[i*w+j*2+0]=(pData[i*h/2+j]&0xF0)<<0;
-                x2[i*w+j*2+1]=(pData[i*h/2+j]&0x0F)<<4;
+        for(int i=0;i<h;i++){
+            for(int j=0;j<w/2;j++){
+                x2[i*w+j*2+0]=(pData[i*w+j]&0xF0)<<0;
+                x2[i*w+j*2+1]=(pData[i*w+j]&0x0F)<<4;
             }
         }
         pData=x2;
